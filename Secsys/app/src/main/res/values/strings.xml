@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Secsys</string>
+    <string name="title_activity_maps">Map</string>
+
+    <!-- Login -->
+    <string name="hint_correo">Correo</string>
+    <string name="hint_contrasela">Contraseña</string>
+    <string name="mnsg_iniciar_sesion">Log In</string>
+    <string name="mnsg_entrar_visitante">Visit</string>
+    <string name="mnsg_registrar">Sig In</string>
+    <string name="error_contraseña_invalida">Contraseña incorrecta</string>
+    <string name="error_campo_requerido">Campo requerido</string>
+    <string name="error_correo_invalido">Correo incorrecto</string>
+
+    <!-- Menus -->
+    <string name="menu_configuracion">Configuración</string>
+    <string name="menu_buscar">Buscar</string>
+
+    <!-- Drawer -->
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+    <string name="nav_item_guard">Guardas</string>
+    <string name="nav_item_round">Rondas</string>
+    <string name="nav_item_rep">Reportes</string>
+
+    <!-- navigation drawer item labels  -->
+    <string-array name="nav_drawer_options">
+        <item>@string/nav_item_guard</item>
+        <item>@string/nav_item_round</item>
+        <item>@string/nav_item_rep</item>
+    </string-array>
+
+    <string name="title_sec">Guardas</string>
+    <string name="title_rond">Rondas</string>
+    <string name="title_rep">Reportes</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_activity_registrar">ActivityRegistrar</string>
+</resources>
