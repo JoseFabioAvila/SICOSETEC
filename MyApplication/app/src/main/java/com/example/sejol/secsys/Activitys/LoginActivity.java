@@ -11,8 +11,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sejol.secsys.R;
+import com.firebase.client.Firebase;
 
 import java.text.ParseException;
 
@@ -103,10 +105,10 @@ public class LoginActivity extends AppCompatActivity
         loadUser(Correo, Constraseña);
     }
 
-    private void loadUser(String paramString1, String paramString2)
+    private void loadUser(String email, String password)
+            throws ParseException
     {
-        //Revisar BD
-        startActivity(new Intent(this,MainActivity.class));
+
     }
 
     private boolean validarContraseña(String paramString)
@@ -124,8 +126,15 @@ public class LoginActivity extends AppCompatActivity
         SharedPreferences localSharedPreferences = getSharedPreferences("Login", 0);
         String str1 = localSharedPreferences.getString("Unm", null);
         String str2 = localSharedPreferences.getString("Psw", null);
-        loadUser(str1, str2);
-        return;
+        try
+        {
+            loadUser(str1, str2);
+            return;
+        }
+        catch (ParseException localParseException)
+        {
+            localParseException.printStackTrace();
+        }
     }
 
     public void guardarCredenciales(String paramString1, String paramString2)
