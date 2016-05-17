@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Secsys</string>
+    <string name="title_activity_registro">RegistroActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <!-- Drawer -->
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <!-- Titulos drawer administrador -->
+    <string name="title_adm_crear">Realizar ronda</string>
+    <string name="title_adm_realizar">Crear ruta</string>
+    <string name="title_adm_descargar">Descargar Reportes</string>
+    <string name="title_adm_salir">Salir</string>
+    <!-- Items del drawer -->
+    <string name="nav_item_rlz">Realizar ronda</string>
+    <string name="nav_item_crt">Crear ruta</string>
+    <string name="nav_item_dsc">Descargar Reportes</string>
+    <string name="nav_item_slr">Salir</string>
+    <!-- navigation drawer item labels for admin  -->
+    <string-array name="nav_drawer_options">
+        <item>@string/nav_item_rlz</item>
+        <item>@string/nav_item_crt</item>
+        <item>@string/nav_item_dsc</item>
+        <item>@string/nav_item_slr</item>
+    </string-array>
+</resources>
