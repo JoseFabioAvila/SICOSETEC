@@ -44,6 +44,8 @@ public class MainActivity
         displayView(0); //Display option 0 o the navigation drawer
     }
 
+
+
     @Override
     public void onDrawerItemSelected(View view, int position) {
         displayView(position);

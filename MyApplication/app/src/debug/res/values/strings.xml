@@ -10,8 +10,8 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <!-- Titulos drawer administrador -->
-    <string name="title_adm_crear">Realizar ronda</string>
-    <string name="title_adm_realizar">Crear ruta</string>
+    <string name="title_adm_crear">Crear ruta</string>
+    <string name="title_adm_realizar">Realizar ronda</string>
     <string name="title_adm_descargar">Descargar Reportes</string>
     <string name="title_adm_salir">Salir</string>
     <!-- Items del drawer -->
