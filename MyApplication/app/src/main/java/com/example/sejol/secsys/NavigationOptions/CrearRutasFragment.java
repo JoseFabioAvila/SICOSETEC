@@ -94,8 +94,8 @@ public class CrearRutasFragment extends Fragment {
         cardView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(view.getContext(),"card view agregar",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(view.getContext(),AgregarRutaActivity.class);
+                //Toast.makeText(view.getContext(),"card view agregar",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(),AgregarRutaActivity.class);
                 startActivity(intent);
             }
         });
