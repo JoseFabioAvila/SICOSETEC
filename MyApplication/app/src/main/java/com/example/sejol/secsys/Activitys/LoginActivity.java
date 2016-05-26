@@ -63,8 +63,7 @@ public class LoginActivity extends AppCompatActivity
         this.toolbar.setTitle("Regencias Agropecuarias");
     }
 
-    public void attemptLogin()
-            throws ParseException
+    public void attemptLogin() throws ParseException
     {
         this.mEmailView.setError(null);
         this.mPasswordView.setError(null);
@@ -105,10 +104,10 @@ public class LoginActivity extends AppCompatActivity
         loadUser(Correo, Constraseña);
     }
 
-    private void loadUser(String email, String password)
-            throws ParseException
+    private void loadUser(String email, String password) throws ParseException
     {
-
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 
     private boolean validarContraseña(String paramString)
