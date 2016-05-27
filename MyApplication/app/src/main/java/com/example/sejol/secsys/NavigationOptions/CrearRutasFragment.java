@@ -1,7 +1,6 @@
 package com.example.sejol.secsys.NavigationOptions;
 
 import android.content.Intent;
-import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -13,17 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sejol.secsys.Activitys.AgregarRutaActivity;
-import com.example.sejol.secsys.Activitys.CrearRondaActivity;
 import com.example.sejol.secsys.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by fabio on 21/5/2016.
@@ -77,13 +72,7 @@ public class CrearRutasFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_crear_rutas, container, false);
-    }
-    /////////////////////Crea la vista////////////////////////////////
-
-    ////////////////////Despues de crear la vista////////////////////
-    @Override
-    public void onViewCreated(final View view, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_crear_rutas, container, false);
 
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,arrayList));
@@ -94,8 +83,20 @@ public class CrearRutasFragment extends Fragment {
         cardView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(view.getContext(),"card view agregar",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(),AgregarRutaActivity.class);
+                /*Toast.makeText(view.getContext(),"card view agregar",Toast.LENGTH_SHORT).show();
+                //Intent intent = new Intent(getActivity(),AgregarRutaActivity2.class);
+                //startActivity(intent);
+
+                Intent intent = new Intent(getActivity(), AgregarRutaActivity2.class);
+                //((MainActivity) getActivity()).startActivity(intent);
+                //startActivity(intent);
+                //CrearRutasFragment.this.startActivity(intent);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                getActivity().startActivity(intent);*/
+                Intent intent = new Intent(getActivity(), AgregarRutaActivity.class);
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
                 startActivity(intent);
             }
         });
@@ -106,6 +107,16 @@ public class CrearRutasFragment extends Fragment {
                 Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
             }
         });
+
+        return view;
+    }
+    /////////////////////Crea la vista////////////////////////////////
+
+    ////////////////////Despues de crear la vista////////////////////
+    @Override
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
+
+
     }
     ////////////////////Despues de crear la vista////////////////////
 

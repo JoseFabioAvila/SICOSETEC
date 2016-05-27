@@ -15,9 +15,7 @@ import com.example.sejol.secsys.NavigationOptions.DescargarReportesFragment;
 import com.example.sejol.secsys.NavigationOptions.RealizarRutasFragment;
 import com.example.sejol.secsys.R;
 
-public class MainActivity
-        extends AppCompatActivity
-        implements  FragmentDrawer.FragmentDrawerListener{
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
 
     private static String TAG = MainActivity.class.getSimpleName();
 
@@ -51,7 +49,7 @@ public class MainActivity
         displayView(position);
     }
 
-    private void displayView(int position) {
+    public void displayView(int position) {
         Fragment fragment = null;
         String title = getString(R.string.app_name);
         switch (position) {

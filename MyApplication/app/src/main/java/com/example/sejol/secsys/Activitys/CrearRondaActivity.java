@@ -9,6 +9,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +20,7 @@ import android.widget.Toast;
 
 import com.example.sejol.secsys.R;
 
-public class CrearRondaActivity extends AppCompatActivity {
+public class CrearRondaActivity extends FragmentActivity {
 
     EditText cod;
     Button btnCrear;

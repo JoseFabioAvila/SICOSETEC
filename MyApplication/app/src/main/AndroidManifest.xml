@@ -55,8 +55,17 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activitys.AgregarRondaActivity" />
-        <activity android:name=".Activitys.AgregarRutaActivity" />
-        <activity android:name=".Activitys.CrearRondaActivity"></activity>
+        <activity android:name=".Activitys.AgregarRutaActivity2" />
+        <activity android:name=".Activitys.CrearRondaActivity" />
+        <activity
+            android:name=".Activitys.AgregarRutaActivity"
+            android:label="@string/title_activity_agregar_ruta"
+            android:parentActivityName=".Activitys.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.sejol.secsys.Activitys.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
