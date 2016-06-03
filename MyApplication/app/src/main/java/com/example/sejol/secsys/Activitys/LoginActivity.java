@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sejol.secsys.R;
+import com.example.sejol.secsys.Utilidades.NFC_Controller;
 import com.firebase.client.Firebase;
 
 import java.text.ParseException;
@@ -24,6 +25,7 @@ public class LoginActivity extends AppCompatActivity
     private EditText mPasswordView;
     private Toolbar toolbar;
 
+
     @Override
     protected void onCreate(Bundle paramBundle)
     {
@@ -32,6 +34,7 @@ public class LoginActivity extends AppCompatActivity
         cargarCredenciales();
         this.mEmailView = ((AutoCompleteTextView)findViewById(R.id.lngInCorreo));
         this.mPasswordView = ((EditText)findViewById(R.id.lngInContraseña));
+
         // Boton de iniciar sesión
         ((Button)findViewById(R.id.lngInBTNLogIn)).setOnClickListener(new View.OnClickListener()
         {
