@@ -61,9 +61,6 @@ public class CrearRutasFragment extends Fragment {
         arrayList.add("Hola 8");
         arrayList.add("Hola 9");
 
-
-
-
         saludo = "Toas mop!!!";
     }
     //////////////////////Segundo en ejecucion///////////////////////

@@ -21,14 +21,14 @@ android {
         }
     }
 
-    /*packagingOptions {
+    packagingOptions {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
     }
 
     dexOptions {
         javaMaxHeapSize "4g"
-    }*/
+    }
 }
 
 dependencies {
