@@ -128,16 +128,16 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if(read) {
-            //setIntent(intent);
-            tx = (TextView) fragment.getView().findViewById(R.id.fralgo);
-            //tx.setText(nfcController.leerPunto(intent));
-            lista.add(nfcController.leerPunto(intent));
+            //tx = (TextView) fragment.getView().findViewById(R.id.fralgo);
+            //lista.add(nfcController.leerPunto(intent));
 
-            setUpFragmentRealizarRutas();
-            lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lista));
+            //setUpFragmentRealizarRutas();
+            //lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lista));
+
+            Toast.makeText(this,nfcController.leerPunto(intent),Toast.LENGTH_SHORT).show();
         }
     }
-
+    /*
     public void setUpFragmentRealizarRutas(){
         if(first == 0) {
             lv = (ListView) fragment.getView().findViewById(R.id.frListViewRR);
@@ -149,6 +149,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             });
             first = -1;
         }
-    }
+    }*/
 
 }
