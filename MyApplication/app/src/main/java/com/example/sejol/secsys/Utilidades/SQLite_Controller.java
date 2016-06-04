@@ -5,8 +5,14 @@ package com.example.sejol.secsys.Utilidades;
  */
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.sejol.secsys.Clases.Ronda;
+import com.example.sejol.secsys.Clases.Usuario;
+
+import java.util.ArrayList;
 
 public class SQLite_Controller extends SQLiteOpenHelper {
 
@@ -91,23 +97,24 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         bd.close();
         return true;
     }
-    /*
-    public ArrayList<ListData> selectRondas(Usuario usuario){
-        String selectQuery = "SELECT  * FROM " + TABLE_NOMBRE;
+
+    public ArrayList<Ronda> selectRondas(Usuario usuario){
+        String selectQuery = "SELECT  * FROM " + TABLE_RONDA + "WHERE" +  COLUMN_USUARIO + " = " + usuario.getUsuario();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        ArrayList<ListData> arrayListData = new ArrayList<ListData>();
+        ArrayList<Ronda> arrayListData = new ArrayList<Ronda>();
         if (cursor.moveToFirst()) {
             do {
-                ListData list = new ListData();
-                list.setNombre(cursor.getString(0));
-                list.setDescription(cursor.getString(1));
-                list.setPrecio(cursor.getString(2));
-                arrayListData.add(list);
+                Ronda ronda = new Ronda();
+                ronda.setCodigo (cursor.getString(0));
+                ronda.setNombre (cursor.getString(1));
+                ronda.setUsuario(cursor.getString(2));
+                arrayListData.add(ronda);
             } while (cursor.moveToNext());
         }
         return arrayListData;
-    }*/
+    }
+
 
 }
 
