@@ -98,6 +98,22 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean validateUser(String usuario, String contraseña){
+        SQLiteDatabase bd = this.getReadableDatabase();
+
+        String selectQuery = "SELECT FROM " + TABLE_USUARIO + " WHERE " +
+                COLUMN_USUARIO + " = " + usuario + " AND " +
+                COLUMN_CONTRASEÑA + " = " + contraseña;
+
+        Cursor cursor = bd.rawQuery(selectQuery, null);
+        if(cursor.getCount() <= 0){
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
     public ArrayList<Ronda> selectRondas(Usuario usuario){
         String selectQuery = "SELECT  * FROM " + TABLE_RONDA + "WHERE" +  COLUMN_USUARIO + " = " + usuario.getUsuario();
         SQLiteDatabase db = this.getWritableDatabase();

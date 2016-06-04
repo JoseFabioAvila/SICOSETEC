@@ -32,19 +32,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:hint="Jose Pablo Gamboa Vargas"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Numero de Cedula"
-                android:textSize="15sp"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="207360131"/>
+                android:hint="Jose Pablo Gamboa Vargas"
+                android:id="@+id/txtNombre"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -55,7 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:hint="correo@gmail.com"/>
+                android:hint="correo@gmail.com"
+                android:id="@+id/txtCorreo"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,7 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="*******"/>
+                android:hint="*******"
+                android:id="@+id/txtContraseña"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -77,7 +68,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="*******"/>
+                android:hint="*******"
+                android:id="@+id/txtContraseña2"/>
 
         </LinearLayout>
     </ScrollView>

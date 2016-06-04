@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
+import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 import com.firebase.client.Firebase;
 
 import java.text.ParseException;
@@ -109,8 +110,18 @@ public class LoginActivity extends AppCompatActivity
 
     private void loadUser(String email, String password) throws ParseException
     {
-        Intent intent = new Intent(this,MainActivity.class);
-        startActivity(intent);
+        if(email != null && !password.isEmpty()){
+            SQLite_Controller db = new SQLite_Controller(this);
+            boolean respuesta = db.validateUser(email,password);
+            if (respuesta){
+                Intent intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+            }else{
+                Toast.makeText(this,"Usuario o contraseña incorrecto", Toast.LENGTH_SHORT);
+                mEmailView.setText("");
+                mPasswordView.setText("");
+            }
+        }
     }
 
     private boolean validarContraseña(String paramString)
