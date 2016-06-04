@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.sejol.secsys.Clases.Ronda;
+import com.example.sejol.secsys.Clases.Ruta;
 import com.example.sejol.secsys.Clases.Usuario;
 
 import java.util.ArrayList;
@@ -17,20 +18,33 @@ import java.util.ArrayList;
 public class SQLite_Controller extends SQLiteOpenHelper {
 
     public static final String DATABASE_NOMBRE = "SecsysBD.db";
+    //_________________________________________________________________
+    public static final String TABLE_USUARIO   = "TUsuario";
+    public static final String COLUMN_NOMBRE     = "nombre";
+    public static final String COLUMN_USUARIO    = "usuario";
+    public static final String COLUMN_CONTRASEÑA = "contraseña";
 
-    public static final String TABLE_USUARIO = "usuario";
-    public static final String COLUMN_NOMBRE        = "nombre";
-    public static final String COLUMN_USUARIO       = "usuario";
-    public static final String COLUMN_CONTRASEÑA    = "contraseña";
-
-    public static final String TABLE_RONDA = "ronda";
-    public static final String COLUMN_CODIGO_R = "codigo";
+    //_________________________________________________________________
+    public static final String TABLE_RONDA   = "TRonda";
+    public static final String COLUMN_ID_RND   = "codigo";
+    //public static final String COLUMN_NOMBRE = "nombre";
+    public static final String COLUMN_FECHA    = "fecha";
     public static final String REF_USUARIO     = "usuario";
 
-    public static final String TABLE_TAG   = "tag";
-    public static final String COLUMN_CODIGO_T = "codigo";
-    public static final String REF_RONDA       = "ronda";
-    public static final String COLUMN_POS      = "pos";
+    //_________________________________________________________________
+    public static final String TABLE_TAG_RND = "T_RND_Tag";
+    public static final String COLUMN_ID_TAG   = "codigo";
+    public static final String COLUMN_HORA     = "hora";
+    public static final String REF_RND         = "ronda";
+
+    //_________________________________________________________________
+    public static final String TABLE_RUTA    = "TRuta";
+    public static final String COLUMN_ID_RUT  = "codigo";
+
+    //_________________________________________________________________
+    public static final String TABLE_TAG_RUT  = "T_RUT_Tag";
+    //public static final String COLUMN_ID_TAG = "codigo";
+    public static final String REF_RUT         = "ruta";
 
     public SQLite_Controller(Context context) {
         super(context, DATABASE_NOMBRE, null, 1);
@@ -46,17 +60,28 @@ public class SQLite_Controller extends SQLiteOpenHelper {
 
         db.execSQL(
                 "create table " + TABLE_RONDA +
-                        "(" + COLUMN_CODIGO_R   + " text primary key," +
+                        "(" + COLUMN_ID_RND   + " text primary key," +
                               COLUMN_NOMBRE     + " text," +
+                              COLUMN_FECHA      + " text," +
                               REF_USUARIO       + " text," +
                              " FOREIGN KEY ("+REF_USUARIO+") REFERENCES "+TABLE_USUARIO+"("+COLUMN_USUARIO+"));");
 
         db.execSQL(
-                "create table " + TABLE_TAG +
-                        "(" + COLUMN_CODIGO_T   + " text primary key," +
-                              REF_RONDA         + " text, " +
-                              COLUMN_POS        + " text, " +
-                             " FOREIGN KEY ("+REF_RONDA+") REFERENCES "+TABLE_RONDA+"("+COLUMN_CODIGO_R+"));");
+                "create table " + TABLE_TAG_RND +
+                        "(" + COLUMN_ID_TAG   + " text primary key," +
+                              COLUMN_HORA     + " text," +
+                              REF_RND   + " text, " +
+                             " FOREIGN KEY ("+REF_RND+") REFERENCES "+TABLE_RONDA+"("+COLUMN_ID_RND+"));");
+
+        db.execSQL(
+                "create table " + TABLE_RUTA +
+                        "(" + COLUMN_ID_RUT   + " text primary key );" );
+
+        db.execSQL(
+                "create table " + TABLE_TAG_RUT +
+                        "(" + COLUMN_ID_TAG   + " text primary key," +
+                              REF_RUT   + " text, " +
+                        " FOREIGN KEY ("+REF_RUT+") REFERENCES "+TABLE_RUTA+"("+COLUMN_ID_RUT+"));");
     }
 
     @Override
@@ -76,47 +101,62 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean insertRonda(String codigo, String nombre, String usuario){
+
+    public boolean insertRonda(String codigo, String nombre, String fecha, String usuario){
         SQLiteDatabase bd = this.getWritableDatabase();
         ContentValues registro = new ContentValues();
-        registro.put(COLUMN_CODIGO_R , codigo);
+        registro.put(COLUMN_ID_RND , codigo);
         registro.put(COLUMN_NOMBRE, nombre);
+        registro.put(COLUMN_FECHA, fecha);
         registro.put(REF_USUARIO, usuario);
         bd.insert(TABLE_RONDA, null, registro);
         bd.close();
         return true;
     }
 
-    public boolean insertTag(String condigo, String ronda, String pos){
+    public boolean insertTagRND(String condigo, String hora, String ronda){
         SQLiteDatabase bd = this.getWritableDatabase();
         ContentValues registro = new ContentValues();
-        registro.put(COLUMN_CODIGO_T , condigo);
-        registro.put(REF_RONDA, ronda);
-        registro.put(COLUMN_POS, pos);
-        bd.insert(TABLE_TAG, null, registro);
+        registro.put(COLUMN_ID_TAG , condigo);
+        registro.put(COLUMN_HORA, hora);
+        registro.put(REF_RND, ronda);
+        bd.insert(TABLE_TAG_RND, null, registro);
         bd.close();
         return true;
     }
 
-    public boolean validateUser(String usuario, String contraseña){
+    public boolean insertRuta(String codigo){
+        SQLiteDatabase bd = this.getWritableDatabase();
+        ContentValues registro = new ContentValues();
+        registro.put(COLUMN_ID_RUT , codigo);
+        bd.insert(TABLE_RUTA, null, registro);
+        bd.close();
+        return true;
+    }
+
+    public boolean insertTagRUT(String condigo, String ronda){
+        SQLiteDatabase bd = this.getWritableDatabase();
+        ContentValues registro = new ContentValues();
+        registro.put(COLUMN_ID_TAG , condigo);
+        registro.put(REF_RUT, ronda);
+        bd.insert(TABLE_TAG_RUT, null, registro);
+        bd.close();
+        return true;
+    }
+
+    public Cursor getUsuario(String usuario, String contraseña)
+    {
         SQLiteDatabase bd = this.getReadableDatabase();
 
-        String selectQuery = "SELECT FROM " + TABLE_USUARIO + " WHERE " +
-                COLUMN_USUARIO + " = " + usuario + " AND " +
-                COLUMN_CONTRASEÑA + " = " + contraseña;
-
-        Cursor cursor = bd.rawQuery(selectQuery, null);
-        if(cursor.getCount() <= 0){
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
+        Cursor fila = bd.rawQuery("select * from " + TABLE_USUARIO +
+                " where " + COLUMN_USUARIO + " = '" + usuario + "'" +
+                " and " + COLUMN_CONTRASEÑA + " = '" + contraseña + "'", null);
+        return fila;
     }
 
     public ArrayList<Ronda> selectRondas(Usuario usuario){
         String selectQuery = "SELECT  * FROM " + TABLE_RONDA + "WHERE" +  COLUMN_USUARIO + " = " + usuario.getUsuario();
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         ArrayList<Ronda> arrayListData = new ArrayList<Ronda>();
         if (cursor.moveToFirst()) {
@@ -124,13 +164,29 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 Ronda ronda = new Ronda();
                 ronda.setCodigo (cursor.getString(0));
                 ronda.setNombre (cursor.getString(1));
-                ronda.setUsuario(cursor.getString(2));
+                ronda.setFecha  (cursor.getString(2));
+                ronda.setUsuario(cursor.getString(3));
                 arrayListData.add(ronda);
             } while (cursor.moveToNext());
         }
         return arrayListData;
     }
 
-
+    public ArrayList<Ruta> selectRuta(){
+        String selectQuery = "SELECT  * FROM " + TABLE_RUTA;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ArrayList<Ruta> arrayListData = new ArrayList<Ruta>();
+        if (cursor.moveToFirst()) {
+            do {
+                Ruta ruta = new Ruta();
+                ruta.setCodigo (cursor.getString(0));
+                ruta.setNombre (cursor.getString(1));
+                ruta.setUsuario(cursor.getString(2));
+                arrayListData.add(ruta);
+            } while (cursor.moveToNext());
+        }
+        return arrayListData;
+    }
 }
 

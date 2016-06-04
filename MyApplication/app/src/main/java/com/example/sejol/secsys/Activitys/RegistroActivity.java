@@ -1,5 +1,6 @@
 package com.example.sejol.secsys.Activitys;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -37,6 +38,7 @@ public class RegistroActivity extends AppCompatActivity {
                         nombre.getText().toString(),
                         correo.getText().toString(),
                         contra.getText().toString());
+                startActivity(new Intent(RegistroActivity.this,LoginActivity.class));
             }
         });
     }

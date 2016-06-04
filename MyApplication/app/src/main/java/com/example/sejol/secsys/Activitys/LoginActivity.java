@@ -2,6 +2,7 @@ package com.example.sejol.secsys.Activitys;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -108,19 +109,30 @@ public class LoginActivity extends AppCompatActivity
         loadUser(Correo, Constraseña);
     }
 
-    private void loadUser(String email, String password) throws ParseException
+    private void loadUser(String email, String password)
     {
-        if(email != null && !password.isEmpty()){
+        if(!mEmailView.getText().toString().equals("") && !mPasswordView.getText().toString().equals(""))
+        {
             SQLite_Controller db = new SQLite_Controller(this);
-            boolean respuesta = db.validateUser(email,password);
-            if (respuesta){
-                Intent intent = new Intent(this,MainActivity.class);
-                startActivity(intent);
-            }else{
-                Toast.makeText(this,"Usuario o contraseña incorrecto", Toast.LENGTH_SHORT);
-                mEmailView.setText("");
-                mPasswordView.setText("");
+
+            Cursor cursor = db.getUsuario(mEmailView.getText().toString(), mPasswordView.getText().toString());
+
+            if(!cursor.moveToFirst())
+            {
+                Toast.makeText(getApplicationContext(), "Usuario o contraseña inválidos", Toast.LENGTH_SHORT).show();
             }
+            else
+            {
+                guardarCredenciales(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), "Favor completar todos los campos", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -144,9 +156,8 @@ public class LoginActivity extends AppCompatActivity
             loadUser(str1, str2);
             return;
         }
-        catch (ParseException localParseException)
+        catch (Exception e)
         {
-            localParseException.printStackTrace();
         }
     }
 

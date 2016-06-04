@@ -3,16 +3,15 @@ package com.example.sejol.secsys.Clases;
 /**
  * Created by sejol on 4/6/2016.
  */
-public class Ronda {
-    private String codigo,nombre,fecha,usuario;
+public class Ruta {
+    private String codigo,nombre,usuario;
 
-    public Ronda() {
+    public Ruta() {
     }
 
-    public Ronda(String codigo, String nombre, String fecha, String usuario) {
+    public Ruta(String codigo, String nombre, String usuario) {
         this.codigo = codigo;
         this.nombre = nombre;
-        this.fecha = fecha;
         this.usuario = usuario;
     }
 
@@ -30,14 +29,6 @@ public class Ronda {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
     }
 
     public String getUsuario() {
