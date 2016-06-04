@@ -9,6 +9,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +21,8 @@ import com.example.sejol.secsys.NavigationOptions.DescargarReportesFragment;
 import com.example.sejol.secsys.NavigationOptions.RealizarRutasFragment;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
 
@@ -33,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
 
     TextView tx;
+    ListView lv;
+    ArrayList<String> lista = new ArrayList<String>();
+    int first;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         switch (position) {
             case 0:
                 read = true;
+                first = 0;
                 fragment = new RealizarRutasFragment();
                 title = getString(R.string.title_adm_realizar);
                 break;
@@ -121,7 +130,24 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if(read == true) {
             //setIntent(intent);
             tx = (TextView) fragment.getView().findViewById(R.id.fralgo);
-            tx.setText(nfcController.leerPunto(intent));
+            //tx.setText(nfcController.leerPunto(intent));
+            lista.add(nfcController.leerPunto(intent));
+
+            setUpFragmentRealizarRutas();
+            lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lista));
+        }
+    }
+
+    public void setUpFragmentRealizarRutas(){
+        if(first == 0) {
+            lv = (ListView) fragment.getView().findViewById(R.id.frListViewRR);
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(getApplicationContext(),lista.get(position).toString(),Toast.LENGTH_SHORT).show();
+                }
+            });
+            first = -1;
         }
     }
 

@@ -111,7 +111,7 @@ public class NFC_Controller {
             * Aqui se agregara a la base de datos dummy la posicion del mapa y el codigo del tag;
             *
             * */
-            Toast.makeText(context,code,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context,code,Toast.LENGTH_SHORT).show();
             permitir = false;
         }
     }
@@ -134,7 +134,7 @@ public class NFC_Controller {
     private void writeNdefMessage(Tag tag , NdefMessage ndefMessage) {
         try {
             if (tag == null ){
-                Toast. makeText(context, "Tab object error" , Toast. LENGTH_LONG ).show();
+                //Toast. makeText(context, "Tab object error" , Toast. LENGTH_LONG ).show();
                 return;
             }
             Ndef ndef = Ndef. get(tag);
@@ -144,13 +144,13 @@ public class NFC_Controller {
             } else {
                 ndef.connect();
                 if (!ndef.isWritable()){
-                    Toast. makeText ( context , "Tag is not writeable" , Toast. LENGTH_LONG ).show();
+                    //Toast. makeText ( context , "Tag is not writeable" , Toast. LENGTH_LONG ).show();
                     ndef.close();
                     return;
                 }
                 ndef.writeNdefMessage(ndefMessage);
                 ndef.close();
-                Toast. makeText ( context , "Tag writen!" , Toast. LENGTH_LONG ).show();
+                //Toast. makeText ( context , "Tag writen!" , Toast. LENGTH_LONG ).show();
             }
         } catch (Exception e){
             Log. e("formatTag", e.getMessage());
@@ -161,13 +161,13 @@ public class NFC_Controller {
         try {
             NdefFormatable ndefFormatable = NdefFormatable. get(tag);
             if (ndefFormatable == null ){
-                Toast. makeText ( context , "Tag is not ndef fomatable" , Toast. LENGTH_LONG ).show();
+                //Toast. makeText ( context , "Tag is not ndef fomatable" , Toast. LENGTH_LONG ).show();
                 return;
             }
             ndefFormatable.connect();
             ndefFormatable.format(ndefMessage);
             ndefFormatable.close();
-            Toast. makeText ( context , "Tag format OK" , Toast. LENGTH_LONG ).show();
+            //Toast. makeText ( context , "Tag format OK" , Toast. LENGTH_LONG ).show();
         } catch (Exception e){
             Log. e ( "formatTag" , e.getMessage());
         }
@@ -183,12 +183,12 @@ public class NFC_Controller {
                 if(mTextView.getText() == "Lectura NFC activado") {
                     readTextFromMessage((NdefMessage) parcelables[0], listView, rondas, adapter);
                 }else{
-                    Toast.makeText(context, "Lectura desactivada", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Lectura desactivada", Toast.LENGTH_SHORT).show();
                 }
             }
             else
             {
-                Toast.makeText(context, "No se econtro mensaje de la etiqueta!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "No se econtro mensaje de la etiqueta!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -202,7 +202,7 @@ public class NFC_Controller {
             }
             else
             {
-                Toast.makeText(context, "No se econtro mensaje de la etiqueta!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "No se econtro mensaje de la etiqueta!", Toast.LENGTH_SHORT).show();
                 return "";
             }
         }
@@ -233,7 +233,7 @@ public class NFC_Controller {
             rondas.add(tagContent + " - Fecha: " + fecha + ", Hora: " + hora);
             listView.setAdapter(adapter);
         }else{
-            Toast.makeText(context, "No hay datos en la etiqueta!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "No hay datos en la etiqueta!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -258,10 +258,10 @@ public class NFC_Controller {
                 hora +=" a.m";
             }
 
-            Toast.makeText(context,tagContent + " - Fecha: " + fecha + ", Hora: " + hora,Toast.LENGTH_LONG).show();
+            //Toast.makeText(context,tagContent + " - Fecha: " + fecha + ", Hora: " + hora,Toast.LENGTH_LONG).show();
             return tagContent + " - Fecha: " + fecha + ", Hora: " + hora;
         }else{
-            Toast.makeText(context, "No hay datos en la etiqueta!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "No hay datos en la etiqueta!", Toast.LENGTH_SHORT).show();
             return "";
         }
     }
