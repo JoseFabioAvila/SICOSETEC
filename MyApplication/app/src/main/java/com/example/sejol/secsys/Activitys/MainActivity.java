@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if(read == true) {
+        if(read) {
             //setIntent(intent);
             tx = (TextView) fragment.getView().findViewById(R.id.fralgo);
             //tx.setText(nfcController.leerPunto(intent));
