@@ -2,7 +2,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_fantasma">Fantasma</string>
-    <string name="title_activity_agregar_ruta">AgregarRutaActivity</string>
+    <string name="title_activity_agregar_ruta">Crear Ruta</string>
 
 </resources>

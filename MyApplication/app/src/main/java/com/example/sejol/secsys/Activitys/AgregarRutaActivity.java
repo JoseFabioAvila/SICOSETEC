@@ -3,22 +3,12 @@ package com.example.sejol.secsys.Activitys;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
-import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,34 +23,35 @@ import android.widget.Toast;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.GPS_Tracker;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
-import com.google.android.gms.maps.model.LatLng;
+import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 
-import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.HashMap;
+import java.util.Random;
 
 public class AgregarRutaActivity extends AppCompatActivity {
 
-    List rondas = new ArrayList<>();
+    List PntsTagRuta = new ArrayList<>();
+    SQLite_Controller db;
 
     ArrayAdapter<String> adapter;
 
-    public static final String TAG = "NfcDemo";
-
-    private TextView mTextView;
     private NFC_Controller nfcController;
     private ListView listView;
+    private TextView txtNombre;
 
     private boolean dialog = false;
     int codigoTag = 0;
     CustomDialogClass cdd;
+    String codigo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_ruta);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -68,10 +59,6 @@ public class AgregarRutaActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(getApplicationContext(), CrearRondaActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);*/
-
                 cdd = new CustomDialogClass(AgregarRutaActivity.this);
                 cdd.show();
             }
@@ -79,43 +66,26 @@ public class AgregarRutaActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mTextView = (TextView) findViewById(R.id.textViewAR);
-
+        db = new SQLite_Controller(this);
+        txtNombre= (TextView) findViewById(R.id.txtAddRutNombre);
         listView = (ListView) findViewById(R.id.listViewAR);
         adapterSet();
 
         nfcController = new NFC_Controller(this, 2);
 
         if (!nfcController.mNfcAdapter.isEnabled()) {
-            mTextView.setText("Lectura NFC desactivado");
+            Toast.makeText(this,"Lectura NFC desactivado",Toast.LENGTH_SHORT).show();
         } else {
-            mTextView.setText("Lectura NFC activado");
+            Toast.makeText(this,"Lectura NFC activado",Toast.LENGTH_SHORT).show();
         }
-
-        mTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mTextView.getText() == "Lectura NFC activado") {
-                    mTextView.setText("Lectura NFC desactivado");
-                } else {
-                    mTextView.setText("Lectura NFC activado");
-                }
-            }
-        });
     }
 
-    public void adapterSet() {
-        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, rondas);
+    private void adapterSet() {
+        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, PntsTagRuta);
         listView.setAdapter(adapter);
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        alerta();
-    }
-
-    public void alerta()
+    private void alerta()
     {
         new AlertDialog.Builder(this)
                 .setTitle("Atención!")
@@ -123,6 +93,9 @@ public class AgregarRutaActivity extends AppCompatActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int which) {
+                        String nombre = txtNombre.getText().toString();
+                        codigo = crearCodigoRuta(nombre);
+                        db.insertRuta(codigo,nombre);
                         finish();
                     }
                 })
@@ -133,8 +106,15 @@ public class AgregarRutaActivity extends AppCompatActivity {
 
                     }
                 })
-                //.setIcon(R.drawable.warning_icon)
                 .show();
+    }
+
+    private String crearCodigoRuta(String nombre){
+        String fecha = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        Random randomGenerator = new Random();
+        int RndNum = randomGenerator.nextInt(1000);
+
+        return nombre+"-"+fecha+"-"+RndNum;
     }
 
     @Override
@@ -142,7 +122,12 @@ public class AgregarRutaActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         if (dialog) {
             GPS_Tracker gps_tracker = new GPS_Tracker(this);
-            nfcController.write(intent, String.valueOf(codigoTag)+" "+gps_tracker.getLongitude()+" "+gps_tracker.getLatitude(), listView, rondas, adapter);
+            String codigo = String.valueOf(codigoTag)+" "+gps_tracker.getLongitude()+" "+gps_tracker.getLatitude();
+
+            PntsTagRuta.add(codigo);
+            nfcController.write(intent, codigo);
+
+            listView.setAdapter(adapter);
             cdd.dismiss();
             dialog = false;
         }
@@ -163,7 +148,7 @@ public class AgregarRutaActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_agregar_ruta, menu);
         return true;
     }
 
@@ -172,37 +157,30 @@ public class AgregarRutaActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        //int id = item.getItemId();
+        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_creacion_de_rondas) {
-            Intent intent = new Intent(this,CrearRondaActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+        if (id == R.id.action_guardar_ruta) {
+            alerta();
             return true;
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
     public class CustomDialogClass extends Dialog implements android.view.View.OnClickListener {
-
-        public Dialog d;
-        public EditText editText;
         TextView textView1;
-        public Button yes, no;
 
         public CustomDialogClass(Activity a) {
             super(a);
             dialog = true;
-            // TODO Auto-generated constructor stub
         }
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.write_tag);
+            setContentView(R.layout.popup_write_tag);
 
             codigoTag++;
 
@@ -216,55 +194,3 @@ public class AgregarRutaActivity extends AppCompatActivity {
         }
     }
 }
-
-            /*yes = (Button) findViewById(R.id.btn_yes);
-            no = (Button) findViewById(R.id.btn_no);
-            editText = (EditText) findViewById(R.id.codigo);
-
-            editText.addTextChangedListener(new TextWatcher()
-            {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after)
-                {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count)
-                {
-                    if(s.toString().equals(""))
-                    {
-                        codigoTag = "";
-                    }
-                    else
-                    {
-                        codigoTag = s.toString();
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s)
-                {
-                }
-            });
-
-            //yes.setOnClickListener(this);
-            no.setOnClickListener(this);
-
-        }
-
-
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.btn_no:
-                    dialog = false;
-                    dismiss();
-                    break;
-                default:
-                    break;
-            }
-            dismiss();
-        }*/
-

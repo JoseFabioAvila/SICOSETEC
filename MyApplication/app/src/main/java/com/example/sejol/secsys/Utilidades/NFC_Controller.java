@@ -125,17 +125,6 @@ public class NFC_Controller {
         }
     }
 
-    public void write(Intent intent , String code, ListView listView, List rondas, ArrayAdapter<String> adapter){
-        if (intent.hasExtra(NfcAdapter. EXTRA_TAG ))
-        {
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            NdefMessage ndefMessage = createNdefMessage(code);
-            writeNdefMessage(tag, ndefMessage);
-            rondas.add(code);
-            listView.setAdapter(adapter);
-        }
-    }
-
     private NdefMessage createNdefMessage(String contect){
         NdefRecord ndefRecord = NdefRecord.createUri(contect);
         NdefMessage ndefMessage = new NdefMessage(new NdefRecord[]{ndefRecord});

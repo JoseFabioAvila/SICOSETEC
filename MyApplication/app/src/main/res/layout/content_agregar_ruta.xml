@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,19 +10,34 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Activitys.AgregarRutaActivity"
-    tools:showIn="@layout/activity_agregar_ruta">
+    tools:showIn="@layout/activity_agregar_ruta"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textViewAR"
-        android:layout_gravity="center_horizontal" />
+        android:text="Nombre"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20dp"
+        android:textColor="@android:color/black"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:id="@+id/txtAddRutNombre"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ronda"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20dp"
+        android:textColor="@android:color/black"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listViewAR" />
+        android:id="@+id/listViewAR"
+        android:layout_margin="5dp"/>
 
-</RelativeLayout>
+</LinearLayout>

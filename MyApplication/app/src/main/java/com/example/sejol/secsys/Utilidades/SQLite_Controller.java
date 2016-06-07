@@ -75,7 +75,8 @@ public class SQLite_Controller extends SQLiteOpenHelper {
 
         db.execSQL(
                 "create table " + TABLE_RUTA +
-                        "(" + COLUMN_ID_RUT   + " text primary key );" );
+                        "(" + COLUMN_ID_RUT   + " text primary key," +
+                              COLUMN_NOMBRE   + " text);" );
 
         db.execSQL(
                 "create table " + TABLE_TAG_RUT +
@@ -125,10 +126,11 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean insertRuta(String codigo){
+    public boolean insertRuta(String codigo,String nombre){
         SQLiteDatabase bd = this.getWritableDatabase();
         ContentValues registro = new ContentValues();
         registro.put(COLUMN_ID_RUT , codigo);
+        registro.put(COLUMN_NOMBRE , nombre);
         bd.insert(TABLE_RUTA, null, registro);
         bd.close();
         return true;
