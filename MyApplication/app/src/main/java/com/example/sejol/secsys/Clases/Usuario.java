@@ -1,10 +1,14 @@
 package com.example.sejol.secsys.Clases;
 
+import java.io.Serializable;
+
 /**
  * Created by sejol on 4/6/2016.
  */
-public class Usuario {
+public class Usuario implements Serializable{
     private String nombre,usuario,contraseña;
+
+    public Usuario(){}
 
     public Usuario(String nombre, String usuario, String contraseña) {
         this.nombre = nombre;

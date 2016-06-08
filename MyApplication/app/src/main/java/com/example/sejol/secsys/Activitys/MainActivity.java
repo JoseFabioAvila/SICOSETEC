@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.sejol.secsys.Adapters.FragmentDrawer;
 import com.example.sejol.secsys.Clases.Tag;
+import com.example.sejol.secsys.Clases.Usuario;
 import com.example.sejol.secsys.NavigationOptions.CrearRutasFragment;
 import com.example.sejol.secsys.NavigationOptions.DescargarReportesFragment;
 import com.example.sejol.secsys.NavigationOptions.RealizarRutasFragment;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private NFC_Controller nfcController; // Controlador de NFC
     int first;
 
+    Usuario usuario;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +52,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         nfcController = new NFC_Controller(this, 3);
+
+        Intent intent = getIntent();
+        usuario = (Usuario) intent.getSerializableExtra("usuario");
 
         if (nfcController.mNfcAdapter == null) {
             Toast.makeText(this, "Su dispositivo no soporta la tecnologia NFC", Toast.LENGTH_LONG).show();
@@ -110,6 +116,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         // Do fragment display transaction
         if (fragment != null) {
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("usuario", usuario);
+            fragment.setArguments(bundle);
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_body, fragment);

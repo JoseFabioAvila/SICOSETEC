@@ -2,7 +2,9 @@ package com.example.sejol.secsys.NavigationOptions;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Ruta;
 import com.example.sejol.secsys.Clases.Tag;
+import com.example.sejol.secsys.Clases.Usuario;
 import com.example.sejol.secsys.Popup.PopupSeleccionarRuta;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
@@ -36,6 +39,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -66,6 +70,7 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     Tag[] estadoDeRonda; // Estado del recorrido de la ruta --> Tag de la ronda
     Ronda ronda; // Ronda --> Conjunto de tags
 
+    Usuario usuario;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,13 +80,15 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
 
         db = new SQLite_Controller(v.getContext());
 
+        usuario = (Usuario) getArguments().getSerializable("usuario");
+
         // Boton para seleccionar una ruta
-        ImageButton btnSeleccionarRuta = (ImageButton)v.findViewById(R.id.btnMapSelecRuta);
-        btnSeleccionarRuta.setOnClickListener(new View.OnClickListener(){
+        ImageButton btnSeleccionarRuta = (ImageButton) v.findViewById(R.id.btnMapSelecRuta);
+        btnSeleccionarRuta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(v.getContext(), PopupSeleccionarRuta.class);
-                startActivityForResult(i,1);
+                startActivityForResult(i, 1);
             }
         });
 
@@ -95,6 +102,9 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
         // Ubicacion de de la camara en el mapa donde se encuentra el usuario
         mMap = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapRR)).getMap();
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return null;
+        }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
 
         return v;
@@ -102,9 +112,9 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(data != null){
+        if (data != null) {
             mMap.clear();
-            Ruta ruta = (Ruta)data.getSerializableExtra("ruta");
+            Ruta ruta = (Ruta) data.getSerializableExtra("ruta");
             ronda = crearIdRonda(ruta);
 
             puntosPorRecorrer = db.getTagsDeRutaPorRuta(ruta.getCodigo());
@@ -114,24 +124,24 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
         }
     }
 
-    private Ronda crearIdRonda(Ruta ruta){
+    private Ronda crearIdRonda(Ruta ruta) {
 
         Ronda ronda = new Ronda();
         String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
 
-        ronda.setCodigo(ruta.getCodigo()+fecha);
+        ronda.setCodigo(ruta.getCodigo() + fecha);
         ronda.setNombre(ruta.getNombre());
         ronda.setFecha(fecha);
 
         return ronda;
     }
 
-    private void displayMarkerPuntosPorRecorrer(){
-        for(Tag tag:puntosPorRecorrer){
+    private void displayMarkerPuntosPorRecorrer() {
+        for (Tag tag : puntosPorRecorrer) {
             String[] tagData = tag.getCodigo().split("_");
             double lng = Double.parseDouble(tagData[2]);
             double lat = Double.parseDouble(tagData[3]);
-            LatLng ll = new LatLng(lat,lng);
+            LatLng ll = new LatLng(lat, lng);
 
             BitmapDescriptor icon =
                     BitmapDescriptorFactory.fromResource(R.drawable.map_icon_sinrecorrer);
@@ -153,13 +163,13 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     }
 
     public void ActualizarRonda(Tag lectura) {
-        for(int i = 0 ; i<puntosPorRecorrer.size() ; i++){
-            if(puntosPorRecorrer.get(i).getCodigo().equals(lectura.getCodigo())){
+        for (int i = 0; i < puntosPorRecorrer.size(); i++) {
+            if (puntosPorRecorrer.get(i).getCodigo().equals(lectura.getCodigo())) {
 
                 Tag nuevoTag = new Tag();
                 String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
 
-                nuevoTag.setCodigo(lectura.getCodigo()+fecha);
+                nuevoTag.setCodigo(lectura.getCodigo() + fecha);
                 nuevoTag.setRonda(ronda.getCodigo());
                 nuevoTag.setHora(fecha);
 
@@ -170,6 +180,7 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
             }
         }
     }
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////   Menu
@@ -190,26 +201,50 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_guardar_ronda:
-                // Almacenar ronda en la base de datos
-                db.insertRonda(ronda.getCodigo(),ronda.getNombre(),ronda.getFecha(),"Pepito");
-                for (int i = 0; i < puntosPorRecorrer.size(); i++) {
-                    if(estadoDeRonda[i] != null)
-                        db.insertTagRND(
-                                estadoDeRonda[i].getCodigo(),
-                                estadoDeRonda[i].getHora(),
-                                estadoDeRonda[i].getRonda()); // Almacenar tag y asignarlo a la ruta creada
-                    else
-                        db.insertTagRND(
-                                puntosPorRecorrer.get(i).getCodigo(),
-                                " No se realizó",
-                                puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
-                }
-                Intent i = new Intent(v.getContext(),DescargarReportesFragment.class);
+                alerta();
+                Intent i = new Intent(v.getContext(), DescargarReportesFragment.class);
                 startActivity(i);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /*
+        Mostrar dialogo para confirmación de guardado
+     */
+    private void alerta()
+    {
+        new AlertDialog.Builder(v.getContext())
+                .setTitle("Atención!")
+                .setMessage("¿Desea crear esta ruta?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Almacenar ronda en la base de datos
+                        db.insertRonda(ronda.getCodigo(), ronda.getNombre(), ronda.getFecha(), usuario.getUsuario());
+                        for (int i = 0; i < puntosPorRecorrer.size(); i++) {
+                            if (estadoDeRonda[i] != null)
+                                db.insertTagRND(
+                                        estadoDeRonda[i].getCodigo(),
+                                        estadoDeRonda[i].getHora(),
+                                        estadoDeRonda[i].getRonda()); // Almacenar tag y asignarlo a la ruta creada
+                            else
+                                db.insertTagRND(
+                                        puntosPorRecorrer.get(i).getCodigo(),
+                                        " No se realizó",
+                                        puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+
+                    }
+                })
+                .show();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,7 +277,7 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(v.getContext(),"Holis",Toast.LENGTH_SHORT);
+                Toast.makeText(v.getContext(), "Holis", Toast.LENGTH_SHORT);
                 return false;
             }
 
@@ -268,6 +303,9 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(UserLatLng, 10);
 
         mMap.animateCamera(cameraUpdate);
+        if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         locationManager.removeUpdates(this);
     }
 

@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sejol.secsys.Clases.Usuario;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
@@ -115,9 +116,9 @@ public class LoginActivity extends AppCompatActivity
         {
             SQLite_Controller db = new SQLite_Controller(this);
 
-            Cursor cursor = db.getUsuario(email,password);
+            Usuario usuario = db.getUsuario(email,password);
 
-            if(!cursor.moveToFirst())
+            if(usuario == null)
             {
                 Toast.makeText(getApplicationContext(), "Usuario o contraseña inválidos", Toast.LENGTH_SHORT).show();
             }
@@ -125,9 +126,8 @@ public class LoginActivity extends AppCompatActivity
             {
                 guardarCredenciales(email, password);
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("usuario",usuario);
                 startActivity(intent);
-                finish();
             }
         }
         else

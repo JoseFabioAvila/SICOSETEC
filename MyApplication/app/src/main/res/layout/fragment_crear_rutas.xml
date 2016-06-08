@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="15dp"
-                android:text="Mis Rondas"
+                android:text="Mis Rutas"
                 android:layout_marginTop="10dp"
                 android:paddingBottom="8dp"
                 android:layout_alignParentTop="true"

@@ -103,14 +103,24 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return true;
     }
 
-    public Cursor getUsuario(String usuario, String contraseña)
+    public Usuario getUsuario(String usuario, String contraseña)
     {
         SQLiteDatabase bd = this.getReadableDatabase();
 
-        Cursor fila = bd.rawQuery("select * from " + TABLE_USUARIO +
+        Cursor cursor = bd.rawQuery("select * from " + TABLE_USUARIO +
                 " where " + COLUMN_USUARIO + " = '" + usuario + "'" +
                 " and " + COLUMN_CONTRASEÑA + " = '" + contraseña + "'", null);
-        return fila;
+
+        Usuario mae = new Usuario();
+
+        if (cursor.moveToFirst()) {
+            do {
+                mae.setUsuario (cursor.getString(0));
+                mae.setContraseña (cursor.getString(1));
+                mae.setNombre  (cursor.getString(2));
+            } while (cursor.moveToNext());
+        }
+        return mae;
     }
 
     public boolean insertRonda(String codigo, String nombre, String fecha, String usuario){
