@@ -1,18 +1,19 @@
 package com.example.sejol.secsys.Clases;
 
+import java.io.Serializable;
+
 /**
  * Created by sejol on 4/6/2016.
  */
-public class Ruta {
-    private String codigo,nombre,usuario;
+public class Ruta implements Serializable{
+    private String codigo,nombre;
 
     public Ruta() {
     }
 
-    public Ruta(String codigo, String nombre, String usuario) {
+    public Ruta(String codigo, String nombre) {
         this.codigo = codigo;
         this.nombre = nombre;
-        this.usuario = usuario;
     }
 
     public String getCodigo() {
@@ -29,13 +30,5 @@ public class Ruta {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
     }
 }

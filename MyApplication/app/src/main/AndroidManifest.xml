@@ -65,6 +65,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.sejol.secsys.Activitys.MainActivity" />
         </activity>
+        <activity
+            android:name=".Popup.PopupSeleccionarRuta"
+            android:theme="@style/AppTheme.CustomPopup" ></activity>
     </application>
 
 </manifest>

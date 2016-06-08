@@ -16,8 +16,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.sejol.secsys.Clases.Ronda;
+import com.example.sejol.secsys.Clases.Ruta;
+import com.example.sejol.secsys.Clases.Tag;
+import com.example.sejol.secsys.Popup.PopupSeleccionarRuta;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
+import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -50,13 +55,30 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
 
-    ImageButton btnFiltro;
+    ImageButton btnSeleccionarRuta;
+
+    SQLite_Controller db;
+    ArrayList<Tag> puntosPorRecorrer;
+    Ronda ronda;
+    ArrayList<Tag> estadoDeRonda;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_realizar_rutas, container, false);
+
+        db = new SQLite_Controller(v.getContext());
+
+        // Boton para seleccionar una ruta
+        btnSeleccionarRuta = (ImageButton)v.findViewById(R.id.btnMapSelecRuta);
+        btnSeleccionarRuta.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(v.getContext(), PopupSeleccionarRuta.class);
+                startActivityForResult(i,1);
+            }
+        });
 
         // Button for positioning on actual position
         setUpMapIfNeeded();
@@ -73,9 +95,18 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
         return v;
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mMap.clear();
+        Ruta ruta = (Ruta)data.getSerializableExtra("ruta");
+        puntosPorRecorrer = db.getTagsDeRuta(ruta.getCodigo());
+        Toast.makeText(v.getContext(),ruta.getNombre(),Toast.LENGTH_SHORT).show();
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////   Configurar mapa
     ///////////////////////////////////////////////////////////////////////////////////////////////
+
     private void setUpMapIfNeeded() {
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.

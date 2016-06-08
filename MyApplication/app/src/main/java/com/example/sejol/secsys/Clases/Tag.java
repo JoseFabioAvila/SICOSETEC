@@ -4,12 +4,15 @@ package com.example.sejol.secsys.Clases;
  * Created by sejol on 4/6/2016.
  */
 public class Tag {
-    private String codigo,ronda,pos;
+    private String codigo,ronda;
 
-    public Tag(String codigo, String ronda, String pos) {
+    public Tag(){
+
+    }
+
+    public Tag(String codigo, String ronda) {
         this.codigo = codigo;
         this.ronda = ronda;
-        this.pos = pos;
     }
 
     public String getCodigo() {
@@ -26,13 +29,5 @@ public class Tag {
 
     public void setRonda(String ronda) {
         this.ronda = ronda;
-    }
-
-    public String getPos() {
-        return pos;
-    }
-
-    public void setPos(String pos) {
-        this.pos = pos;
     }
 }

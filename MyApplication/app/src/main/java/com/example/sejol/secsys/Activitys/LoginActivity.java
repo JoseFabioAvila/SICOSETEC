@@ -111,11 +111,11 @@ public class LoginActivity extends AppCompatActivity
 
     private void loadUser(String email, String password)
     {
-        if(!mEmailView.getText().toString().equals("") && !mPasswordView.getText().toString().equals(""))
+        if(!email.equals("") && !password.equals(""))
         {
             SQLite_Controller db = new SQLite_Controller(this);
 
-            Cursor cursor = db.getUsuario(mEmailView.getText().toString(), mPasswordView.getText().toString());
+            Cursor cursor = db.getUsuario(email,password);
 
             if(!cursor.moveToFirst())
             {
@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity
             }
             else
             {
-                guardarCredenciales(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                guardarCredenciales(email, password);
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -158,6 +158,7 @@ public class LoginActivity extends AppCompatActivity
         }
         catch (Exception e)
         {
+            Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
         }
     }
 
