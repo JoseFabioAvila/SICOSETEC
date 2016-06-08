@@ -52,8 +52,6 @@ public class CrearRutasFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-    //////////////////////Segundo en ejecucion///////////////////////
-
     /////////////////////Crea la vista////////////////////////////////
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,22 +91,6 @@ public class CrearRutasFragment extends Fragment {
 
         return view;
     }
-    /////////////////////Crea la vista////////////////////////////////
-
-    ////////////////////Despues de crear la vista////////////////////
-    @Override
-    public void onViewCreated(final View view, Bundle savedInstanceState) {
-
-
-    }
-    ////////////////////Despues de crear la vista////////////////////
-
-    ////////////////////Forma segura de buscar cosas en el activity padre////////////////////
-    /*@Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }*/
-    ////////////////////Forma segura de buscar cosas en el activity padre////////////////////
 
     //////////////////para menu//////////////////////////////////
     @Override

@@ -2,8 +2,11 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/action_hola"
+        android:id="@+id/action_guardar_ronda"
         android:orderInCategory="100"
-        android:title="hola" app:showAsAction="never" />
+        android:icon="@drawable/ic_action_save"
+        app:showAsAction="always"
+        android:title="Save" />
 </menu>

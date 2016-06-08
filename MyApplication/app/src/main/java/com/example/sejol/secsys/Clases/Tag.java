@@ -4,7 +4,7 @@ package com.example.sejol.secsys.Clases;
  * Created by sejol on 4/6/2016.
  */
 public class Tag {
-    private String codigo,ronda;
+    private String codigo,ronda,hora;
 
     public Tag(){
 
@@ -29,5 +29,13 @@ public class Tag {
 
     public void setRonda(String ronda) {
         this.ronda = ronda;
+    }
+
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
     }
 }

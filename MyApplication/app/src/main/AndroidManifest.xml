@@ -54,7 +54,6 @@
             android:name=".Activitys.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activitys.AgregarRondaActivity" />
         <activity android:name=".Activitys.CrearRondaActivity" />
         <activity
             android:name=".Activitys.AgregarRutaActivity"

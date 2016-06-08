@@ -192,10 +192,10 @@ public class NFC_Controller {
             }
         }
     }
-
+    /*
     public String leerPunto(Intent intent){
         if (intent.hasExtra(NfcAdapter.EXTRA_TAG)) {
-            Parcelable[] parcelables = intent. getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+            Parcelable[] parcelables = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
             if(parcelables != null && parcelables.length > 0)
             {
                 return readTextFromMessage((NdefMessage) parcelables[0]);
@@ -207,6 +207,44 @@ public class NFC_Controller {
             }
         }
         return "";
+    }*/
+    public String leerPunto(Intent intent) {
+        String action = intent.getAction();
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)
+                || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
+                || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+            Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+            NdefMessage[] msgs = null;
+            if (rawMsgs != null) {
+                msgs = new NdefMessage[rawMsgs.length];
+                for (int i = 0; i < rawMsgs.length; i++) {
+                    msgs[i] = (NdefMessage) rawMsgs[i];
+                }
+            }
+            return buildTagViews(msgs);
+        }
+        return "";
+    }
+
+    private String buildTagViews(NdefMessage[] msgs) {
+        if (msgs == null || msgs.length == 0)
+            return "";
+
+        String text = "";
+        //  String tagId = new String(msgs[0].getRecords()[0].getType());
+        byte[] payload = msgs[0].getRecords()[0].getPayload();
+        String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16"; // Get the Text Encoding
+        int languageCodeLength = payload[0] & 0063; // Get the Language Code, e.g. "en"
+        // String languageCode = new String(payload, 1, languageCodeLength, "US-ASCII");
+
+        try {
+            // Get the Text
+            text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+        } catch (UnsupportedEncodingException e) {
+            Log.e("UnsupportedEncoding", e.toString());
+        }
+
+        return text;
     }
 
     private void readTextFromMessage(NdefMessage ndefMessage,ListView listView, List rondas, ArrayAdapter adapter) {

@@ -16,11 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sejol.secsys.Adapters.FragmentDrawer;
+import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.NavigationOptions.CrearRutasFragment;
 import com.example.sejol.secsys.NavigationOptions.DescargarReportesFragment;
 import com.example.sejol.secsys.NavigationOptions.RealizarRutasFragment;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
+import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 
 import java.util.ArrayList;
 
@@ -30,16 +32,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
-    Fragment fragment = null;
 
-    boolean read = false;
-
-    private NFC_Controller nfcController;
-
-
-    TextView tx;
-    ListView lv;
-    ArrayList<String> lista = new ArrayList<String>();
+    Fragment fragment = null; // Fragment de las opciones de drawer mostrandose
+    boolean read = false; // Flag para indicar si el fragment es utilizado para lecturas de NFC
+    private NFC_Controller nfcController; // Controlador de NFC
     int first;
 
     @Override
@@ -67,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
         displayView(0); //Display option 0 o the navigation drawer
-
     }
 
     @Override
@@ -128,27 +123,20 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if(read) {
+            RealizarRutasFragment frag = (RealizarRutasFragment)fragment;
+            SQLite_Controller db = new SQLite_Controller(this);
+            ArrayList<Tag> tag = db.getTagsDeRuta();
+            Tag lectura = db.getTagsDeRutaPorCodigo(nfcController.leerPunto(intent));
+            frag.ActualizarRonda(lectura);
+
             //tx = (TextView) fragment.getView().findViewById(R.id.fralgo);
             //lista.add(nfcController.leerPunto(intent));
 
             //setUpFragmentRealizarRutas();
             //lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lista));
 
-            Toast.makeText(this,nfcController.leerPunto(intent),Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,nfcController.leerPunto(intent),Toast.LENGTH_SHORT).show();
         }
     }
-    /*
-    public void setUpFragmentRealizarRutas(){
-        if(first == 0) {
-            lv = (ListView) fragment.getView().findViewById(R.id.frListViewRR);
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(getApplicationContext(),lista.get(position).toString(),Toast.LENGTH_SHORT).show();
-                }
-            });
-            first = -1;
-        }
-    }*/
 
 }

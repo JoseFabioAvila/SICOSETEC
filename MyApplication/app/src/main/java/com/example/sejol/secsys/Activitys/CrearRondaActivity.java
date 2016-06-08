@@ -39,8 +39,6 @@ public class CrearRondaActivity extends FragmentActivity {
                 }
             }
         });
-
-
     }
 
     @Override

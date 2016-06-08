@@ -103,6 +103,15 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return true;
     }
 
+    public Cursor getUsuario(String usuario, String contraseña)
+    {
+        SQLiteDatabase bd = this.getReadableDatabase();
+
+        Cursor fila = bd.rawQuery("select * from " + TABLE_USUARIO +
+                " where " + COLUMN_USUARIO + " = '" + usuario + "'" +
+                " and " + COLUMN_CONTRASEÑA + " = '" + contraseña + "'", null);
+        return fila;
+    }
 
     public boolean insertRonda(String codigo, String nombre, String fecha, String usuario){
         SQLiteDatabase bd = this.getWritableDatabase();
@@ -127,6 +136,24 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return true;
     }
 
+    public ArrayList<Ronda> getRondas(Usuario usuario){
+        String selectQuery = "SELECT  * FROM " + TABLE_RONDA + "WHERE" +  COLUMN_USUARIO + " = " + usuario.getUsuario();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ArrayList<Ronda> arrayListData = new ArrayList<Ronda>();
+        if (cursor.moveToFirst()) {
+            do {
+                Ronda ronda = new Ronda();
+                ronda.setCodigo (cursor.getString(0));
+                ronda.setNombre (cursor.getString(1));
+                ronda.setFecha  (cursor.getString(2));
+                ronda.setUsuario(cursor.getString(3));
+                arrayListData.add(ronda);
+            } while (cursor.moveToNext());
+        }
+        return arrayListData;
+    }
+
     public boolean insertRuta(String codigo,String nombre){
         SQLiteDatabase bd = this.getWritableDatabase();
         ContentValues registro = new ContentValues();
@@ -147,34 +174,6 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return true;
     }
 
-    public Cursor getUsuario(String usuario, String contraseña)
-    {
-        SQLiteDatabase bd = this.getReadableDatabase();
-
-        Cursor fila = bd.rawQuery("select * from " + TABLE_USUARIO +
-                " where " + COLUMN_USUARIO + " = '" + usuario + "'" +
-                " and " + COLUMN_CONTRASEÑA + " = '" + contraseña + "'", null);
-        return fila;
-    }
-
-    public ArrayList<Ronda> getRondas(Usuario usuario){
-        String selectQuery = "SELECT  * FROM " + TABLE_RONDA + "WHERE" +  COLUMN_USUARIO + " = " + usuario.getUsuario();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        ArrayList<Ronda> arrayListData = new ArrayList<Ronda>();
-        if (cursor.moveToFirst()) {
-            do {
-                Ronda ronda = new Ronda();
-                ronda.setCodigo (cursor.getString(0));
-                ronda.setNombre (cursor.getString(1));
-                ronda.setFecha  (cursor.getString(2));
-                ronda.setUsuario(cursor.getString(3));
-                arrayListData.add(ronda);
-            } while (cursor.moveToNext());
-        }
-        return arrayListData;
-    }
-
     public ArrayList<Ruta> getRutas(){
         String selectQuery = "SELECT  * FROM " + TABLE_RUTA;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -191,7 +190,23 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return arrayListData;
     }
 
-    public ArrayList<Tag> getTagsDeRuta(String ruta){
+    public ArrayList<Tag> getTagsDeRuta(){
+        String selectQuery = "SELECT  * FROM " + TABLE_TAG_RUT;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ArrayList<Tag> arrayListData = new ArrayList<Tag>();
+        if (cursor.moveToFirst()) {
+            do {
+                Tag tag = new Tag();
+                tag.setCodigo (cursor.getString(0));
+                tag.setRonda(cursor.getString(1));
+                arrayListData.add(tag);
+            } while (cursor.moveToNext());
+        }
+        return arrayListData;
+    }
+
+    public ArrayList<Tag> getTagsDeRutaPorRuta(String ruta){
         String selectQuery = "SELECT  * FROM " + TABLE_TAG_RUT + " where " + REF_RUT + " = " + "'"+ruta+"'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -205,6 +220,20 @@ public class SQLite_Controller extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return arrayListData;
+    }
+
+    public Tag getTagsDeRutaPorCodigo(String codigo){
+        String selectQuery = "SELECT  * FROM " + TABLE_TAG_RUT + " where " + COLUMN_ID_TAG + " = " + "'"+codigo+"'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        Tag resultado = new Tag();
+        if (cursor.moveToFirst()) {
+            do {
+                resultado.setCodigo (cursor.getString(0));
+                resultado.setRonda(cursor.getString(1));
+            } while (cursor.moveToNext());
+        }
+        return resultado;
     }
 }
 

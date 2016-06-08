@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -39,7 +42,9 @@ import android.location.LocationManager;
 import android.widget.Toast;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,14 +60,12 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
 
-    ImageButton btnSeleccionarRuta;
+    SQLite_Controller db; // Base de datos
+    ArrayList<Tag> puntosPorRecorrer; // Tag de la ruta seleccionada
+    ArrayList<Marker> punterosEnMapa = new ArrayList<>(); // Marker de los tag de la ruta seleccionada
+    Tag[] estadoDeRonda; // Estado del recorrido de la ruta --> Tag de la ronda
+    Ronda ronda; // Ronda --> Conjunto de tags
 
-    SQLite_Controller db;
-    ArrayList<Tag> puntosPorRecorrer;
-    ArrayList<Marker> punterosEnMapa = new ArrayList<>();
-
-    Ronda ronda;
-    ArrayList<Tag> estadoDeRonda;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +76,7 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
         db = new SQLite_Controller(v.getContext());
 
         // Boton para seleccionar una ruta
-        btnSeleccionarRuta = (ImageButton)v.findViewById(R.id.btnMapSelecRuta);
+        ImageButton btnSeleccionarRuta = (ImageButton)v.findViewById(R.id.btnMapSelecRuta);
         btnSeleccionarRuta.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -102,9 +105,25 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
         if(data != null){
             mMap.clear();
             Ruta ruta = (Ruta)data.getSerializableExtra("ruta");
-            puntosPorRecorrer = db.getTagsDeRuta(ruta.getCodigo());
+            ronda = crearIdRonda(ruta);
+
+            puntosPorRecorrer = db.getTagsDeRutaPorRuta(ruta.getCodigo());
+            estadoDeRonda = new Tag[puntosPorRecorrer.size()];
+
             displayMarkerPuntosPorRecorrer();
         }
+    }
+
+    private Ronda crearIdRonda(Ruta ruta){
+
+        Ronda ronda = new Ronda();
+        String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
+
+        ronda.setCodigo(ruta.getCodigo()+fecha);
+        ronda.setNombre(ruta.getNombre());
+        ronda.setFecha(fecha);
+
+        return ronda;
     }
 
     private void displayMarkerPuntosPorRecorrer(){
@@ -124,6 +143,75 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
                             .icon(icon)));
         }
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////   Controladores de ronda
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Ronda getRonda() {
+        return ronda;
+    }
+
+    public void ActualizarRonda(Tag lectura) {
+        for(int i = 0 ; i<puntosPorRecorrer.size() ; i++){
+            if(puntosPorRecorrer.get(i).getCodigo().equals(lectura.getCodigo())){
+
+                Tag nuevoTag = new Tag();
+                String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
+
+                nuevoTag.setCodigo(lectura.getCodigo()+fecha);
+                nuevoTag.setRonda(ronda.getCodigo());
+                nuevoTag.setHora(fecha);
+
+                estadoDeRonda[i] = nuevoTag;
+                BitmapDescriptor icon =
+                        BitmapDescriptorFactory.fromResource(R.drawable.map_icon_recorrido);
+                punterosEnMapa.get(i).setIcon(icon);
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////   Menu
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_realizar_ronda, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_guardar_ronda:
+                // Almacenar ronda en la base de datos
+                db.insertRonda(ronda.getCodigo(),ronda.getNombre(),ronda.getFecha(),"Pepito");
+                for (int i = 0; i < puntosPorRecorrer.size(); i++) {
+                    if(estadoDeRonda[i] != null)
+                        db.insertTagRND(
+                                estadoDeRonda[i].getCodigo(),
+                                estadoDeRonda[i].getHora(),
+                                estadoDeRonda[i].getRonda()); // Almacenar tag y asignarlo a la ruta creada
+                    else
+                        db.insertTagRND(
+                                puntosPorRecorrer.get(i).getCodigo(),
+                                " No se realizó",
+                                puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
+                }
+                Intent i = new Intent(v.getContext(),DescargarReportesFragment.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////   Configurar mapa
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,13 +305,6 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     // ---------------------------------------------------------------------------------------------
     // ------------------------------   Configurar gestos     --------------------------------------
     // ---------------------------------------------------------------------------------------------
-
-
-    /*
-        EL API de Google Maps para Android viene con una serie de gestos ya predefinidos
-        los cuales son configurables con la finalidad de dirigir la manera en la que el
-        usuario interactúa con el mismo.
-    */
 
     public void activateGestures(){
         UiSettings mUisettings = mMap.getUiSettings();
