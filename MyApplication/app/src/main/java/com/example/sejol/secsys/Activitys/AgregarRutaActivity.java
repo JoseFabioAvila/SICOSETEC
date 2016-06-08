@@ -126,11 +126,11 @@ public class AgregarRutaActivity extends AppCompatActivity {
         Metodo que crea un ID para la ruta
      */
     private String crearCodigoRuta(String nombre){
-        String fecha = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        String fecha = new SimpleDateFormat("ddMMyyyy").format(new Date());
         Random randomGenerator = new Random();
         int RndNum = randomGenerator.nextInt(1000);
 
-        return nombre+"-"+fecha+"-"+RndNum;
+        return nombre+"_"+fecha+"_"+RndNum;
     }
 
     /*
@@ -169,9 +169,9 @@ public class AgregarRutaActivity extends AppCompatActivity {
         if (dialog) {
 
             GPS_Tracker gps_tracker = new GPS_Tracker(this);
-            String codigo = String.valueOf(codigoTag)+" "+ // Contador de tags en ruta
-                    ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID))+" "+ // Mac de tag
-                    gps_tracker.getLongitude()+" "+ // Latitud actual (ubicacion del tag)
+            String codigo = String.valueOf(codigoTag)+"_"+ // Contador de tags en ruta
+                    ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID))+"_"+ // Mac de tag
+                    gps_tracker.getLongitude()+"_"+ // Latitud actual (ubicacion del tag)
                     gps_tracker.getLatitude(); // Latitud actual
 
             PntsTagRuta.add(codigo); // Guardar tag

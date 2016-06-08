@@ -192,15 +192,15 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     }
 
     public ArrayList<Tag> getTagsDeRuta(String ruta){
-        String selectQuery = "SELECT  * FROM " + TABLE_TAG_RUT + " where " + REF_RUT + " = " + ruta;
+        String selectQuery = "SELECT  * FROM " + TABLE_TAG_RUT + " where " + REF_RUT + " = " + "'"+ruta+"'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         ArrayList<Tag> arrayListData = new ArrayList<Tag>();
         if (cursor.moveToFirst()) {
             do {
                 Tag tag = new Tag();
-                tag.setRonda (cursor.getString(0));
-                tag.setCodigo(cursor.getString(1));
+                tag.setCodigo (cursor.getString(0));
+                tag.setRonda(cursor.getString(1));
                 arrayListData.add(tag);
             } while (cursor.moveToNext());
         }

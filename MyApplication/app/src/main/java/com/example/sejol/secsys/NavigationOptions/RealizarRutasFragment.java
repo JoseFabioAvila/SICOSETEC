@@ -59,6 +59,8 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
 
     SQLite_Controller db;
     ArrayList<Tag> puntosPorRecorrer;
+    ArrayList<Marker> punterosEnMapa = new ArrayList<>();
+
     Ronda ronda;
     ArrayList<Tag> estadoDeRonda;
 
@@ -97,12 +99,31 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mMap.clear();
-        Ruta ruta = (Ruta)data.getSerializableExtra("ruta");
-        puntosPorRecorrer = db.getTagsDeRuta(ruta.getCodigo());
-        Toast.makeText(v.getContext(),ruta.getNombre(),Toast.LENGTH_SHORT).show();
+        if(data != null){
+            mMap.clear();
+            Ruta ruta = (Ruta)data.getSerializableExtra("ruta");
+            puntosPorRecorrer = db.getTagsDeRuta(ruta.getCodigo());
+            displayMarkerPuntosPorRecorrer();
+        }
     }
 
+    private void displayMarkerPuntosPorRecorrer(){
+        for(Tag tag:puntosPorRecorrer){
+            String[] tagData = tag.getCodigo().split("_");
+            double lng = Double.parseDouble(tagData[2]);
+            double lat = Double.parseDouble(tagData[3]);
+            LatLng ll = new LatLng(lat,lng);
+
+            BitmapDescriptor icon =
+                    BitmapDescriptorFactory.fromResource(R.drawable.map_icon_sinrecorrer);
+            punterosEnMapa.add(
+                    mMap.addMarker(new MarkerOptions()
+                            .position(ll)
+                            .draggable(true)
+                            .title(tagData[0])
+                            .icon(icon)));
+        }
+    }
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////   Configurar mapa
     ///////////////////////////////////////////////////////////////////////////////////////////////
