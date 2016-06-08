@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -33,19 +34,22 @@ import java.util.Random;
 
 public class AgregarRutaActivity extends AppCompatActivity {
 
-    List PntsTagRuta = new ArrayList<>();
-    SQLite_Controller db;
+    List<String> PntsTagRuta = new ArrayList<>(); // Putos en el recorrido de la ruta
+    SQLite_Controller db; // Clase para accesar a la base de datos
 
-    ArrayAdapter<String> adapter;
+    ArrayAdapter<String> adapter; // Adapter para el listview
 
-    private NFC_Controller nfcController;
-    private ListView listView;
-    private TextView txtNombre;
+    private NFC_Controller nfcController; // Controlador de nfc
+    private ListView listView; // Lista para mostrar los puntos en la ruta
+    private TextView txtNombre; // Nombre para el recorrido
 
     private boolean dialog = false;
-    int codigoTag = 0;
-    CustomDialogClass cdd;
-    String codigo;
+
+    int codigoTag = 0; // Contador de puntos
+
+    CustomDialogClass cdd; //
+
+    String codigo; // Codigo o id de la ruta a asignar a los puntos
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,32 +63,38 @@ public class AgregarRutaActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cdd = new CustomDialogClass(AgregarRutaActivity.this);
+                cdd = new CustomDialogClass(AgregarRutaActivity.this); // En espera de NFC
                 cdd.show();
             }
         });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        db = new SQLite_Controller(this);
-        txtNombre= (TextView) findViewById(R.id.txtAddRutNombre);
-        listView = (ListView) findViewById(R.id.listViewAR);
-        adapterSet();
+        db = new SQLite_Controller(this); // Inicializar la base de datos
+        txtNombre= (TextView) findViewById(R.id.txtAddRutNombre); // Nombre de la ruta
+        listView = (ListView) findViewById(R.id.listViewAR); // Lista de puntos
+        adapterSet(); // Setear lista
 
         nfcController = new NFC_Controller(this, 2);
 
-        if (!nfcController.mNfcAdapter.isEnabled()) {
+        if (!nfcController.mNfcAdapter.isEnabled()) { // Estado del NFC en el telefono
             Toast.makeText(this,"Lectura NFC desactivado",Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this,"Lectura NFC activado",Toast.LENGTH_SHORT).show();
         }
     }
 
+    /*
+        Metodo para configurar el adapter para la lista de puntos en la ruta
+     */
     private void adapterSet() {
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, PntsTagRuta);
         listView.setAdapter(adapter);
     }
 
+    /*
+        Mostrar dialogo para confirmación de guardado
+     */
     private void alerta()
     {
         new AlertDialog.Builder(this)
@@ -95,7 +105,10 @@ public class AgregarRutaActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String nombre = txtNombre.getText().toString();
                         codigo = crearCodigoRuta(nombre);
-                        db.insertRuta(codigo,nombre);
+                        db.insertRuta(codigo,nombre); // Almacenar ruta en la base de datos
+                        for (String tag:PntsTagRuta) {
+                            db.insertTagRUT(tag,codigo); // Almacenar tag y asignarlo a la ruta creada
+                        }
                         finish();
                     }
                 })
@@ -109,6 +122,9 @@ public class AgregarRutaActivity extends AppCompatActivity {
                 .show();
     }
 
+    /*
+        Metodo que crea un ID para la ruta
+     */
     private String crearCodigoRuta(String nombre){
         String fecha = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
         Random randomGenerator = new Random();
@@ -117,20 +133,72 @@ public class AgregarRutaActivity extends AppCompatActivity {
         return nombre+"-"+fecha+"-"+RndNum;
     }
 
+    /*
+        Dialogo para indicarle al usaurio que acerque un Tag de NFC para
+        escribirle y almacenarlo en la ruta
+     */
+    public class CustomDialogClass extends Dialog implements android.view.View.OnClickListener {
+        TextView textView1;
+
+        public CustomDialogClass(Activity a) {
+            super(a);
+            dialog = true;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.popup_write_tag);
+
+            codigoTag++;
+
+            textView1 = (TextView) findViewById(R.id.dialogo);
+            textView1.setText("Esperando TAG...");
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (dialog) {
+
             GPS_Tracker gps_tracker = new GPS_Tracker(this);
-            String codigo = String.valueOf(codigoTag)+" "+gps_tracker.getLongitude()+" "+gps_tracker.getLatitude();
+            String codigo = String.valueOf(codigoTag)+" "+ // Contador de tags en ruta
+                    ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID))+" "+ // Mac de tag
+                    gps_tracker.getLongitude()+" "+ // Latitud actual (ubicacion del tag)
+                    gps_tracker.getLatitude(); // Latitud actual
 
-            PntsTagRuta.add(codigo);
-            nfcController.write(intent, codigo);
-
-            listView.setAdapter(adapter);
-            cdd.dismiss();
+            PntsTagRuta.add(codigo); // Guardar tag
+            nfcController.write(intent, codigo); // Escribir el codigo en el NFC
+            listView.setAdapter(adapter); // Actualizar ListView
+            cdd.dismiss(); // Cerrar dialog
             dialog = false;
         }
+    }
+
+    /*
+        Metodo para convertir los bytes de la mac del TAG NFC a string
+     */
+    private String ByteArrayToHexString(byte [] inarray) {
+        int i, j, in;
+        String [] hex = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
+        String out= "";
+
+        for(j = 0 ; j < inarray.length ; ++j)
+        {
+            in = (int) inarray[j] & 0xff;
+            i = (in >> 4) & 0x0f;
+            out += hex[i];
+            i = in & 0x0f;
+            out += hex[i];
+        }
+        return out;
     }
 
     @Override
@@ -166,31 +234,5 @@ public class AgregarRutaActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public class CustomDialogClass extends Dialog implements android.view.View.OnClickListener {
-        TextView textView1;
-
-        public CustomDialogClass(Activity a) {
-            super(a);
-            dialog = true;
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.popup_write_tag);
-
-            codigoTag++;
-
-            textView1 = (TextView) findViewById(R.id.dialogo);
-            textView1.setText("Esperando TAG...");
-        }
-
-        @Override
-        public void onClick(View v) {
-
-        }
     }
 }

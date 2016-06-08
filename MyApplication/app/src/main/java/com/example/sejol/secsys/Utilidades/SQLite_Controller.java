@@ -174,7 +174,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return arrayListData;
     }
 
-    public ArrayList<Ruta> selectRuta(){
+    public ArrayList<Ruta> getRutas(){
         String selectQuery = "SELECT  * FROM " + TABLE_RUTA;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -184,7 +184,6 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 Ruta ruta = new Ruta();
                 ruta.setCodigo (cursor.getString(0));
                 ruta.setNombre (cursor.getString(1));
-                ruta.setUsuario(cursor.getString(2));
                 arrayListData.add(ruta);
             } while (cursor.moveToNext());
         }

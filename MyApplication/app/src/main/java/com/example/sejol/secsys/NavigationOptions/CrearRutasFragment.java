@@ -16,7 +16,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sejol.secsys.Activitys.AgregarRutaActivity;
+import com.example.sejol.secsys.Clases.Ruta;
 import com.example.sejol.secsys.R;
+import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 
 import java.util.ArrayList;
 
@@ -25,13 +27,12 @@ import java.util.ArrayList;
  */
 public class CrearRutasFragment extends Fragment {
 
-    private String saludo;
     private CardView cardView1;
     private CardView cardView2;
 
     private ListView listView;
 
-    ArrayList<String> arrayList = new ArrayList<String>();
+    private SQLite_Controller db;
 
 
     //////////////////////Primero en ejecucion///////////////////////
@@ -49,20 +50,8 @@ public class CrearRutasFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        arrayList.add("Hola 0");
-        arrayList.add("Hola 1");
-        arrayList.add("Hola 2");
-        arrayList.add("Hola 3");
-        arrayList.add("Hola 4");
-        arrayList.add("Hola 5");
-        arrayList.add("Hola 6");
-        arrayList.add("Hola 7");
-        arrayList.add("Hola 8");
-        arrayList.add("Hola 9");
-
-        saludo = "Toas mop!!!";
     }
+
     //////////////////////Segundo en ejecucion///////////////////////
 
     /////////////////////Crea la vista////////////////////////////////
@@ -71,8 +60,15 @@ public class CrearRutasFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_crear_rutas, container, false);
 
+        db = new SQLite_Controller(view.getContext());
+        ArrayList<Ruta> rutas = db.getRutas();
+        ArrayList<String> nombresRutas = new ArrayList<>();
+        for(Ruta ruta:rutas){
+            nombresRutas.add(ruta.getNombre());
+        }
+
         listView = (ListView) view.findViewById(R.id.listView);
-        listView.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,arrayList));
+        listView.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,nombresRutas));
 
         //se pueden meter acciones de los elementos del fragment
         cardView1 = (CardView) view.findViewById(R.id.card_view);
