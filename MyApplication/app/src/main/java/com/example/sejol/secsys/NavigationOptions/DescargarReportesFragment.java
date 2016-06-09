@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sejol.secsys.Activitys.MainActivity;
+import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Ruta;
 import com.example.sejol.secsys.Clases.Usuario;
 import com.example.sejol.secsys.R;
@@ -48,14 +49,14 @@ public class DescargarReportesFragment extends Fragment {
         usuario = (Usuario) getArguments().getSerializable("usuario");
 
         db = new SQLite_Controller(view.getContext());
-        ArrayList<Ruta> rutas = db.getRutas();
-        ArrayList<String> nombresRutas = new ArrayList<>();
-        for(Ruta ruta:rutas){
-            nombresRutas.add(ruta.getNombre());
+        ArrayList<Ronda> rondas = db.getRondas(usuario);
+        ArrayList<String> nombresRondas = new ArrayList<>();
+        for(Ronda ronda:rondas){
+            nombresRondas.add(ronda.getNombre());
         }
 
         lvRondas = (ListView) view.findViewById(R.id.lvRondas);
-        lvRondas.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,nombresRutas));
+        lvRondas.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,nombresRondas));
         lvRondas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

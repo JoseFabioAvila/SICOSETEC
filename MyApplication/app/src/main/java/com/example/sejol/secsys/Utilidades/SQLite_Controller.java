@@ -147,7 +147,9 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     }
 
     public ArrayList<Ronda> getRondas(Usuario usuario){
-        String selectQuery = "SELECT  * FROM " + TABLE_RONDA + "WHERE" +  COLUMN_USUARIO + " = " + usuario.getUsuario();
+        String selectQuery =
+                "SELECT  * FROM " + TABLE_RONDA + " WHERE " +
+                        COLUMN_USUARIO + " = " + "'" + usuario.getUsuario() + "'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         ArrayList<Ronda> arrayListData = new ArrayList<Ronda>();

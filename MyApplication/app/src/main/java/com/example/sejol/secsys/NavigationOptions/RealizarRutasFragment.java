@@ -25,6 +25,7 @@ import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Ruta;
 import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.Clases.Usuario;
+import com.example.sejol.secsys.Popup.PopupGuardarRonda;
 import com.example.sejol.secsys.Popup.PopupSeleccionarRuta;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
@@ -113,14 +114,63 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
-            mMap.clear();
-            Ruta ruta = (Ruta) data.getSerializableExtra("ruta");
-            ronda = crearIdRonda(ruta);
+            if (requestCode == 1) {
+                mMap.clear();
+                Ruta ruta = (Ruta) data.getSerializableExtra("ruta");
+                ronda = crearIdRonda(ruta);
 
-            puntosPorRecorrer = db.getTagsDeRutaPorRuta(ruta.getCodigo());
-            estadoDeRonda = new Tag[puntosPorRecorrer.size()];
+                puntosPorRecorrer = db.getTagsDeRutaPorRuta(ruta.getCodigo());
+                estadoDeRonda = new Tag[puntosPorRecorrer.size()];
 
-            displayMarkerPuntosPorRecorrer();
+                displayMarkerPuntosPorRecorrer();
+            }else if(requestCode == 2){
+                Bundle b = data.getExtras();
+                guardarRodonda((String) b.get("nombre"));
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////   Controladores de ronda
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Ronda getRonda() {
+        return ronda;
+    }
+
+    public void ActualizarRonda(Tag lectura) {
+        for (int i = 0; i < puntosPorRecorrer.size(); i++) {
+            if (puntosPorRecorrer.get(i).getCodigo().equals(lectura.getCodigo())) {
+
+                Tag nuevoTag = new Tag();
+                String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
+
+                nuevoTag.setCodigo(lectura.getCodigo() + fecha);
+                nuevoTag.setRonda(ronda.getCodigo());
+                nuevoTag.setHora(fecha);
+
+                estadoDeRonda[i] = nuevoTag;
+                BitmapDescriptor icon =
+                        BitmapDescriptorFactory.fromResource(R.drawable.map_icon_recorrido);
+                punterosEnMapa.get(i).setIcon(icon);
+            }
+        }
+    }
+
+    private void guardarRodonda(String nombre){
+        // Almacenar ronda en la base de datos
+        db.insertRonda(ronda.getCodigo(), nombre, ronda.getFecha(), usuario.getUsuario());
+        for (int i = 0; i < puntosPorRecorrer.size(); i++) {
+            if (estadoDeRonda[i] != null)
+                db.insertTagRND(
+                        estadoDeRonda[i].getCodigo(),
+                        estadoDeRonda[i].getHora(),
+                        estadoDeRonda[i].getRonda()); // Almacenar tag y asignarlo a la ruta creada
+            else
+                db.insertTagRND(
+                        puntosPorRecorrer.get(i).getCodigo(),
+                        " No se realizó",
+                        puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
         }
     }
 
@@ -155,34 +205,6 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////   Controladores de ronda
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Ronda getRonda() {
-        return ronda;
-    }
-
-    public void ActualizarRonda(Tag lectura) {
-        for (int i = 0; i < puntosPorRecorrer.size(); i++) {
-            if (puntosPorRecorrer.get(i).getCodigo().equals(lectura.getCodigo())) {
-
-                Tag nuevoTag = new Tag();
-                String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
-
-                nuevoTag.setCodigo(lectura.getCodigo() + fecha);
-                nuevoTag.setRonda(ronda.getCodigo());
-                nuevoTag.setHora(fecha);
-
-                estadoDeRonda[i] = nuevoTag;
-                BitmapDescriptor icon =
-                        BitmapDescriptorFactory.fromResource(R.drawable.map_icon_recorrido);
-                punterosEnMapa.get(i).setIcon(icon);
-            }
-        }
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////   Menu
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -201,50 +223,14 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_guardar_ronda:
-                alerta();
-                Intent i = new Intent(v.getContext(), DescargarReportesFragment.class);
-                startActivity(i);
+                Intent i = new Intent(v.getContext(), PopupGuardarRonda.class);
+                i.putExtra("pntPorRecorrer",puntosPorRecorrer);
+                i.putExtra("estadoRonda",estadoDeRonda);
+                startActivityForResult(i,2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    /*
-        Mostrar dialogo para confirmación de guardado
-     */
-    private void alerta()
-    {
-        new AlertDialog.Builder(v.getContext())
-                .setTitle("Atención!")
-                .setMessage("¿Desea crear esta ruta?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Almacenar ronda en la base de datos
-                        db.insertRonda(ronda.getCodigo(), ronda.getNombre(), ronda.getFecha(), usuario.getUsuario());
-                        for (int i = 0; i < puntosPorRecorrer.size(); i++) {
-                            if (estadoDeRonda[i] != null)
-                                db.insertTagRND(
-                                        estadoDeRonda[i].getCodigo(),
-                                        estadoDeRonda[i].getHora(),
-                                        estadoDeRonda[i].getRonda()); // Almacenar tag y asignarlo a la ruta creada
-                            else
-                                db.insertTagRND(
-                                        puntosPorRecorrer.get(i).getCodigo(),
-                                        " No se realizó",
-                                        puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
-                        }
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-
-                    }
-                })
-                .show();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

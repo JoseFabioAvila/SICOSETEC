@@ -1,9 +1,11 @@
 package com.example.sejol.secsys.Clases;
 
+import java.io.Serializable;
+
 /**
  * Created by sejol on 4/6/2016.
  */
-public class Tag {
+public class Tag implements Serializable{
     private String codigo,ronda,hora;
 
     public Tag(){

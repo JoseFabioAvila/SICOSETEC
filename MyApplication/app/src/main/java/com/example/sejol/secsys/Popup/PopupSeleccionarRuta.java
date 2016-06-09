@@ -48,7 +48,7 @@ public class PopupSeleccionarRuta extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(localDisplayMetrics);
         int width = localDisplayMetrics.widthPixels;
         int height = localDisplayMetrics.heightPixels;
-        getWindow().setLayout((int)(0.70 * width), (int)(0.50 * height));
+        getWindow().setLayout((int)(0.70 * width), (int)(0.60 * height));
     }
 
 
