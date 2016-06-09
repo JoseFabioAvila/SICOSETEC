@@ -6,6 +6,8 @@ package com.example.sejol.secsys.Utilidades;
 
 import android.os.Environment;
 
+import com.example.sejol.secsys.Clases.Ronda;
+import com.example.sejol.secsys.Clases.Tag;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -18,7 +20,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class PDF_Controller {
 
@@ -30,9 +35,13 @@ public class PDF_Controller {
             Font.NORMAL, BaseColor.RED);
     private static Font TxtNegro = new Font(Font.FontFamily.TIMES_ROMAN, 12,
             Font.NORMAL);
+    private Ronda ronda;
+    private ArrayList<Tag> puntos;
 
-    public PDF_Controller() {
-
+    public PDF_Controller(Ronda ronda, ArrayList<Tag> puntos) {
+        this.ronda = ronda;
+        this.puntos = puntos;
+        createPdf();
     }
 
     public void createPdf(){
@@ -72,12 +81,22 @@ public class PDF_Controller {
         document.open();
 
         //Step 4 Add content
-        document.add(new Paragraph("Titulo", Titulo));
-        document.add(new Paragraph("   Subtitulo ", Subtitulo));
-        document.add(new Paragraph("Teléfono: 2240-8645 / Fax: 2240-2642", TxtNegro));
-        document.add(new Paragraph("Cédula Jueridica: 3-001-051820-23", TxtNegro));
-        document.add(new Paragraph("Correo: fiscalia@ingagr.or.cr", TxtNegro));
-        document.add(new Paragraph("Apdo. 281-100", TxtNegro));
+        document.add(new Paragraph("Reporte de ronda", Titulo));
+        document.add(new Paragraph("", Titulo));
+        document.add(new Paragraph("   Nomrbre: " + ronda.getNombre() , Subtitulo));
+        document.add(new Paragraph("   Fecha:   " + ronda.getFecha()  , Subtitulo));
+        document.add(new Paragraph("   Oficial: " + ronda.getUsuario(), Subtitulo));
+
+        document.add(new Paragraph("Detalle de la ronda", Titulo));
+        document.add(new Paragraph("", Titulo));
+        for (Tag pnt:puntos) {
+            List<String> codeData = Arrays.asList(pnt.getCodigo().split("_"));
+            document.add(new Paragraph("Punto " + codeData.get(0), Subtitulo));
+            document.add(new Paragraph("    Latitud : " + codeData.get(3), TxtNegro));
+            document.add(new Paragraph("    Longitud: " + codeData.get(2), TxtNegro));
+            document.add(new Paragraph("    Hora:     " + pnt.getHora()  , TxtNegro));
+            document.add(new Paragraph("", Titulo));
+        }
 
         //Step 5: Close the document
         document.close();
