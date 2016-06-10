@@ -2,7 +2,9 @@ package com.example.sejol.secsys.NavigationOptions;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +20,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -273,7 +277,11 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                marker.remove();
+
+                //marker.remove();
+
+                ReportarAnomalias anomalia = new ReportarAnomalias(getActivity(), marker);
+                anomalia.show();
             }
         });
     }
@@ -319,11 +327,40 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
                 if(MarkerLatLng != null)
                     MarkerLatLng.remove();
 
-                MarkerLatLng = mMap.addMarker(new MarkerOptions()
-                        .position(latLng).draggable(true).title("Remover"));
+                MarkerLatLng = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title("Remover"));
+
                 //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         });
+    }
+
+    public class ReportarAnomalias extends Dialog implements android.view.View.OnClickListener {
+        Button button;
+
+        public ReportarAnomalias(Activity a,Marker marker) {
+            super(a);
+
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.popup_reporte);
+            button = (Button) findViewById(R.id.btElimnar);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //marker.remove();
+                }
+            });
+
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
     }
 
     // ---------------------------------------------------------------------------------------------

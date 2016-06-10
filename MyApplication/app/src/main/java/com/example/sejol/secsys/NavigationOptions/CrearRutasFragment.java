@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.sejol.secsys.Activitys.AgregarRutaActivity;
@@ -62,7 +63,7 @@ public class CrearRutasFragment extends Fragment {
 
         db = new SQLite_Controller(view.getContext());
         ArrayList<Ruta> rutas = db.getRutas();
-        ArrayList<String> nombresRutas = new ArrayList<>();
+        final ArrayList<String> nombresRutas = new ArrayList<>();
         for(Ruta ruta:rutas){
             nombresRutas.add(ruta.getNombre());
         }
@@ -76,9 +77,13 @@ public class CrearRutasFragment extends Fragment {
         cardView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("ruta","");
                 Intent intent = new Intent(getActivity(), AgregarRutaActivity.class);
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                intent.putExtras(bundle);
 
                 startActivity(intent);
             }
@@ -86,8 +91,38 @@ public class CrearRutasFragment extends Fragment {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
+
+
+                //Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
+                final PopupMenu popup = new PopupMenu(view.getContext(), listView);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.opciones_crear_ruta, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.modificar:
+                                Bundle bundle = new Bundle();
+                                bundle.putString("ruta", nombresRutas.get(position));
+                                Intent intent = new Intent(getActivity(), AgregarRutaActivity.class);
+
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                                intent.putExtras(bundle);
+
+                                startActivity(intent);
+                                return true;
+                            case R.id.borrar:
+                                db.borrarRuta(nombresRutas.get(position));
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+
+                popup.show();//showing popup menu
             }
         });
 

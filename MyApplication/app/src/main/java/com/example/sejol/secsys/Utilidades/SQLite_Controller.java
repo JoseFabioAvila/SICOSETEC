@@ -81,9 +81,9 @@ public class SQLite_Controller extends SQLiteOpenHelper {
 
         db.execSQL(
                 "create table " + TABLE_TAG_RUT +
-                        "(" + COLUMN_ID_TAG   + " text primary key," +
-                              REF_RUT   + " text, " +
-                        " FOREIGN KEY ("+REF_RUT+") REFERENCES "+TABLE_RUTA+"("+COLUMN_ID_RUT+"));");
+                        "(" + COLUMN_ID_TAG + " text primary key," +
+                        REF_RUT + " text, " +
+                        " FOREIGN KEY (" + REF_RUT + ") REFERENCES " + TABLE_RUTA + "(" + COLUMN_ID_RUT + "));");
     }
 
     @Override
@@ -173,6 +173,20 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         registro.put(COLUMN_NOMBRE , nombre);
         bd.insert(TABLE_RUTA, null, registro);
         bd.close();
+        return true;
+    }
+
+    public boolean borrarRuta(String nombre){
+        SQLiteDatabase bd = this.getWritableDatabase();
+
+        bd.delete(TABLE_TAG_RUT, REF_RUT+"='"+nombre+"'",null);
+
+        //String[] args = new String[]{nombre};
+        //bd.execSQL("DELETE FROM"+TABLE_RUTA+"WHERE "+COLUMN_NOMBRE+"=?", args);
+
+        bd.delete(TABLE_RUTA, "nombre='"+nombre+"'", null);
+
+
         return true;
     }
 

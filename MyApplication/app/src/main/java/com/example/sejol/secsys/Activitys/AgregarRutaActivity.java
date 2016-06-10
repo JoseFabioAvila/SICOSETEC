@@ -34,7 +34,7 @@ import java.util.Random;
 
 public class AgregarRutaActivity extends AppCompatActivity {
 
-    List<String> PntsTagRuta = new ArrayList<>(); // Putos en el recorrido de la ruta
+    ArrayList<String> PntsTagRuta = new ArrayList<>(); // Putos en el recorrido de la ruta
     SQLite_Controller db; // Clase para accesar a la base de datos
 
     ArrayAdapter<String> adapter; // Adapter para el listview
@@ -50,6 +50,8 @@ public class AgregarRutaActivity extends AppCompatActivity {
     CustomDialogClass cdd; //
 
     String codigo; // Codigo o id de la ruta a asignar a los puntos
+
+    boolean agregar = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +73,18 @@ public class AgregarRutaActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         db = new SQLite_Controller(this); // Inicializar la base de datos
-        txtNombre= (TextView) findViewById(R.id.txtAddRutNombre); // Nombre de la ruta
+        txtNombre = (TextView) findViewById(R.id.txtAddRutNombre); // Nombre de la ruta
         listView = (ListView) findViewById(R.id.listViewAR); // Lista de puntos
-        adapterSet(); // Setear lista
 
+        if(getIntent().getExtras().getString("ruta").equals("")) {
+            agregar = true;
+        }
+        else {
+            agregar = false;
+            txtNombre.setText(getIntent().getExtras().getString("ruta"));
+        }
+
+        adapterSet(getIntent().getExtras().getString("ruta")); // Setear lista
         nfcController = new NFC_Controller(this, 2);
 
         if (!nfcController.mNfcAdapter.isEnabled()) { // Estado del NFC en el telefono
@@ -87,7 +97,10 @@ public class AgregarRutaActivity extends AppCompatActivity {
     /*
         Metodo para configurar el adapter para la lista de puntos en la ruta
      */
-    private void adapterSet() {
+    private void adapterSet(String ruta) {
+        if(!agregar){
+            //PntsTagRuta = db.getTagsDeRutaPorRuta(ruta);
+        }
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, PntsTagRuta);
         listView.setAdapter(adapter);
     }
@@ -106,7 +119,7 @@ public class AgregarRutaActivity extends AppCompatActivity {
                         String nombre = txtNombre.getText().toString();
                         codigo = crearCodigoRuta(nombre);
                         db.insertRuta(codigo,nombre); // Almacenar ruta en la base de datos
-                        for (String tag:PntsTagRuta) {
+                        for (String tag: PntsTagRuta) {
                             db.insertTagRUT(tag,codigo); // Almacenar tag y asignarlo a la ruta creada
                         }
                         finish();
