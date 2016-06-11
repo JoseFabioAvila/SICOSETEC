@@ -138,7 +138,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     public boolean insertTagRND(String condigo, String hora, String ronda){
         SQLiteDatabase bd = this.getWritableDatabase();
         ContentValues registro = new ContentValues();
-        registro.put(COLUMN_ID_TAG , condigo);
+        registro.put(COLUMN_ID_TAG, condigo);
         registro.put(COLUMN_HORA, hora);
         registro.put(REF_RND, ronda);
         bd.insert(TABLE_TAG_RND, null, registro);
@@ -179,12 +179,12 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     public boolean borrarRuta(String nombre){
         SQLiteDatabase bd = this.getWritableDatabase();
 
-        bd.delete(TABLE_TAG_RUT, REF_RUT+"='"+nombre+"'",null);
+        bd.delete(TABLE_TAG_RUT, REF_RUT + "='" + nombre + "'", null);
 
         //String[] args = new String[]{nombre};
         //bd.execSQL("DELETE FROM"+TABLE_RUTA+"WHERE "+COLUMN_NOMBRE+"=?", args);
 
-        bd.delete(TABLE_RUTA, "nombre='"+nombre+"'", null);
+        bd.delete(TABLE_RUTA, "nombre='" + nombre + "'", null);
 
 
         return true;
@@ -255,11 +255,28 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         Tag resultado = new Tag();
         if (cursor.moveToFirst()) {
             do {
-                resultado.setCodigo (cursor.getString(0));
+                resultado.setCodigo(cursor.getString(0));
                 resultado.setRonda(cursor.getString(1));
             } while (cursor.moveToNext());
         }
         return resultado;
+    }
+
+    public ArrayList<Tag> getTagsDeRondaPorRuta(String ruta){
+        String selectQuery = "SELECT  * FROM " + TABLE_TAG_RND + " where " + REF_RND + " = " + "'"+ruta+"'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ArrayList<Tag> arrayListData = new ArrayList<Tag>();
+        if (cursor.moveToFirst()) {
+            do {
+                Tag tag = new Tag();
+                tag.setCodigo (cursor.getString(0));
+                tag.setHora(cursor.getString(1));
+                tag.setRonda(cursor.getString(2));
+                arrayListData.add(tag);
+            } while (cursor.moveToNext());
+        }
+        return arrayListData;
     }
 }
 

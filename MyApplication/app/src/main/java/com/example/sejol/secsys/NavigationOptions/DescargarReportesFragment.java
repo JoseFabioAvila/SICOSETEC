@@ -21,6 +21,7 @@ import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Ruta;
 import com.example.sejol.secsys.Clases.Usuario;
 import com.example.sejol.secsys.R;
+import com.example.sejol.secsys.Utilidades.PDF_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class DescargarReportesFragment extends Fragment {
         usuario = (Usuario) getArguments().getSerializable("usuario");
 
         db = new SQLite_Controller(view.getContext());
-        ArrayList<Ronda> rondas = db.getRondas(usuario);
+        final ArrayList<Ronda> rondas = db.getRondas(usuario);
         ArrayList<String> nombresRondas = new ArrayList<>();
         for(Ronda ronda:rondas){
             nombresRondas.add(ronda.getNombre());
@@ -60,7 +61,8 @@ public class DescargarReportesFragment extends Fragment {
         lvRondas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "List item " + position, Toast.LENGTH_SHORT).show();
+                PDF_Controller pdf_controller = new PDF_Controller(rondas.get(position),db.getTagsDeRondaPorRuta(rondas.get(position).getCodigo()));
             }
         });
 

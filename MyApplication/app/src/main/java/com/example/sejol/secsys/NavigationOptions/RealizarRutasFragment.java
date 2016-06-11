@@ -278,10 +278,7 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
             @Override
             public void onInfoWindowClick(Marker marker) {
 
-                //marker.remove();
-
-                ReportarAnomalias anomalia = new ReportarAnomalias(getActivity(), marker);
-                anomalia.show();
+                marker.remove();
             }
         });
     }
@@ -328,7 +325,8 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
                     MarkerLatLng.remove();
 
                 MarkerLatLng = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title("Remover"));
-
+                ReportarAnomalias anomalia = new ReportarAnomalias(getActivity());
+                anomalia.show();
                 //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         });
@@ -337,7 +335,7 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     public class ReportarAnomalias extends Dialog implements android.view.View.OnClickListener {
         Button button;
 
-        public ReportarAnomalias(Activity a,Marker marker) {
+        public ReportarAnomalias(Activity a) {
             super(a);
 
         }
@@ -351,7 +349,8 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //marker.remove();
+                    Toast.makeText(getContext(),"Reporte creado",Toast.LENGTH_SHORT).show();
+                    dismiss();
                 }
             });
 
