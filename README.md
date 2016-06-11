@@ -1,4 +1,4 @@
-# SecsysRepository
+# SICOSETECRepository
 Este proyecto es una una herramienta de apoyo para el sector administrativo 
 de las empresas que cuentan con un departamento de oficiales de seguridad. 
 
