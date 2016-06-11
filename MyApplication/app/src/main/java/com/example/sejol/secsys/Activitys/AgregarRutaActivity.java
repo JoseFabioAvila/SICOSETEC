@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,8 @@ import java.util.Random;
 public class AgregarRutaActivity extends AppCompatActivity {
 
     Ruta rutaA;
+    ArrayList<Tag> tags;
+    int pos;
 
     ArrayList<String> PntsTagRuta = new ArrayList<>(); // Putos en el recorrido de la ruta
     SQLite_Controller db; // Clase para accesar a la base de datos
@@ -81,12 +84,7 @@ public class AgregarRutaActivity extends AppCompatActivity {
         txtNombre = (TextView) findViewById(R.id.txtAddRutNombre); // Nombre de la ruta
         listView = (ListView) findViewById(R.id.listViewAR); // Lista de puntos
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            }
-        });
 
         if(getIntent().getExtras().getString("ruta").equals("")) {
             agregar = true;
@@ -117,16 +115,48 @@ public class AgregarRutaActivity extends AppCompatActivity {
                     rutaA = rut;
                 }
             }
-            ArrayList<Tag> tags = db.getTagsDeRutaPorRuta(rutaA.getCodigo());
+            tags = db.getTagsDeRutaPorRuta(rutaA.getCodigo());
             for(Tag tag: tags){
                 if(tag.getRonda().equals(rutaA.getCodigo())){
                     PntsTagRuta.add(tag.getCodigo());
                 }
             }
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                    //Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
+                    final PopupMenu popup = new PopupMenu(view.getContext(), listView);
+                    //Inflating the Popup using xml file
+                    popup.getMenuInflater().inflate(R.menu.opciones_crear_ruta, popup.getMenu());
+
+                    //registering popup with OnMenuItemClickListener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.modificar:
+                                    cdd = new CustomDialogClass(AgregarRutaActivity.this); // En espera de NFC
+                                    pos = position;
+                                    cdd.show();
+                                    return true;
+                                case R.id.borrar:
+                                    //db.borrarRuta(nombresRutas.get(position));
+                                    return true;
+                            }
+                            return true;
+                        }
+                    });
+
+                    popup.show();//showing popup menu
+                }
+            });
         }
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, PntsTagRuta);
         listView.setAdapter(adapter);
     }
+
+
+
 
     /*
         Mostrar dialogo para confirmación de guardado
@@ -136,22 +166,35 @@ public class AgregarRutaActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Atención!")
                 .setMessage("¿Desea crear esta ruta?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String nombre = txtNombre.getText().toString();
-                        codigo = crearCodigoRuta(nombre);
-                        db.insertRuta(codigo,nombre); // Almacenar ruta en la base de datos
-                        for (String tag: PntsTagRuta) {
-                            db.insertTagRUT(tag,codigo); // Almacenar tag y asignarlo a la ruta creada
+                        if (!agregar) {
+                            String nombre = txtNombre.getText().toString();
+                            codigo = crearCodigoRuta(nombre);
+                            db.insertRuta(codigo, nombre); // Almacenar ruta en la base de datos
+                            for (String tag : PntsTagRuta) {
+                                db.insertTagRUT(tag, codigo); // Almacenar tag y asignarlo a la ruta creada
+                            }
+                            finish();
+                        } else {
+                            String nombre = txtNombre.getText().toString();
+                            codigo = crearCodigoRuta(nombre);
+                            ArrayList<Ruta> rutas = db.getRutas();
+                            for (Ruta ruta : rutas) {
+                                if (ruta.getNombre().equals(getIntent().getExtras().getString("ruta"))) {
+                                    db.borrarRuta(ruta.getNombre());
+                                }
+                            }
+                            db.insertRuta(codigo, nombre); // Almacenar ruta en la base de datos
+                            for (String tag : PntsTagRuta) {
+                                db.insertTagRUT(tag, codigo); // Almacenar tag y asignarlo a la ruta creada
+                            }
+                            finish();
                         }
-                        finish();
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
 
                     }
                 })
@@ -181,6 +224,10 @@ public class AgregarRutaActivity extends AppCompatActivity {
             dialog = true;
         }
 
+        public CustomDialogClass(Activity a, int position) {
+            super(a);
+        }
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -204,17 +251,33 @@ public class AgregarRutaActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         if (dialog) {
 
-            GPS_Tracker gps_tracker = new GPS_Tracker(this);
-            String codigo = String.valueOf(codigoTag)+"_"+ // Contador de tags en ruta
-                    ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID))+"_"+ // Mac de tag
-                    gps_tracker.getLongitude()+"_"+ // Latitud actual (ubicacion del tag)
-                    gps_tracker.getLatitude(); // Latitud actual
+            if(agregar) {
+                GPS_Tracker gps_tracker = new GPS_Tracker(this);
+                String codigo = String.valueOf(codigoTag) + "_" + // Contador de tags en ruta
+                        ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)) + "_" + // Mac de tag
+                        gps_tracker.getLongitude() + "_" + // Latitud actual (ubicacion del tag)
+                        gps_tracker.getLatitude(); // Latitud actual
 
-            PntsTagRuta.add(codigo); // Guardar tag
-            nfcController.write(intent, codigo); // Escribir el codigo en el NFC
-            listView.setAdapter(adapter); // Actualizar ListView
-            cdd.dismiss(); // Cerrar dialog
-            dialog = false;
+                PntsTagRuta.add(codigo); // Guardar tag
+                nfcController.write(intent, codigo); // Escribir el codigo en el NFC
+                listView.setAdapter(adapter); // Actualizar ListView
+                cdd.dismiss(); // Cerrar dialog
+                dialog = false;
+            }
+            else{
+                GPS_Tracker gps_tracker = new GPS_Tracker(this);
+                String codigo = String.valueOf(codigoTag) + "_" + // Contador de tags en ruta
+                        ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)) + "_" + // Mac de tag
+                        gps_tracker.getLongitude() + "_" + // Latitud actual (ubicacion del tag)
+                        gps_tracker.getLatitude(); // Latitud actual
+
+                PntsTagRuta.remove(pos);
+                PntsTagRuta.add(codigo); // Guardar tag
+                nfcController.write(intent, codigo); // Escribir el codigo en el NFC
+                listView.setAdapter(adapter); // Actualizar ListView
+                cdd.dismiss(); // Cerrar dialog
+                dialog = false;
+            }
         }
     }
 
