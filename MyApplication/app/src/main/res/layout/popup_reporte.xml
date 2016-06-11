@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editText2"
-        android:hint="parte de reporte" />
+        android:hint="Titulo del reporte"
+        android:textAlignment="gravity" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
         android:id="@+id/editText3"
-        android:hint="parte de reporte" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText4"
-        android:hint="parte de reporte" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText5"
-        android:hint="parte de reporte" />
+        android:layout_weight="0.74"
+        android:textAlignment="textStart"
+        android:hint="Descripcion del reporte de la anomalia" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Eliminar"
+        android:text="Archivar Anomalia"
         android:id="@+id/btElimnar"
         android:layout_gravity="center_horizontal"/>
 </LinearLayout>

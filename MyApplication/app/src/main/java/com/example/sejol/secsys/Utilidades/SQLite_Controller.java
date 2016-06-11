@@ -181,11 +181,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
 
         bd.delete(TABLE_TAG_RUT, REF_RUT + "='" + nombre + "'", null);
 
-        //String[] args = new String[]{nombre};
-        //bd.execSQL("DELETE FROM"+TABLE_RUTA+"WHERE "+COLUMN_NOMBRE+"=?", args);
-
         bd.delete(TABLE_RUTA, "nombre='" + nombre + "'", null);
-
 
         return true;
     }
@@ -277,6 +273,14 @@ public class SQLite_Controller extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return arrayListData;
+    }
+
+    public boolean borrarRonda(String codigo) {
+        SQLiteDatabase bd = this.getWritableDatabase();
+
+        bd.delete(TABLE_TAG_RND, REF_RND + "='" + codigo + "'", null);
+
+        return true;
     }
 }
 

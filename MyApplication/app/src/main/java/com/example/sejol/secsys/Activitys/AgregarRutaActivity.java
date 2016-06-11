@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sejol.secsys.Clases.Ruta;
+import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.GPS_Tracker;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
@@ -33,6 +36,8 @@ import java.util.List;
 import java.util.Random;
 
 public class AgregarRutaActivity extends AppCompatActivity {
+
+    Ruta rutaA;
 
     ArrayList<String> PntsTagRuta = new ArrayList<>(); // Putos en el recorrido de la ruta
     SQLite_Controller db; // Clase para accesar a la base de datos
@@ -76,6 +81,13 @@ public class AgregarRutaActivity extends AppCompatActivity {
         txtNombre = (TextView) findViewById(R.id.txtAddRutNombre); // Nombre de la ruta
         listView = (ListView) findViewById(R.id.listViewAR); // Lista de puntos
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
         if(getIntent().getExtras().getString("ruta").equals("")) {
             agregar = true;
         }
@@ -99,7 +111,18 @@ public class AgregarRutaActivity extends AppCompatActivity {
      */
     private void adapterSet(String ruta) {
         if(!agregar){
-            //PntsTagRuta = db.getTagsDeRutaPorRuta(ruta);
+            ArrayList<Ruta> ruta1 = db.getRutas();
+            for(Ruta rut: ruta1){
+                if(rut.getNombre().equals(getIntent().getExtras().getString("ruta"))){
+                    rutaA = rut;
+                }
+            }
+            ArrayList<Tag> tags = db.getTagsDeRutaPorRuta(rutaA.getCodigo());
+            for(Tag tag: tags){
+                if(tag.getRonda().equals(rutaA.getCodigo())){
+                    PntsTagRuta.add(tag.getCodigo());
+                }
+            }
         }
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, PntsTagRuta);
         listView.setAdapter(adapter);

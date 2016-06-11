@@ -350,6 +350,7 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getContext(),"Reporte creado",Toast.LENGTH_SHORT).show();
+                    MarkerLatLng.remove();
                     dismiss();
                 }
             });

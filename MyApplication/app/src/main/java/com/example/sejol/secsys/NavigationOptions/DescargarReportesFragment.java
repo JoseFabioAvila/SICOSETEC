@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.example.sejol.secsys.Activitys.AgregarRutaActivity;
 import com.example.sejol.secsys.Activitys.MainActivity;
 import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Ruta;
@@ -32,7 +34,6 @@ import java.util.ArrayList;
 public class DescargarReportesFragment extends Fragment {
 
     Usuario usuario;
-    private CardView cardViewAgragarRonda;
     private ListView lvRondas;
     private SQLite_Controller db;
 
@@ -62,19 +63,30 @@ public class DescargarReportesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(view.getContext(), "List item " + position, Toast.LENGTH_SHORT).show();
-                PDF_Controller pdf_controller = new PDF_Controller(rondas.get(position),db.getTagsDeRondaPorRuta(rondas.get(position).getCodigo()));
-            }
-        });
 
-        cardViewAgragarRonda = (CardView) view.findViewById(R.id.card_view_agregarRonda);
-        cardViewAgragarRonda.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                //Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
+                final PopupMenu popup = new PopupMenu(view.getContext(), lvRondas);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.opciones_imp_ronda, popup.getMenu());
 
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                final int pos = position;
 
-                startActivity(intent);
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.pdf:
+                                PDF_Controller pdf_controller = new PDF_Controller(rondas.get(pos), db.getTagsDeRondaPorRuta(rondas.get(pos).getCodigo()));
+                                return true;
+                            case R.id.borrarRonda:
+                                db.borrarRonda(rondas.get(pos).getCodigo());
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+
+                popup.show();//showing popup menu
             }
         });
         return view;
