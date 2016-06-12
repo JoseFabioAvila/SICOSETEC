@@ -66,8 +66,52 @@ de la aplicacion:
   Contiene popups que se utlizan para guardar ronda en la base de datos 
   y para seleccionar la ruta a seguir por el guarda.
 
-Como se puede volver a ejecutar y si el código debe respetar derechos de autor.
 
+RECOMENDACIONES
+-------------------
+Se recomienda usar versión de Andriod mínima de 4.2.2 (Jelly Bean).
+
+INSTALACIÓN
+------------
+ Se instala como normalmente se haría con un app que no se encuentra en la tienda de google play, mediante el APK directamente, el cual se encargará de instalarla en el dispositivo.
+
+DERECHOS DE AUTOR
+-----------------
+
+	"The MIT License (MIT)
+
+	Copyright (c) 2011-2016 SICOSETEC, Inc.
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+	
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+	
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE."
+
+
+
+COLABORADORES
+-------------
+
+Colaboradores Actuales:
+
+ * Jose Fabio Ávila Estrada         - fabioavila-16@hotmail.com
+ * Jose Pablo Gamboa Vargas         - gamboavargasjosepablo@gmail.com
+ * Keylor Gerardo Rojas Araya 	    - morchak@gmail.com
+ * Jimmy Alfonso Valverde Alfaro    - xjimmyx45@gmail.com
+ * Daniel Antonio Valverde Hidalgo  - dzniel13@hotmail.com 
 
 
 
