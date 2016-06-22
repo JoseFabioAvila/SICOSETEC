@@ -35,9 +35,9 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBjbeW1F7CUpauIDR0TTPwI7S5TYgNtH4M"/>
+            android:value="AIzaSyBjbeW1F7CUpauIDR0TTPwI7S5TYgNtH4M" />
 
-            <!--android:value="@string/google_maps_key" /-->
+        <!-- android:value="@string/google_maps_key" / -->
 
         <activity
             android:name=".MapsActivity"
@@ -72,7 +72,10 @@
             android:theme="@style/AppTheme.CustomPopup" />
         <activity
             android:name=".Popup.PopupGuardarRonda"
-            android:theme="@style/AppTheme.CustomPopup"></activity>
+            android:theme="@style/AppTheme.CustomPopup" />
+        <activity
+            android:name=".Popup.PopupReportarAnomalia"
+            android:theme="@style/AppTheme.CustomPopup"/>
     </application>
 
 </manifest>

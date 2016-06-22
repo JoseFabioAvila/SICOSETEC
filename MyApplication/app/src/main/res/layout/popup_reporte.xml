@@ -18,7 +18,6 @@
         android:ems="10"
         android:id="@+id/editText3"
         android:layout_weight="0.74"
-        android:textAlignment="textStart"
         android:hint="Descripcion del reporte de la anomalia" />
 
     <Button

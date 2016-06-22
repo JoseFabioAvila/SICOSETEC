@@ -29,7 +29,9 @@ import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Ruta;
 import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.Clases.Usuario;
+import com.example.sejol.secsys.Dialogs.ReportarAnomalias;
 import com.example.sejol.secsys.Popup.PopupGuardarRonda;
+import com.example.sejol.secsys.Popup.PopupReportarAnomalia;
 import com.example.sejol.secsys.Popup.PopupSeleccionarRuta;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
@@ -58,13 +60,13 @@ import java.util.Date;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RealizarRutasFragment extends Fragment implements LocationListener {
+public class RealizarRondasFragment extends Fragment implements LocationListener {
 
     View v;
     private GoogleMap mMap;
     private LocationManager locationManager;
     LatLng UserLatLng;
-    Marker MarkerLatLng;
+
 
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
@@ -74,8 +76,8 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     ArrayList<Marker> punterosEnMapa = new ArrayList<>(); // Marker de los tag de la ruta seleccionada
     Tag[] estadoDeRonda; // Estado del recorrido de la ruta --> Tag de la ronda
     Ronda ronda; // Ronda --> Conjunto de tags
-
     Usuario usuario;
+    Marker MarkerReporte;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,18 +120,18 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
-            if (requestCode == 1) {
-                mMap.clear();
-                Ruta ruta = (Ruta) data.getSerializableExtra("ruta");
-                ronda = crearIdRonda(ruta);
+            if (requestCode == 1) { // Volver del seleccionar ruta
+                mMap.clear(); // Limpiar el mapa
+                Ruta ruta = (Ruta) data.getSerializableExtra("ruta"); // get ruta
+                ronda = crearIdRonda(ruta);  // Construi ronda a partir de la ruta seleccionada
 
-                puntosPorRecorrer = db.getTagsDeRutaPorRuta(ruta.getCodigo());
-                estadoDeRonda = new Tag[puntosPorRecorrer.size()];
+                puntosPorRecorrer = db.getTagsDeRutaPorRuta(ruta.getCodigo()); // Get tag de la ruta
+                estadoDeRonda = new Tag[puntosPorRecorrer.size()]; // Crear lista de estados para la ronda
 
-                displayMarkerPuntosPorRecorrer();
-            }else if(requestCode == 2){
+                displayMarkerPuntosPorRecorrer();// Mostrar lista de tag en el mapa
+            }else if(requestCode == 2){ // Volver luego de guardar
                 Bundle b = data.getExtras();
-                guardarRodonda((String) b.get("nombre"));
+                guardarRodonda((String) b.get("nombre")); // Guardar ronda en bd
             }
         }
     }
@@ -142,6 +144,44 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
         return ronda;
     }
 
+    /*
+    Constructor de ronda a partir de un ruta seleccionada
+     */
+    private Ronda crearIdRonda(Ruta ruta) {
+
+        Ronda ronda = new Ronda();
+        String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date()); // Fecha de cración de la ronda
+
+        ronda.setCodigo(ruta.getCodigo() + fecha);
+        ronda.setNombre(ruta.getNombre());
+        ronda.setFecha(fecha);
+
+        return ronda;
+    }
+
+    /*
+    Metodo para guardar la ronda del sistema en la base de datos
+     */
+    private void guardarRodonda(String nombre){
+        // Almacenar ronda en la base de datos
+        db.insertRonda(ronda.getCodigo(), nombre, ronda.getFecha(), usuario.getUsuario());
+        for (int i = 0; i < puntosPorRecorrer.size(); i++) {
+            if (estadoDeRonda[i] != null)
+                db.insertTagRND(
+                        estadoDeRonda[i].getCodigo(),
+                        estadoDeRonda[i].getHora(),
+                        estadoDeRonda[i].getRonda()); // Almacenar tag y asignarlo a la ruta creada
+            else
+                db.insertTagRND(
+                        puntosPorRecorrer.get(i).getCodigo(),
+                        " No se realizó",
+                        puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
+        }
+    }
+
+    /*
+    Actualiza el mapa luego de pasar por un tag
+     */
     public void ActualizarRonda(Tag lectura) {
         for (int i = 0; i < puntosPorRecorrer.size(); i++) {
             if (puntosPorRecorrer.get(i).getCodigo().equals(lectura.getCodigo())) {
@@ -161,35 +201,9 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
         }
     }
 
-    private void guardarRodonda(String nombre){
-        // Almacenar ronda en la base de datos
-        db.insertRonda(ronda.getCodigo(), nombre, ronda.getFecha(), usuario.getUsuario());
-        for (int i = 0; i < puntosPorRecorrer.size(); i++) {
-            if (estadoDeRonda[i] != null)
-                db.insertTagRND(
-                        estadoDeRonda[i].getCodigo(),
-                        estadoDeRonda[i].getHora(),
-                        estadoDeRonda[i].getRonda()); // Almacenar tag y asignarlo a la ruta creada
-            else
-                db.insertTagRND(
-                        puntosPorRecorrer.get(i).getCodigo(),
-                        " No se realizó",
-                        puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
-        }
-    }
-
-    private Ronda crearIdRonda(Ruta ruta) {
-
-        Ronda ronda = new Ronda();
-        String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
-
-        ronda.setCodigo(ruta.getCodigo() + fecha);
-        ronda.setNombre(ruta.getNombre());
-        ronda.setFecha(fecha);
-
-        return ronda;
-    }
-
+    /*
+    Carga en el mapa todos lo tag de una ruta
+     */
     private void displayMarkerPuntosPorRecorrer() {
         for (Tag tag : puntosPorRecorrer) {
             String[] tagData = tag.getCodigo().split("_");
@@ -321,47 +335,21 @@ public class RealizarRutasFragment extends Fragment implements LocationListener 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                if(MarkerLatLng != null)
-                    MarkerLatLng.remove();
+                if(MarkerReporte != null)
+                    MarkerReporte.remove();
 
-                MarkerLatLng = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title("Remover"));
-                ReportarAnomalias anomalia = new ReportarAnomalias(getActivity());
-                anomalia.show();
+                MarkerReporte = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title("Remover"));
+                Intent i = new Intent(v.getContext(), PopupReportarAnomalia.class);
+                startActivityForResult(i,3);
+                //ReportarAnomalias anomalia = new ReportarAnomalias(getActivity());
+                //anomalia.show();
+
                 //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         });
     }
 
-    public class ReportarAnomalias extends Dialog implements android.view.View.OnClickListener {
-        Button button;
 
-        public ReportarAnomalias(Activity a) {
-            super(a);
-
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.popup_reporte);
-            button = (Button) findViewById(R.id.btElimnar);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getContext(),"Reporte creado",Toast.LENGTH_SHORT).show();
-                    MarkerLatLng.remove();
-                    dismiss();
-                }
-            });
-
-        }
-
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
 
     // ---------------------------------------------------------------------------------------------
     // ------------------------------   Configurar gestos     --------------------------------------

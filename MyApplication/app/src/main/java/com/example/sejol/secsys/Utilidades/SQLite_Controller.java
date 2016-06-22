@@ -26,23 +26,31 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     public static final String COLUMN_CONTRASEÑA = "contraseña";
 
     //_________________________________________________________________
+
     public static final String TABLE_RONDA   = "TRonda";
     public static final String COLUMN_ID_RND   = "codigo";
     //public static final String COLUMN_NOMBRE = "nombre";
     public static final String COLUMN_FECHA    = "fecha";
+    public static final String COLUMN_REPORTE    = "reporte";
     public static final String REF_USUARIO     = "usuario";
 
-    //_________________________________________________________________
+    public static final String TABLE_REPORTE        = "TReporte";
+    public static final String COLUMN_ID            = "codigo";
+    public static final String COLUMN_ANOMALIA      = "anomalia";
+    public static final String COLUMN_RDESCRIPCION  = "descripcion";
+    public static final String COLUMN_RHORA         = "hora";
+    public static final String REF_RONDA            = "ronda";
+
     public static final String TABLE_TAG_RND = "T_RND_Tag";
     public static final String COLUMN_ID_TAG   = "codigo";
     public static final String COLUMN_HORA     = "hora";
     public static final String REF_RND         = "ronda";
 
     //_________________________________________________________________
+
     public static final String TABLE_RUTA    = "TRuta";
     public static final String COLUMN_ID_RUT  = "codigo";
 
-    //_________________________________________________________________
     public static final String TABLE_TAG_RUT  = "T_RUT_Tag";
     //public static final String COLUMN_ID_TAG = "codigo";
     public static final String REF_RUT         = "ruta";
@@ -53,12 +61,13 @@ public class SQLite_Controller extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // Tabla de usuario
         db.execSQL(
                 "create table " + TABLE_USUARIO +
                         "(" + COLUMN_USUARIO    + " text primary key," +
                               COLUMN_CONTRASEÑA + " text, " +
                               COLUMN_NOMBRE     + " text )");
-
+        // Tabla de ronda
         db.execSQL(
                 "create table " + TABLE_RONDA +
                         "(" + COLUMN_ID_RND   + " text primary key," +
@@ -67,18 +76,29 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                               REF_USUARIO       + " text," +
                              " FOREIGN KEY ("+REF_USUARIO+") REFERENCES "+TABLE_USUARIO+"("+COLUMN_USUARIO+"));");
 
+        // Tabla de reporte
+        db.execSQL(
+                "create table " + TABLE_REPORTE +
+                        "(" + COLUMN_ID_TAG   + " text primary key," +
+                              COLUMN_ID         + " text," +
+                              COLUMN_ANOMALIA     + " text," +
+                              COLUMN_RDESCRIPCION   + " text," +
+                              COLUMN_RHORA        + " text," +
+                              REF_RONDA         + " text," +
+                        " FOREIGN KEY ("+REF_RONDA+") REFERENCES "+TABLE_RONDA+"("+COLUMN_ID_RND+"));");
+        // Tabla de tags de ronda
         db.execSQL(
                 "create table " + TABLE_TAG_RND +
                         "(" + COLUMN_ID_TAG   + " text primary key," +
                               COLUMN_HORA     + " text," +
                               REF_RND   + " text, " +
                              " FOREIGN KEY ("+REF_RND+") REFERENCES "+TABLE_RONDA+"("+COLUMN_ID_RND+"));");
-
+        // Tabla de rutas
         db.execSQL(
                 "create table " + TABLE_RUTA +
                         "(" + COLUMN_ID_RUT   + " text primary key," +
                               COLUMN_NOMBRE   + " text);" );
-
+        // Tabla de tags de ruta
         db.execSQL(
                 "create table " + TABLE_TAG_RUT +
                         "(" + COLUMN_ID_TAG + " text primary key," +
@@ -129,6 +149,20 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         registro.put(COLUMN_ID_RND , codigo);
         registro.put(COLUMN_NOMBRE, nombre);
         registro.put(COLUMN_FECHA, fecha);
+        registro.put(COLUMN_REPORTE, "");
+        registro.put(REF_USUARIO, usuario);
+        bd.insert(TABLE_RONDA, null, registro);
+        bd.close();
+        return true;
+    }
+
+    public boolean insertRonda(String codigo, String nombre, String fecha, String usuario, String reporte){
+        SQLiteDatabase bd = this.getWritableDatabase();
+        ContentValues registro = new ContentValues();
+        registro.put(COLUMN_ID_RND , codigo);
+        registro.put(COLUMN_NOMBRE, nombre);
+        registro.put(COLUMN_FECHA, fecha);
+        registro.put(COLUMN_REPORTE, reporte);
         registro.put(REF_USUARIO, usuario);
         bd.insert(TABLE_RONDA, null, registro);
         bd.close();

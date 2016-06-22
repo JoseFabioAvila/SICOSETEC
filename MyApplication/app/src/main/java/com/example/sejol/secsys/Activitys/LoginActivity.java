@@ -112,6 +112,8 @@ public class LoginActivity extends AppCompatActivity
 
     private void loadUser(String email, String password)
     {
+        if(email == null || password == null )
+            return;
         if(!email.equals("") && !password.equals(""))
         {
             SQLite_Controller db = new SQLite_Controller(this);

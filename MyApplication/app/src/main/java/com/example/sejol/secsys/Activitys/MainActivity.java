@@ -9,10 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sejol.secsys.Adapters.FragmentDrawer;
@@ -20,7 +16,7 @@ import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.Clases.Usuario;
 import com.example.sejol.secsys.NavigationOptions.CrearRutasFragment;
 import com.example.sejol.secsys.NavigationOptions.DescargarReportesFragment;
-import com.example.sejol.secsys.NavigationOptions.RealizarRutasFragment;
+import com.example.sejol.secsys.NavigationOptions.RealizarRondasFragment;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
@@ -94,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             case 0:
                 read = true;
                 first = 0;
-                fragment = new RealizarRutasFragment();
+                fragment = new RealizarRondasFragment();
                 title = getString(R.string.title_adm_realizar);
                 break;
             case 1:
@@ -134,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if(read) {
-            RealizarRutasFragment frag = (RealizarRutasFragment)fragment;
+            RealizarRondasFragment frag = (RealizarRondasFragment)fragment;
             SQLite_Controller db = new SQLite_Controller(this);
             ArrayList<Tag> tag = db.getTagsDeRuta();
             Tag lectura = db.getTagsDeRutaPorCodigo(nfcController.leerPunto(intent));
