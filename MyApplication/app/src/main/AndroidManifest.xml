@@ -75,7 +75,8 @@
             android:theme="@style/AppTheme.CustomPopup" />
         <activity
             android:name=".Popup.PopupReportarAnomalia"
-            android:theme="@style/AppTheme.CustomPopup"/>
+            android:theme="@style/AppTheme.CustomPopup" />
+        <activity android:name=".Popup.PopupVerReporte"></activity>
     </application>
 
 </manifest>

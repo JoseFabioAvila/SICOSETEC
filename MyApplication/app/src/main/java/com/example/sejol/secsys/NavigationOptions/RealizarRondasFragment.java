@@ -25,11 +25,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.sejol.secsys.Clases.Reporte;
 import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Ruta;
 import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.Clases.Usuario;
-import com.example.sejol.secsys.Dialogs.ReportarAnomalias;
 import com.example.sejol.secsys.Popup.PopupGuardarRonda;
 import com.example.sejol.secsys.Popup.PopupReportarAnomalia;
 import com.example.sejol.secsys.Popup.PopupSeleccionarRuta;
@@ -78,6 +78,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
     Ronda ronda; // Ronda --> Conjunto de tags
     Usuario usuario;
     Marker MarkerReporte;
+    ArrayList<Reporte> reportes = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -131,7 +132,16 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                 displayMarkerPuntosPorRecorrer();// Mostrar lista de tag en el mapa
             }else if(requestCode == 2){ // Volver luego de guardar
                 Bundle b = data.getExtras();
-                guardarRodonda((String) b.get("nombre")); // Guardar ronda en bd
+                guardarRonda((String) b.get("nombre")); // Guardar ronda en bd
+
+            }else if(requestCode == 3){ // Volver luego de realizar un reporte
+                Bundle b = data.getExtras();
+                String titulo = b.get("titulo").toString();
+                String descripcion = b.get("descripcion").toString();
+                String hora = new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+                Reporte nuevoReporte = new Reporte(titulo,descripcion,hora);
+                reportes.add(nuevoReporte);
             }
         }
     }
@@ -162,9 +172,11 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
     /*
     Metodo para guardar la ronda del sistema en la base de datos
      */
-    private void guardarRodonda(String nombre){
+    private void guardarRonda(String nombre){
         // Almacenar ronda en la base de datos
+        // GUardar ronda
         db.insertRonda(ronda.getCodigo(), nombre, ronda.getFecha(), usuario.getUsuario());
+        // Guardar estado de la ronda (Ountos recorridos y no recorridos)
         for (int i = 0; i < puntosPorRecorrer.size(); i++) {
             if (estadoDeRonda[i] != null)
                 db.insertTagRND(
@@ -177,6 +189,8 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                         " No se realizó",
                         puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
         }
+        //GUardar reportes
+        db.insertListaReportes(reportes,usuario);
     }
 
     /*
@@ -291,7 +305,6 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-
                 marker.remove();
             }
         });
@@ -341,10 +354,6 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                 MarkerReporte = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title("Remover"));
                 Intent i = new Intent(v.getContext(), PopupReportarAnomalia.class);
                 startActivityForResult(i,3);
-                //ReportarAnomalias anomalia = new ReportarAnomalias(getActivity());
-                //anomalia.show();
-
-                //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         });
     }

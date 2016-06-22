@@ -4,7 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:padding="@dimen/activity_horizontal_margin">
 
     <LinearLayout
         android:orientation="vertical"
@@ -14,22 +15,22 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText2"
+            android:id="@+id/popAnomaliaTitulo"
             android:hint="Titulo del reporte"
-            android:textAlignment="gravity" />
+            android:textAlignment="center" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:ems="10"
-            android:id="@+id/editText3"
+            android:id="@+id/popAnomaliaDescripcion"
             android:layout_weight="0.74"
-            android:hint="Descripcion del reporte de la anomalia" />
+            android:hint="Presiona para escribir descipcion de la anomalía" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabGuardar"
+        android:id="@+id/fabAnomaliaGuardar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

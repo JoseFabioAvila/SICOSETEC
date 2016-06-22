@@ -51,30 +51,4 @@ public class Ronda {
         this.usuario = usuario;
     }
 
-    public class Reporte{
-
-        private String anomalia;
-        private String descripcion;
-
-        public Reporte(String anomalia, String descripcion){
-            this.anomalia = anomalia;
-            this.descripcion = descripcion;
-        }
-
-        public String getAnomalia() {
-            return anomalia;
-        }
-
-        public void setAnomalia(String anomalia) {
-            this.anomalia = anomalia;
-        }
-
-        public String getDescripcion() {
-            return descripcion;
-        }
-
-        public void setDescripcion(String descripcion) {
-            this.descripcion = descripcion;
-        }
-    }
 }
