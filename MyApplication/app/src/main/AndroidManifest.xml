@@ -39,9 +39,6 @@
 
         <!-- android:value="@string/google_maps_key" / -->
 
-        <activity
-            android:name=".MapsActivity"
-            android:label="jojo" />
         <activity android:name=".Activitys.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
