@@ -26,7 +26,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Reporte"
-                    android:textSize="30dp"
+                    android:textSize="20dp"
                     android:textAlignment="center"
                     android:textStyle="bold"/>
 
@@ -41,20 +41,20 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:text="Oficial: "
-                        android:textSize="20dp"/>
+                        android:textSize="15dp"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:text="Jose Pablo Gamboa "
-                        android:textSize="20dp"/>
+                        android:textSize="15dp"
+                        android:id="@+id/poptxtOficial"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -62,20 +62,20 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:text="Ronda: "
-                        android:textSize="20dp"/>
+                        android:textSize="15dp"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:text="Ronda Diurna Juanito"
-                        android:textSize="20dp"/>
+                        android:textSize="15dp"
+                        android:id="@+id/poptxtRonda"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -83,14 +83,36 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:text="Fecha: "
-                        android:textSize="20dp"/>
+                        android:textSize="15dp"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
-                        android:text="25/6/16 20:30:01"
-                        android:textSize="20dp"/>
+                        android:text="25/6/16"
+                        android:textSize="15dp"
+                        android:id="@+id/poptxtFecha"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Hora: "
+                        android:textSize="15dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:text="20:30:01"
+                        android:textSize="15dp"
+                        android:id="@+id/poptxtHora"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -103,14 +125,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Ronda"
-                    android:textSize="30dp"
+                    android:textSize="20dp"
                     android:textAlignment="center"
                     android:textStyle="bold"/>
 
                 <ListView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/lstTags">
+                    android:id="@+id/poplvTags">
 
                 </ListView>
             </LinearLayout>
@@ -124,14 +146,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Reportes"
-                    android:textSize="30dp"
+                    android:textSize="20dp"
                     android:textAlignment="center"
                     android:textStyle="bold"/>
 
                 <ListView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/lstReportes">
+                    android:id="@+id/poplvReportes">
 
                 </ListView>
 

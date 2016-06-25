@@ -142,6 +142,11 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
 
                 Reporte nuevoReporte = new Reporte(titulo,descripcion,hora);
                 reportes.add(nuevoReporte);
+                BitmapDescriptor icon =
+                        BitmapDescriptorFactory.fromResource(R.drawable.map_icon_notification);
+                mMap.addMarker(new MarkerOptions().position(MarkerReporte.getPosition()).draggable(true).icon(icon));
+                MarkerReporte.remove();
+
             }
         }
     }
@@ -186,11 +191,11 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
             else
                 db.insertTagRND(
                         puntosPorRecorrer.get(i).getCodigo(),
-                        " No se realizó",
+                        " No realizado",
                         puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
         }
         //GUardar reportes
-        db.insertListaReportes(reportes,usuario);
+        db.insertListaReportes(reportes,ronda);
     }
 
     /*
@@ -203,7 +208,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                 Tag nuevoTag = new Tag();
                 String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
 
-                nuevoTag.setCodigo(lectura.getCodigo() + fecha);
+                nuevoTag.setCodigo(lectura.getCodigo() + "_" + fecha);
                 nuevoTag.setRonda(ronda.getCodigo());
                 nuevoTag.setHora(fecha);
 
@@ -295,7 +300,6 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(v.getContext(), "Holis", Toast.LENGTH_SHORT);
                 return false;
             }
 
@@ -309,7 +313,6 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
             }
         });
     }
-
 
     // ---------------------------------------------------------------------------------------------
     // ----------------------------   Cambios de posicion      -------------------------------------

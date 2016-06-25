@@ -1,11 +1,12 @@
 package com.example.sejol.secsys.Clases;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by sejol on 4/6/2016.
  */
-public class Ronda {
+public class Ronda implements Serializable{
     private String codigo,nombre,fecha,usuario;
     private ArrayList<Reporte> reportes;
 

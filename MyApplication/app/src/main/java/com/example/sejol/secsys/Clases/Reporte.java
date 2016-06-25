@@ -1,10 +1,12 @@
 package com.example.sejol.secsys.Clases;
 
+import java.io.Serializable;
+
 /**
  * Created by jose on 6/21/16.
  */
 
-public class Reporte{
+public class Reporte implements Serializable{
 
     private String anomalia;
     private String descripcion;
@@ -14,6 +16,10 @@ public class Reporte{
         this.anomalia = anomalia;
         this.descripcion = descripcion;
         this.hora = hora;
+    }
+
+    public Reporte() {
+
     }
 
     public String getAnomalia() {

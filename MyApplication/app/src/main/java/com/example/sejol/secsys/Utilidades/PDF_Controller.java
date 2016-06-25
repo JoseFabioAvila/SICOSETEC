@@ -6,8 +6,10 @@ package com.example.sejol.secsys.Utilidades;
 
 import android.os.Environment;
 
+import com.example.sejol.secsys.Clases.Reporte;
 import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Tag;
+import com.example.sejol.secsys.Clases.Usuario;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -30,16 +32,19 @@ public class PDF_Controller {
             Font.BOLD);
     private static Font Subtitulo = new Font(Font.FontFamily.TIMES_ROMAN, 18,
             Font.BOLD);
-    private static Font TxtRojo = new Font(Font.FontFamily.TIMES_ROMAN, 12,
-            Font.NORMAL, BaseColor.RED);
     private static Font TxtNegro = new Font(Font.FontFamily.TIMES_ROMAN, 12,
             Font.NORMAL);
-    private Ronda ronda;
-    private ArrayList<Tag> puntos;
 
-    public PDF_Controller(Ronda ronda, ArrayList<Tag> puntos) {
-        this.ronda = ronda;
-        this.puntos = puntos;
+    private Ronda ronda;
+    private Usuario usuario;
+    private ArrayList<Tag> puntos;
+    private ArrayList<Reporte> reportes;
+
+    public PDF_Controller(Ronda rnd, Usuario usr, ArrayList<Tag> pnt, ArrayList<Reporte> rep) {
+        this.ronda = rnd;
+        this.usuario = usr;
+        this.puntos = pnt;
+        this.reportes = rep;
         createPdf();
     }
 
@@ -82,18 +87,33 @@ public class PDF_Controller {
         //Step 4 Add content
         document.add(new Paragraph("Reporte de ronda", Titulo));
         document.add(new Paragraph("", Titulo));
-        document.add(new Paragraph("   Nomrbre: " + ronda.getNombre() , Subtitulo));
-        document.add(new Paragraph("   Fecha:   " + ronda.getFecha()  , Subtitulo));
-        document.add(new Paragraph("   Oficial: " + ronda.getUsuario(), Subtitulo));
+        document.add(new Paragraph("   Ronda:   " + ronda.getNombre() , Subtitulo));
+        document.add(new Paragraph("   Oficial: " + usuario.getNombre(), Subtitulo));
+        List<String> dataFecha = Arrays.asList(ronda.getFecha().split(" "));
+        document.add(new Paragraph("   Fecha:   " + dataFecha.get(0)  , Subtitulo));
+        document.add(new Paragraph("   Inicio:  " + dataFecha.get(1)  , Subtitulo));
 
         document.add(new Paragraph("Detalle de la ronda", Titulo));
         document.add(new Paragraph("", Titulo));
+        document.add(new Paragraph("Ronda realizada: ", Subtitulo));
+        document.add(new Paragraph("", Subtitulo));
         for (Tag pnt:puntos) {
             List<String> codeData = Arrays.asList(pnt.getCodigo().split("_"));
             document.add(new Paragraph("Punto " + codeData.get(0), Subtitulo));
             document.add(new Paragraph("    Latitud : " + codeData.get(3), TxtNegro));
             document.add(new Paragraph("    Longitud: " + codeData.get(2), TxtNegro));
-            document.add(new Paragraph("    Hora:     " + pnt.getHora()  , TxtNegro));
+            List<String> fechaData = Arrays.asList(pnt.getHora().split(" "));
+            document.add(new Paragraph("    Hora:     " + fechaData.get(1)  , TxtNegro));
+            document.add(new Paragraph("", Titulo));
+        }
+
+        document.add(new Paragraph("Anomalías reportadas: ", Subtitulo));
+        document.add(new Paragraph("", Subtitulo));
+        for (int i = 0; i < reportes.size();i++) {
+            document.add(new Paragraph("Reporte " + (i+1), Subtitulo));
+            document.add(new Paragraph("    Anomalía:    " + reportes.get(i).getAnomalia(), TxtNegro));
+            document.add(new Paragraph("    Descripcion: " + reportes.get(i).getDescripcion(), TxtNegro));
+            document.add(new Paragraph("    Hora:        " + reportes.get(i).getHora() , TxtNegro));
             document.add(new Paragraph("", Titulo));
         }
 

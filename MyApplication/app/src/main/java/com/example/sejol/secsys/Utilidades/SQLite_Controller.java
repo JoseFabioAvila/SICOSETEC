@@ -202,7 +202,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return true;
     }
 
-    public ArrayList<Tag> getTagsDeRondaPorRuta(String ruta){
+    public ArrayList<Tag> getTagsDeRondaPorCodigo(String ruta){
         String selectQuery = "SELECT  * FROM " + TABLE_TAG_RND + " where " + REF_RND + " = " + "'"+ruta+"'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -219,19 +219,38 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return arrayListData;
     }
 
-    public boolean insertListaReportes(ArrayList<Reporte> lst,Usuario usuario){
+    public boolean insertListaReportes(ArrayList<Reporte> lst,Ronda ronda){
         SQLiteDatabase bd = this.getWritableDatabase();
+        int i = 0;
         for (Reporte reporte:lst) {
+            i++;
             ContentValues registro = new ContentValues();
-            registro.put(COLUMN_ID, new SimpleDateFormat("dd/MM/yy-HH:mm:ss").format(new Date()));
+            registro.put(COLUMN_ID, i+" "+new SimpleDateFormat("dd/MM/yy-HH:mm:ss").format(new Date()));
             registro.put(COLUMN_ANOMALIA, reporte.getAnomalia());
             registro.put(COLUMN_RDESCRIPCION, reporte.getDescripcion());
             registro.put(COLUMN_RHORA, reporte.getHora());
-            registro.put(REF_RND, usuario.getUsuario());
+            registro.put(REF_RND, ronda.getCodigo());
             bd.insert(TABLE_REPORTE, null, registro);
         }
         bd.close();
         return true;
+    }
+
+    public ArrayList<Reporte> getRepsDeRondaPorCodigo(String codigo) {
+        String selectQuery = "SELECT  * FROM " + TABLE_REPORTE + " where " + REF_RND + " = " + "'"+codigo+"'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ArrayList<Reporte> arrayListData = new ArrayList<Reporte>();
+        if (cursor.moveToFirst()) {
+            do {
+                Reporte reporte = new Reporte();
+                reporte.setAnomalia (cursor.getString(1));
+                reporte.setDescripcion(cursor.getString(2));
+                reporte.setHora(cursor.getString(3));
+                arrayListData.add(reporte);
+            } while (cursor.moveToNext());
+        }
+        return arrayListData;
     }
     /*
     Control de rutas
@@ -327,6 +346,5 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         }
         return resultado;
     }
-
 }
 

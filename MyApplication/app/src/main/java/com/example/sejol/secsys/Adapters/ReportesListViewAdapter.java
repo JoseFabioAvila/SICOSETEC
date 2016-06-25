@@ -21,7 +21,6 @@ import java.util.List;
 public class ReportesListViewAdapter extends BaseAdapter {
     Context ctx;
     ArrayList<Reporte> lstReportes = new ArrayList();
-    ArrayList<String> seleccionados = new ArrayList<>();
     LayoutInflater mInflater;
 
     public ReportesListViewAdapter(ArrayList<Reporte> lst,Context ctx)
@@ -53,15 +52,17 @@ public class ReportesListViewAdapter extends BaseAdapter {
             view = this.mInflater.inflate(R.layout.list_item_reporte, null);
         }
 
+        TextView repNum = (TextView)view.findViewById(R.id.lvNum);
         TextView repAnomalia  = (TextView)view.findViewById(R.id.lvAnomalia);
         TextView repDescripcion = (TextView)view.findViewById(R.id.lvDescripcion);
         TextView repHora = (TextView)view.findViewById(R.id.lvHora);
 
         Reporte reporte = lstReportes.get(pos);
 
-        repAnomalia.setText(reporte.getAnomalia());
-        repDescripcion.setText(reporte.getDescripcion());
-        repHora.setText(reporte.getHora());
+        repNum.setText          ("Reporte "+(pos+1));
+        repAnomalia.setText     ("Anomalía: "+reporte.getAnomalia());
+        repDescripcion.setText  ("Detalle:  "+reporte.getDescripcion());
+        repHora.setText         ("Hora:     "+reporte.getHora());
 
         return view;
     }

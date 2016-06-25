@@ -20,13 +20,12 @@ import java.util.List;
 public class TagListViewAdapter extends BaseAdapter {
     Context ctx;
     ArrayList<Tag> lsttags = new ArrayList();
-    ArrayList<String> seleccionados = new ArrayList<>();
     LayoutInflater mInflater;
 
     public TagListViewAdapter(ArrayList<Tag> lst,Context ctx)
     {
-        this.lsttags = lst;
         this.mInflater = LayoutInflater.from(ctx);
+        this.lsttags = lst;
         this.ctx = ctx;
     }
 
@@ -35,32 +34,29 @@ public class TagListViewAdapter extends BaseAdapter {
         return this.lsttags.size();
     }
 
-    public Object getItem(int paramInt)
+    public Object getItem(int pos)
     {
-        return this.lsttags.get(paramInt);
+        return this.lsttags.get(pos);
     }
 
-    public long getItemId(int paramInt)
+    public long getItemId(int pos)
     {
-        return 0L;
+        return 0;
     }
 
     public View getView(int pos, View view, ViewGroup paramViewGroup)
     {
+        View v = this.mInflater.inflate(R.layout.list_item_tagview, null);
 
-        if (view == null) {
-            view = this.mInflater.inflate(R.layout.list_item_tagview, null);
-        }
-
-        TextView tagPos  = (TextView)view.findViewById(R.id.lv_tag);
-        TextView tagHora = (TextView)view.findViewById(R.id.lv_hora);
+        TextView tagPos  = (TextView)v.findViewById(R.id.lv_tag);
+        TextView tagHora = (TextView)v.findViewById(R.id.lv_hora);
 
         Tag tag = lsttags.get(pos);
-
         List<String> codeData = Arrays.asList(tag.getCodigo().split("_"));
+
         tagPos.setText("Punto " + codeData.get(0));
         tagHora.setText(tag.getHora());
 
-        return view;
+        return v;
     }
 }
