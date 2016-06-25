@@ -4,6 +4,7 @@ package com.example.sejol.secsys.NavigationOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,10 +15,13 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.example.sejol.secsys.Activitys.AgregarRutaActivity;
 import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Usuario;
+import com.example.sejol.secsys.Popup.PopupConfiguracionDeCorreos;
 import com.example.sejol.secsys.Popup.PopupVerReporte;
 import com.example.sejol.secsys.R;
+import com.example.sejol.secsys.Utilidades.Email_Controller;
 import com.example.sejol.secsys.Utilidades.PDF_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 
@@ -31,6 +35,7 @@ public class DescargarReportesFragment extends Fragment {
     Usuario usuario;
     private ListView lvRondas;
     private SQLite_Controller db;
+    View view;
 
     public DescargarReportesFragment() {
         // Required empty public constructor
@@ -41,18 +46,28 @@ public class DescargarReportesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_descargar_reportes, container, false);
+        view = inflater.inflate(R.layout.fragment_descargar_reportes, container, false);
 
-        usuario = (Usuario) getArguments().getSerializable("usuario");
+
+        CardView cardView1 = (CardView) view.findViewById(R.id.card_view);
+        cardView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(view.getContext(), PopupConfiguracionDeCorreos.class);
+                startActivity(i);
+            }
+        });
+
+        usuario = (Usuario) getArguments().getSerializable("usuario"); // Usuario logueado
 
         db = new SQLite_Controller(view.getContext());
-        final ArrayList<Ronda> rondas = db.getRondas(usuario);
-        ArrayList<String> nombresRondas = new ArrayList<>();
+        final ArrayList<Ronda> rondas = db.getRondas(usuario); // recoger rondas del usuario
+        ArrayList<String> nombresRondas = new ArrayList<>(); // Lista de los nombres de las rondas
         for(Ronda ronda:rondas){
-            nombresRondas.add(ronda.getNombre());
+            nombresRondas.add(ronda.getNombre()); // add nombre de ronda
         }
 
-        lvRondas = (ListView) view.findViewById(R.id.lvRondas);
+        lvRondas = (ListView) view.findViewById(R.id.lvRondas); // Lista para desplrear las rondas
         lvRondas.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,nombresRondas));
         lvRondas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -64,8 +79,7 @@ public class DescargarReportesFragment extends Fragment {
                 //Inflating the Popup using xml file
                 popup.getMenuInflater().inflate(R.menu.opciones_imp_ronda, popup.getMenu());
 
-                final int pos = position;
-
+                final int pos = position; // Posicion numerica del objeto de la lista seleccionado
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {

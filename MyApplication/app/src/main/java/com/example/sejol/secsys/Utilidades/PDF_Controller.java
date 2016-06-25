@@ -71,7 +71,8 @@ public class PDF_Controller {
         Date date = new Date() ;
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(date);
 
-        File myFile = new File(docFolder + timeStamp + ".pdf");
+        //File myFile = new File(docFolder + timeStamp + ".pdf");
+        File myFile = new File(docFolder+": "+ronda.getNombre() + ".pdf");
 
         OutputStream output = new FileOutputStream(myFile);
 

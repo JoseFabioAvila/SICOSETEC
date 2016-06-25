@@ -75,7 +75,10 @@
             android:theme="@style/AppTheme.CustomPopup" />
         <activity
             android:name=".Popup.PopupVerReporte"
-            android:theme="@style/AppTheme.CustomPopup"/>
+            android:theme="@style/AppTheme.CustomPopup" />
+        <activity
+            android:name=".Popup.PopupConfiguracionDeCorreos"
+            android:theme="@style/AppTheme.CustomPopup" />
     </application>
 
 </manifest>
