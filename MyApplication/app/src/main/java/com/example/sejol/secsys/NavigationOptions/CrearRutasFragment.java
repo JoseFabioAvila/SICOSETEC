@@ -36,16 +36,6 @@ public class CrearRutasFragment extends Fragment {
     private SQLite_Controller db;
 
 
-    //////////////////////Primero en ejecucion///////////////////////
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof Activity){
-            this.listener = (FragmentActivity) context;
-        }
-    }*/
-    //////////////////////Primero en ejecucion///////////////////////
-
     //////////////////////Segundo en ejecucion///////////////////////
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +82,6 @@ public class CrearRutasFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-
 
                 //Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
                 final PopupMenu popup = new PopupMenu(view.getContext(), listView);
@@ -156,7 +145,6 @@ public class CrearRutasFragment extends Fragment {
         // handle item selection
         switch (item.getItemId()) {
             case R.id.action_hola:
-                Toast.makeText(getContext(),"jajajaja",Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

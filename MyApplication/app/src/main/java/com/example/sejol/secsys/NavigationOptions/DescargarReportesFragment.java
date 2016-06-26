@@ -13,15 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
-import com.example.sejol.secsys.Activitys.AgregarRutaActivity;
 import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Usuario;
 import com.example.sejol.secsys.Popup.PopupConfiguracionDeCorreos;
 import com.example.sejol.secsys.Popup.PopupVerReporte;
 import com.example.sejol.secsys.R;
-import com.example.sejol.secsys.Utilidades.Email_Controller;
 import com.example.sejol.secsys.Utilidades.PDF_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 
@@ -72,7 +69,6 @@ public class DescargarReportesFragment extends Fragment {
         lvRondas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                Toast.makeText(view.getContext(), "List item " + position, Toast.LENGTH_SHORT).show();
 
                 //Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
                 final PopupMenu popup = new PopupMenu(view.getContext(), lvRondas);

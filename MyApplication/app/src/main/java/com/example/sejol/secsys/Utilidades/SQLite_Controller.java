@@ -28,6 +28,8 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     public static final String COLUMN_USUARIO    = "usuario";
     public static final String COLUMN_CONTRASEÑA = "contraseña";
 
+    public static final String TABLE_CORREOS = "TCorreos";
+    public static final String COLUMN_CORREO = "correo";
     //_________________________________________________________________
 
     public static final String TABLE_RONDA     = "TRonda";
@@ -69,6 +71,10 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                         "(" + COLUMN_USUARIO    + " text primary key," +
                               COLUMN_CONTRASEÑA + " text, " +
                               COLUMN_NOMBRE     + " text )");
+        // Tabla de correos
+        db.execSQL(
+                "create table " + TABLE_CORREOS +
+                        "(" + COLUMN_CORREO    + " text primary key)");
         // Tabla de ronda
         db.execSQL(
                 "create table " + TABLE_RONDA +
@@ -116,7 +122,6 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     /*
      Control de usuarios
      */
-
     public boolean insertUser(String nombre, String usuario, String contraseña){
         SQLiteDatabase bd = this.getWritableDatabase();
         ContentValues registro = new ContentValues();
@@ -148,6 +153,31 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return mae;
     }
 
+    public void insertCorreo(String correo){
+        SQLiteDatabase bd = this.getWritableDatabase();
+        ContentValues registro = new ContentValues();
+        registro.put(COLUMN_CORREO , correo);
+        bd.insert(TABLE_CORREOS, null, registro);
+        bd.close();
+    }
+
+    public void deleteCorreo(String correo){
+        SQLiteDatabase bd = this.getWritableDatabase();
+        bd.delete(TABLE_CORREOS, "correo ='" + correo + "'", null);
+    }
+
+    public ArrayList<String> getCorreos(){
+        String selectQuery = "SELECT  * FROM " + TABLE_CORREOS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ArrayList<String> arrayListData = new ArrayList<String>();
+        if (cursor.moveToFirst()) {
+            do {
+                arrayListData.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        return arrayListData;
+    }
     /*
     Control de rondas
      */

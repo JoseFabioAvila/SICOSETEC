@@ -31,7 +31,8 @@
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"/>
+            android:layout_weight="5"
+            android:id="@+id/popTxtCorreo"/>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,7 +40,8 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_input_add"/>
+                android:src="@android:drawable/ic_input_add"
+                android:id="@+id/popImgBtnAdd"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
