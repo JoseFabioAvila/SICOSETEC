@@ -133,35 +133,4 @@ public class CrearRutasFragment extends Fragment {
         }
     }
 
-    ////////////////////Despues de crear la vista////////////////////
-    @Override
-    public void onViewCreated(final View view, Bundle savedInstanceState) {
-
-
-    }
-    ////////////////////Despues de crear la vista////////////////////
-
-    ////////////////////Forma segura de buscar cosas en el activity padre////////////////////
-    /*@Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }*/
-    ////////////////////Forma segura de buscar cosas en el activity padre////////////////////
-
-    //////////////////para menu//////////////////////////////////
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_hola:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }

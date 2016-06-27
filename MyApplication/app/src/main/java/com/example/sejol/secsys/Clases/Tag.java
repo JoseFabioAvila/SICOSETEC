@@ -6,14 +6,15 @@ import java.io.Serializable;
  * Created by sejol on 4/6/2016.
  */
 public class Tag implements Serializable{
-    private String codigo,ronda,hora;
+    private String codigo,mac,ronda,hora;
 
     public Tag(){
 
     }
 
-    public Tag(String codigo, String ronda) {
+    public Tag(String codigo, String mac, String ronda) {
         this.codigo = codigo;
+        this.mac = mac;
         this.ronda = ronda;
     }
 
@@ -39,5 +40,13 @@ public class Tag implements Serializable{
 
     public void setHora(String hora) {
         this.hora = hora;
+    }
+
+    public String getMac() {
+        return mac;
+    }
+
+    public void setMac(String mac) {
+        this.mac = mac;
     }
 }

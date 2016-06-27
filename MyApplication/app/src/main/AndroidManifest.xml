@@ -49,36 +49,46 @@
         <activity
             android:name=".Activitys.RegistroActivity"
             android:label="@string/title_activity_registro"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activitys.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activitys.CrearRondaActivity" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activitys.CrearRondaActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activitys.AgregarRutaActivity"
             android:label="@string/title_activity_agregar_ruta"
             android:parentActivityName=".Activitys.MainActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.sejol.secsys.Activitys.MainActivity" />
         </activity>
         <activity
             android:name=".Popup.PopupSeleccionarRuta"
-            android:theme="@style/AppTheme.CustomPopup" />
+            android:theme="@style/AppTheme.CustomPopup"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Popup.PopupGuardarRonda"
-            android:theme="@style/AppTheme.CustomPopup" />
+            android:theme="@style/AppTheme.CustomPopup"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Popup.PopupReportarAnomalia"
-            android:theme="@style/AppTheme.CustomPopup" />
+            android:theme="@style/AppTheme.CustomPopup"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Popup.PopupVerReporte"
-            android:theme="@style/AppTheme.CustomPopup" />
+            android:theme="@style/AppTheme.CustomPopup"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Popup.PopupConfiguracionDeCorreos"
-            android:theme="@style/AppTheme.CustomPopup" />
+            android:theme="@style/AppTheme.CustomPopup"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -32,6 +32,7 @@ import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -49,7 +50,8 @@ public class AgregarRutaActivity extends AppCompatActivity {
 
     private NFC_Controller nfcController; // Controlador de nfc
     private ListView listView; // Lista para mostrar los puntos en la ruta
-    private TextView txtNombre; // Nombre para el recorrido
+    private EditText txtNombre; // Nombre para el recorrido
+    private EditText txtVueltas; // Numero de vueltas a la ronda
 
     private boolean dialog = false;
 
@@ -57,7 +59,7 @@ public class AgregarRutaActivity extends AppCompatActivity {
 
     CustomDialogClass cdd; //
 
-    String codigo; // Codigo o id de la ruta a asignar a los puntos
+    String codigoRuta; // Codigo o id de la ruta a asignar a los puntos
 
     boolean agregar = false;
 
@@ -81,10 +83,9 @@ public class AgregarRutaActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         db = new SQLite_Controller(this); // Inicializar la base de datos
-        txtNombre = (TextView) findViewById(R.id.txtAddRutNombre); // Nombre de la ruta
+        txtNombre = (EditText) findViewById(R.id.txtAddRutNombre); // Nombre de la ruta (editor)
+        txtVueltas = (EditText)findViewById(R.id.txtNumVueltas); // Numero de vuelta (editor)
         listView = (ListView) findViewById(R.id.listViewAR); // Lista de puntos
-
-
 
         if(getIntent().getExtras().getString("ruta").equals("")) {
             agregar = true;
@@ -170,10 +171,14 @@ public class AgregarRutaActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if (!agregar) {
                             String nombre = txtNombre.getText().toString();
-                            codigo = crearCodigoRuta(nombre);
-                            db.insertRuta(codigo, nombre); // Almacenar ruta en la base de datos
+                            String vueltas = txtVueltas.getText().toString();
+                            codigoRuta = crearCodigoRuta(nombre);
+                            db.insertRuta(codigoRuta, nombre, vueltas); // Almacenar ruta en la base de datos
                             for (String tag : PntsTagRuta) {
-                                db.insertTagRUT(tag, codigo); // Almacenar tag y asignarlo a la ruta creada
+                                db.insertTagRUT(
+                                        tag,
+                                        Arrays.asList(tag.split("_")).get(1),
+                                        codigoRuta); // Almacenar tag y asignarlo a la ruta creada
                             }
                             Intent localIntent = new Intent();
                             localIntent.putExtra("ruta",nombre);
@@ -181,16 +186,20 @@ public class AgregarRutaActivity extends AppCompatActivity {
                             finish();
                         } else {
                             String nombre = txtNombre.getText().toString();
-                            codigo = crearCodigoRuta(nombre);
+                            String vueltas = txtVueltas.getText().toString();
+                            codigoRuta = crearCodigoRuta(nombre);
                             ArrayList<Ruta> rutas = db.getRutas();
                             for (Ruta ruta : rutas) {
                                 if (ruta.getNombre().equals(getIntent().getExtras().getString("ruta"))) {
                                     db.borrarRuta(ruta.getNombre());
                                 }
                             }
-                            db.insertRuta(codigo, nombre); // Almacenar ruta en la base de datos
+                            db.insertRuta(codigoRuta, nombre, vueltas); // Almacenar ruta en la base de datos
                             for (String tag : PntsTagRuta) {
-                                db.insertTagRUT(tag, codigo); // Almacenar tag y asignarlo a la ruta creada
+                                db.insertTagRUT(
+                                        tag,
+                                        Arrays.asList(tag.split("_")).get(1),
+                                        codigoRuta); // Almacenar tag y asignarlo a la ruta creada
                             }
                             Intent localIntent = new Intent();
                             localIntent.putExtra("ruta",nombre);
@@ -272,7 +281,8 @@ public class AgregarRutaActivity extends AppCompatActivity {
             }
             else{
                 GPS_Tracker gps_tracker = new GPS_Tracker(this);
-                String codigo = String.valueOf(codigoTag) + "_" + // Contador de tags en ruta
+                String codigo =
+                        String.valueOf(codigoTag) + "_" + // Contador de tags en ruta
                         ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)) + "_" + // Mac de tag
                         gps_tracker.getLongitude() + "_" + // Latitud actual (ubicacion del tag)
                         gps_tracker.getLatitude(); // Latitud actual

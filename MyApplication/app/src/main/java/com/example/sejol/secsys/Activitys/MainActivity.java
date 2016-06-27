@@ -132,17 +132,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if(read) {
             RealizarRondasFragment frag = (RealizarRondasFragment)fragment;
             SQLite_Controller db = new SQLite_Controller(this);
-            ArrayList<Tag> tag = db.getTagsDeRuta();
             Tag lectura = db.getTagsDeRutaPorCodigo(nfcController.leerPunto(intent));
             frag.ActualizarRonda(lectura);
-
-            //tx = (TextView) fragment.getView().findViewById(R.id.fralgo);
-            //lista.add(nfcController.leerPunto(intent));
-
-            //setUpFragmentRealizarRutas();
-            //lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lista));
-
-            //Toast.makeText(this,nfcController.leerPunto(intent),Toast.LENGTH_SHORT).show();
         }
     }
 

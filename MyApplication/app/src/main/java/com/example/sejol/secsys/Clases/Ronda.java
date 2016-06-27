@@ -7,16 +7,17 @@ import java.util.ArrayList;
  * Created by sejol on 4/6/2016.
  */
 public class Ronda implements Serializable{
-    private String codigo,nombre,fecha,usuario;
-    private String ruta;
+    private String codigo,nombre,fecha,vueltas,completa,usuario,ruta;
     public Ronda() {
     }
 
-    public Ronda(String codigo, String nombre, String fecha, String usuario, String ruta) {
+    public Ronda(String codigo, String nombre, String fecha, String vueltas, String usuario, String ruta) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.fecha = fecha;
+        this.vueltas = vueltas;
         this.usuario = usuario;
+        this.ruta = ruta;
     }
 
     public String getCodigo() {
@@ -57,5 +58,21 @@ public class Ronda implements Serializable{
 
     public void setRuta(String ruta) {
         this.ruta = ruta;
+    }
+
+    public String getVueltas() {
+        return vueltas;
+    }
+
+    public void setVueltas(String vueltas) {
+        this.vueltas = vueltas;
+    }
+
+    public String getCompleta() {
+        return completa;
+    }
+
+    public void setCompleta(String completa) {
+        this.completa = completa;
     }
 }

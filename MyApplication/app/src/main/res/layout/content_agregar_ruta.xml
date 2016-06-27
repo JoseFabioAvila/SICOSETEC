@@ -25,7 +25,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:id="@+id/txtAddRutNombre"/>
+        android:id="@+id/txtAddRutNombre"
+        android:textAlignment="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vueltas"
+            android:textSize="20dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtNumVueltas"
+            android:inputType="numberDecimal"
+            android:textAlignment="center"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"

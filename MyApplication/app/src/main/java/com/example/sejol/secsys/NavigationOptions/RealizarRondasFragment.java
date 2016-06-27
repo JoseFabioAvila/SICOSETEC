@@ -57,6 +57,7 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -196,17 +197,21 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
     private void guardarRonda(){
         // Almacenar ronda en la base de datos
         // GUardar ronda
-        db.insertRonda(ronda.getCodigo(), ronda.getNombre(), ronda.getFecha(),ronda.getRuta(), usuario.getUsuario());
+        db.insertRonda(
+                ronda.getCodigo(), ronda.getNombre(), ronda.getFecha(),ronda.getVueltas(),
+                ronda.getCompleta(),ronda.getRuta(), usuario.getUsuario());
         // Guardar estado de la ronda (Ountos recorridos y no recorridos)
         for (int i = 0; i < puntosPorRecorrer.size(); i++) {
             if (estadoDeRonda[i] != null)
                 db.insertTagRND(
                         estadoDeRonda[i].getCodigo(),
+                        estadoDeRonda[i].getMac(),
                         estadoDeRonda[i].getHora(),
                         estadoDeRonda[i].getRonda()); // Almacenar tag y asignarlo a la ruta creada
             else
                 db.insertTagRND(
                         puntosPorRecorrer.get(i).getCodigo(),
+                        estadoDeRonda[i].getMac(),
                         " No realizado",
                         puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
         }
@@ -225,6 +230,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                 String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
 
                 nuevoTag.setCodigo(lectura.getCodigo() + "_" + fecha);
+                nuevoTag.setMac(Arrays.asList(lectura.getCodigo().split("_")).get(1));
                 nuevoTag.setRonda(ronda.getCodigo());
                 nuevoTag.setHora(fecha);
 
