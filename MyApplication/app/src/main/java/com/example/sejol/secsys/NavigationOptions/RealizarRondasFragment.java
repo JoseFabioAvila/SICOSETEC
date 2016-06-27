@@ -147,6 +147,9 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                         usuario,
                         db.getTagsDeRondaPorCodigo(ronda.getCodigo()),
                         db.getRepsDeRondaPorCodigo(ronda.getCodigo()));
+                mMap.clear();
+                reportes.clear();
+                ronda = null;
             }else if(requestCode == 3){ // Volver luego de realizar un reporte
                 Bundle b = data.getExtras();
                 String titulo = b.get("titulo").toString();

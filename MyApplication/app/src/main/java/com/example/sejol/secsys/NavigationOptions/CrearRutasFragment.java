@@ -17,11 +17,20 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.sejol.secsys.Activitys.AgregarRutaActivity;
+import com.example.sejol.secsys.Clases.Reporte;
 import com.example.sejol.secsys.Clases.Ruta;
+import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.R;
+import com.example.sejol.secsys.Utilidades.Email_Controller;
+import com.example.sejol.secsys.Utilidades.PDF_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by fabio on 21/5/2016.
@@ -32,9 +41,9 @@ public class CrearRutasFragment extends Fragment {
     private CardView cardView2;
 
     private ListView listView;
-
     private SQLite_Controller db;
-
+    private ArrayList<String> nombresRutas;
+    private ArrayAdapter<String> adapter;
 
     //////////////////////Segundo en ejecucion///////////////////////
     @Override
@@ -53,11 +62,11 @@ public class CrearRutasFragment extends Fragment {
 
         db = new SQLite_Controller(view.getContext());
         ArrayList<Ruta> rutas = db.getRutas();
-        final ArrayList<String> nombresRutas = new ArrayList<>();
+        nombresRutas = new ArrayList<>();
         for(Ruta ruta:rutas){
             nombresRutas.add(ruta.getNombre());
         }
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,nombresRutas);
+        adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,nombresRutas);
         listView = (ListView) view.findViewById(R.id.listView);
 
         listView.setAdapter(adapter);
@@ -71,12 +80,9 @@ public class CrearRutasFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("ruta","");
                 Intent intent = new Intent(getActivity(), AgregarRutaActivity.class);
-
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
                 intent.putExtras(bundle);
-
-                startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
 
@@ -97,11 +103,8 @@ public class CrearRutasFragment extends Fragment {
                                 Bundle bundle = new Bundle();
                                 bundle.putString("ruta", nombresRutas.get(position));
                                 Intent intent = new Intent(getActivity(), AgregarRutaActivity.class);
-
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
                                 intent.putExtras(bundle);
-
                                 startActivity(intent);
                                 return true;
                             case R.id.borrar:
@@ -120,7 +123,15 @@ public class CrearRutasFragment extends Fragment {
 
         return view;
     }
-    /////////////////////Crea la vista////////////////////////////////
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            Bundle b = data.getExtras();
+            nombresRutas.add((String) b.get("ruta"));
+            adapter.notifyDataSetChanged();
+        }
+    }
 
     ////////////////////Despues de crear la vista////////////////////
     @Override

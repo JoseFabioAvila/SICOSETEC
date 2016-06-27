@@ -32,7 +32,7 @@ public class CrearRondaActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 if (cod.getText().equals("")) {
-                    Toast.makeText(getApplicationContext(), "Antes ingre el codigo", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Antes ingrese el codigo", Toast.LENGTH_LONG).show();
                     permitir = false;
                 } else {
                     permitir = true;

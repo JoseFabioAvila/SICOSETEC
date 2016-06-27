@@ -175,6 +175,9 @@ public class AgregarRutaActivity extends AppCompatActivity {
                             for (String tag : PntsTagRuta) {
                                 db.insertTagRUT(tag, codigo); // Almacenar tag y asignarlo a la ruta creada
                             }
+                            Intent localIntent = new Intent();
+                            localIntent.putExtra("ruta",nombre);
+                            setResult(1, localIntent);
                             finish();
                         } else {
                             String nombre = txtNombre.getText().toString();
@@ -189,6 +192,9 @@ public class AgregarRutaActivity extends AppCompatActivity {
                             for (String tag : PntsTagRuta) {
                                 db.insertTagRUT(tag, codigo); // Almacenar tag y asignarlo a la ruta creada
                             }
+                            Intent localIntent = new Intent();
+                            localIntent.putExtra("ruta",nombre);
+                            setResult(1, localIntent);
                             finish();
                         }
                     }

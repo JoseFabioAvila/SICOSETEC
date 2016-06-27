@@ -53,7 +53,7 @@ public class PopupVerReporte extends AppCompatActivity {
 
         txtoficial.setText(usuario.getNombre());
         txtronda.setText(ronda.getNombre());
-        txtruta.setText(ronda.getRuta());
+        txtruta.setText(Arrays.asList(ronda.getRuta().split("_")).get(0));
         List<String> dataFecha = Arrays.asList(ronda.getFecha().split(" "));
         txtfecha.setText(dataFecha.get(0));
         txthora.setText(dataFecha.get(1));
