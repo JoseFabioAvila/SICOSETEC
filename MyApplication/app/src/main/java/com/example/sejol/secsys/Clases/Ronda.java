@@ -8,12 +8,11 @@ import java.util.ArrayList;
  */
 public class Ronda implements Serializable{
     private String codigo,nombre,fecha,usuario;
-    private ArrayList<Reporte> reportes;
-
+    private String ruta;
     public Ronda() {
     }
 
-    public Ronda(String codigo, String nombre, String fecha, String usuario) {
+    public Ronda(String codigo, String nombre, String fecha, String usuario, String ruta) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.fecha = fecha;
@@ -52,4 +51,11 @@ public class Ronda implements Serializable{
         this.usuario = usuario;
     }
 
+    public String getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
+    }
 }

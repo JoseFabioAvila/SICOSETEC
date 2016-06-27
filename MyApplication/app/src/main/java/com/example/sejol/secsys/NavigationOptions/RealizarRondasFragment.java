@@ -34,7 +34,9 @@ import com.example.sejol.secsys.Popup.PopupGuardarRonda;
 import com.example.sejol.secsys.Popup.PopupReportarAnomalia;
 import com.example.sejol.secsys.Popup.PopupSeleccionarRuta;
 import com.example.sejol.secsys.R;
+import com.example.sejol.secsys.Utilidades.Email_Controller;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
+import com.example.sejol.secsys.Utilidades.PDF_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -132,8 +134,19 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                 displayMarkerPuntosPorRecorrer();// Mostrar lista de tag en el mapa
             }else if(requestCode == 2){ // Volver luego de guardar
                 Bundle b = data.getExtras();
-                guardarRonda((String) b.get("nombre")); // Guardar ronda en bd
-
+                ronda.setNombre((String) b.get("nombre"));
+                guardarRonda(); // Guardar ronda en bd
+                new PDF_Controller(
+                        ronda,
+                        usuario,
+                        db.getTagsDeRondaPorCodigo(ronda.getCodigo()),
+                        db.getRepsDeRondaPorCodigo(ronda.getCodigo()));
+                new Email_Controller(
+                        v.getContext(),
+                        ronda,
+                        usuario,
+                        db.getTagsDeRondaPorCodigo(ronda.getCodigo()),
+                        db.getRepsDeRondaPorCodigo(ronda.getCodigo()));
             }else if(requestCode == 3){ // Volver luego de realizar un reporte
                 Bundle b = data.getExtras();
                 String titulo = b.get("titulo").toString();
@@ -146,7 +159,6 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                         BitmapDescriptorFactory.fromResource(R.drawable.map_icon_notification);
                 mMap.addMarker(new MarkerOptions().position(MarkerReporte.getPosition()).draggable(true).icon(icon));
                 MarkerReporte.remove();
-
             }
         }
     }
@@ -168,8 +180,9 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
         String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date()); // Fecha de cración de la ronda
 
         ronda.setCodigo(ruta.getCodigo() + fecha);
-        ronda.setNombre(ruta.getNombre());
+        ronda.setNombre("");
         ronda.setFecha(fecha);
+        ronda.setRuta(ruta.getCodigo());
 
         return ronda;
     }
@@ -177,10 +190,10 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
     /*
     Metodo para guardar la ronda del sistema en la base de datos
      */
-    private void guardarRonda(String nombre){
+    private void guardarRonda(){
         // Almacenar ronda en la base de datos
         // GUardar ronda
-        db.insertRonda(ronda.getCodigo(), nombre, ronda.getFecha(), usuario.getUsuario());
+        db.insertRonda(ronda.getCodigo(), ronda.getNombre(), ronda.getFecha(), usuario.getUsuario());
         // Guardar estado de la ronda (Ountos recorridos y no recorridos)
         for (int i = 0; i < puntosPorRecorrer.size(); i++) {
             if (estadoDeRonda[i] != null)

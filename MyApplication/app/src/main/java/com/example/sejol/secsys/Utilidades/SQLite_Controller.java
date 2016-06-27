@@ -198,6 +198,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
 
         bd.delete(TABLE_TAG_RND, REF_RND + "='" + codigo + "'", null);
 
+        bd.delete(TABLE_RONDA, "codigo='" + codigo + "'", null);
         return true;
     }
 

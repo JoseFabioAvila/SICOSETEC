@@ -59,13 +59,13 @@ public class DescargarReportesFragment extends Fragment {
 
         db = new SQLite_Controller(view.getContext());
         final ArrayList<Ronda> rondas = db.getRondas(usuario); // recoger rondas del usuario
-        ArrayList<String> nombresRondas = new ArrayList<>(); // Lista de los nombres de las rondas
+        final ArrayList<String> nombresRondas = new ArrayList<>(); // Lista de los nombres de las rondas
         for(Ronda ronda:rondas){
             nombresRondas.add(ronda.getNombre()); // add nombre de ronda
         }
-
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,nombresRondas);
         lvRondas = (ListView) view.findViewById(R.id.lvRondas); // Lista para desplrear las rondas
-        lvRondas.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,nombresRondas));
+        lvRondas.setAdapter(adapter);
         lvRondas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
@@ -97,6 +97,9 @@ public class DescargarReportesFragment extends Fragment {
                                 return true;
                             case R.id.borrarRonda:
                                 db.borrarRonda(rondas.get(pos).getCodigo());
+                                final ArrayList<Ronda> rondas = db.getRondas(usuario); // recoger rondas del usuario
+                                nombresRondas.remove(pos);
+                                adapter.notifyDataSetChanged();
                                 return true;
                         }
                         return true;

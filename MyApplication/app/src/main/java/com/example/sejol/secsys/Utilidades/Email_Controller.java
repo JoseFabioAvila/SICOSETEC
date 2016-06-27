@@ -6,26 +6,31 @@ import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.example.sejol.secsys.Clases.Reporte;
+import com.example.sejol.secsys.Clases.Ronda;
+import com.example.sejol.secsys.Clases.Tag;
+import com.example.sejol.secsys.Clases.Usuario;
+
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by jose on 6/24/16.
  */
 public class Email_Controller {
 
-    private String correo, documento;
+    private SQLite_Controller db;
     private Context ctx;
 
-    public Email_Controller(String correo, String documento, Context context) {
-        this.correo = correo;
-        this.documento = documento;
+    public Email_Controller(Context context, Ronda ronda, Usuario usuario, ArrayList<Tag> tagsDeRondaPorCodigo, ArrayList<Reporte> repsDeRondaPorCodigo) {
         this.ctx = context;
+        db = new SQLite_Controller(ctx);
     }
 
-    public void enviarCorreo(){
+    public void enviarCorreo(Ronda ronda, Usuario usuario){
         File path = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOCUMENTS), "Secsys");
-        File filelocation = new File(path, "Reporte: Ronda de prueba 2.pdf");
+        File filelocation = new File(path, "Reporte: "+ronda.getNombre()+".pdf");
         Uri uri = Uri.fromFile(filelocation);
 
         Intent i = new Intent(Intent.ACTION_SEND);
