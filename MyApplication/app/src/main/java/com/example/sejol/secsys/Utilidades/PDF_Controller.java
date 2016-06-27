@@ -88,8 +88,9 @@ public class PDF_Controller {
         //Step 4 Add content
         document.add(new Paragraph("Reporte de ronda", Titulo));
         document.add(new Paragraph("", Titulo));
-        document.add(new Paragraph("   Ruta:   " + ronda.getNombre() , Subtitulo));
         document.add(new Paragraph("   Oficial: " + usuario.getNombre(), Subtitulo));
+        document.add(new Paragraph("   Ronda:   " + ronda.getNombre() , Subtitulo));
+        document.add(new Paragraph("   Ruta:    " + ronda.getRuta() , Subtitulo));
         List<String> dataFecha = Arrays.asList(ronda.getFecha().split(" "));
         document.add(new Paragraph("   Fecha:   " + dataFecha.get(0)  , Subtitulo));
         document.add(new Paragraph("   Inicio:  " + dataFecha.get(1)  , Subtitulo));

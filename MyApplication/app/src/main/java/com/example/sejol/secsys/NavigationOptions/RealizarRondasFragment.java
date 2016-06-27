@@ -132,7 +132,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                 estadoDeRonda = new Tag[puntosPorRecorrer.size()]; // Crear lista de estados para la ronda
 
                 displayMarkerPuntosPorRecorrer();// Mostrar lista de tag en el mapa
-            }else if(requestCode == 2){ // Volver luego de guardar
+            }else if(requestCode == 2){ // Volver luego de seleccionar guardar
                 Bundle b = data.getExtras();
                 ronda.setNombre((String) b.get("nombre"));
                 guardarRonda(); // Guardar ronda en bd
@@ -193,7 +193,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
     private void guardarRonda(){
         // Almacenar ronda en la base de datos
         // GUardar ronda
-        db.insertRonda(ronda.getCodigo(), ronda.getNombre(), ronda.getFecha(), usuario.getUsuario());
+        db.insertRonda(ronda.getCodigo(), ronda.getNombre(), ronda.getFecha(),ronda.getRuta(), usuario.getUsuario());
         // Guardar estado de la ronda (Ountos recorridos y no recorridos)
         for (int i = 0; i < puntosPorRecorrer.size(); i++) {
             if (estadoDeRonda[i] != null)

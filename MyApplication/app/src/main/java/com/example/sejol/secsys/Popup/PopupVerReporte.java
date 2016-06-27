@@ -38,6 +38,7 @@ public class PopupVerReporte extends AppCompatActivity {
 
         TextView txtoficial = (TextView)findViewById(R.id.poptxtOficial);
         TextView txtronda = (TextView)findViewById(R.id.poptxtRonda);
+        TextView txtruta = (TextView)findViewById(R.id.poptxtRuta);
         TextView txtfecha = (TextView)findViewById(R.id.poptxtFecha);
         TextView txthora = (TextView)findViewById(R.id.poptxtHora);
 
@@ -52,6 +53,7 @@ public class PopupVerReporte extends AppCompatActivity {
 
         txtoficial.setText(usuario.getNombre());
         txtronda.setText(ronda.getNombre());
+        txtruta.setText(ronda.getRuta());
         List<String> dataFecha = Arrays.asList(ronda.getFecha().split(" "));
         txtfecha.setText(dataFecha.get(0));
         txthora.setText(dataFecha.get(1));

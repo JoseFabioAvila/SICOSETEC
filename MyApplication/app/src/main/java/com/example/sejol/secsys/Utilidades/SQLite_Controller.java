@@ -36,6 +36,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     public static final String COLUMN_ID_RND   = "codigo";
     //public static final String COLUMN_NOMBRE = "nombre";
     public static final String COLUMN_FECHA    = "fecha";
+    public static final String COLUMN_RUTA     = "ruta";
     public static final String REF_USUARIO     = "usuario";
 
     public static final String TABLE_REPORTE        = "TReporte";
@@ -81,6 +82,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                         "(" + COLUMN_ID_RND   + " text primary key," +
                               COLUMN_NOMBRE     + " text," +
                               COLUMN_FECHA      + " text," +
+                              COLUMN_RUTA      + " text," +
                               REF_USUARIO       + " text," +
                              " FOREIGN KEY ("+REF_USUARIO+") REFERENCES "+TABLE_USUARIO+"("+COLUMN_USUARIO+"));");
 
@@ -181,12 +183,13 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     /*
     Control de rondas
      */
-    public boolean insertRonda(String codigo, String nombre, String fecha, String usuario){
+    public boolean insertRonda(String codigo, String nombre, String fecha,String ruta, String usuario){
         SQLiteDatabase bd = this.getWritableDatabase();
         ContentValues registro = new ContentValues();
         registro.put(COLUMN_ID_RND , codigo);
         registro.put(COLUMN_NOMBRE, nombre);
         registro.put(COLUMN_FECHA, fecha);
+        registro.put(COLUMN_RUTA,ruta);
         registro.put(REF_USUARIO, usuario);
         bd.insert(TABLE_RONDA, null, registro);
         bd.close();
@@ -215,7 +218,8 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 ronda.setCodigo (cursor.getString(0));
                 ronda.setNombre (cursor.getString(1));
                 ronda.setFecha  (cursor.getString(2));
-                ronda.setUsuario(cursor.getString(3));
+                ronda.setRuta  (cursor.getString(3));
+                ronda.setUsuario(cursor.getString(4));
                 arrayListData.add(ronda);
             } while (cursor.moveToNext());
         }
