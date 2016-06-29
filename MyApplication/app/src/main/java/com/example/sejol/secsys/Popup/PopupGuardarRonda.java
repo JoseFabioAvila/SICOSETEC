@@ -25,7 +25,7 @@ import java.util.List;
 public class PopupGuardarRonda extends AppCompatActivity {
 
     ArrayList<Tag> puntosPorRecorrer; // Tag de la ruta seleccionada
-    Tag[] estadoDeRonda; // Estado del recorrido de la ruta --> Tag de la ronda
+    ArrayList<Tag> puntosRecorridos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +35,19 @@ public class PopupGuardarRonda extends AppCompatActivity {
         final TextView txtNombre = (TextView)findViewById(R.id.txtAddRndNombre);
 
         Intent intent = getIntent();
+        Ronda ronda = (Ronda) intent.getSerializableExtra("ronda");
         puntosPorRecorrer = (ArrayList<Tag>) intent.getSerializableExtra("pntPorRecorrer");
-        estadoDeRonda = (Tag[]) intent.getSerializableExtra("estadoRonda");
+        puntosRecorridos = (ArrayList<Tag>) intent.getSerializableExtra("pntRecorridos");
+
         ArrayList<String> printListTags = new ArrayList<>();
-        for(int i = 0 ; i < estadoDeRonda.length ; i++){
+        for(int i = 0 ; i < puntosPorRecorrer.size() ; i++){
             List<String> codeData = Arrays.asList(puntosPorRecorrer.get(i).getCodigo().split("_"));
-            if(estadoDeRonda[i] != null){
+            if(contarRepeticiones(puntosPorRecorrer.get(i).getMac()) >= Integer.parseInt(ronda.getVueltas())){
                 printListTags.add(
-                        "Punto: " + codeData.get(0) +
-                                " (Completado)");
+                        "Punto: " + codeData.get(0) + "  -> Completa ( " + contarRepeticiones(puntosPorRecorrer.get(i).getMac())+" )");
             }else{
                 printListTags.add(
-                        "Punto: " + codeData.get(0) +
-                                " (Incompleto)");
+                        "Punto: " + codeData.get(0) + "  -> Incompleta ( " + contarRepeticiones(puntosPorRecorrer.get(i).getMac())+" )");
             }
         }
 
@@ -72,5 +72,13 @@ public class PopupGuardarRonda extends AppCompatActivity {
         getWindow().setLayout((int)(0.70 * width), (int)(0.50 * height));
     }
 
-
+    private int contarRepeticiones(String mac) {
+        int counter = 0;
+        for(Tag tag:puntosRecorridos){
+            if(tag.getMac().equals(mac)){
+                counter++;
+            }
+        }
+        return counter;
+    }
 }

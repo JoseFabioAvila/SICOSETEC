@@ -63,13 +63,14 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
     private static final float MIN_DISTANCE = 1000;
 
     SQLite_Controller db; // Base de datos
-    ArrayList<Tag> puntosPorRecorrer; // Tag de la ruta seleccionada
-    ArrayList<Marker> punterosEnMapa = new ArrayList<>(); // Marker de los tag de la ruta seleccionada
-    Tag[] estadoDeRonda; // Estado del recorrido de la ruta --> Tag de la ronda
     Ronda ronda; // Ronda --> Conjunto de tags
     Usuario usuario;
-    Marker MarkerReporte;
+
+    ArrayList<Tag> puntosPorRecorrer; // Tag de la ruta seleccionada
+    ArrayList<Marker> punterosEnMapa = new ArrayList<>(); // Marker de los tag de la ruta seleccionada
+    ArrayList<Tag> puntosRecorridos;
     ArrayList<Reporte> reportes = new ArrayList<>();
+    Marker MarkerReporte;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -115,11 +116,10 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
             if (requestCode == 1) { // Volver del seleccionar ruta
                 mMap.clear(); // Limpiar el mapa
                 Ruta ruta = (Ruta) data.getSerializableExtra("ruta"); // get ruta
-                ronda = crearIdRonda(ruta);  // Construi ronda a partir de la ruta seleccionada
+                ronda = contruirRonda(ruta);  // Construi ronda a partir de la ruta seleccionada
 
                 puntosPorRecorrer = db.getTagsDeRuta(ruta.getCodigo()); // Get tag de la ruta
-                estadoDeRonda = new Tag[puntosPorRecorrer.size()]; // Crear lista de estados para la ronda
-                for (int i = 0; i < estadoDeRonda.length; i++) { estadoDeRonda[i] = new Tag(); }
+                puntosRecorridos = new ArrayList<>();
 
                 displayMarkerPuntosPorRecorrer();// Mostrar lista de tag en el mapa
             }else if(requestCode == 2){ // Volver luego de seleccionar guardar
@@ -167,7 +167,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
     /*
     Constructor de ronda a partir de un ruta seleccionada
      */
-    private Ronda crearIdRonda(Ruta ruta) {
+    private Ronda contruirRonda(Ruta ruta) {
 
         Ronda ronda = new Ronda();
         String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date()); // Fecha de cración de la ronda
@@ -176,6 +176,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
         ronda.setNombre("");
         ronda.setFecha(fecha);
         ronda.setRuta(ruta.getCodigo());
+        ronda.setVueltas(ruta.getVueltas());
 
         return ronda;
     }
@@ -190,19 +191,13 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                 ronda.getCodigo(), ronda.getNombre(), ronda.getFecha(),ronda.getVueltas(),
                 ronda.getCompleta(),ronda.getRuta(), usuario.getUsuario());
         // Guardar estado de la ronda (Ountos recorridos y no recorridos)
-        for (int i = 0; i < puntosPorRecorrer.size(); i++) {
-            if (estadoDeRonda[i].getCodigo() != null)
+        for (int i = 0; i < puntosRecorridos.size(); i++) {
+            if (puntosRecorridos.get(i).getCodigo() != null)
                 db.insertTagRND(
-                        estadoDeRonda[i].getCodigo(),
-                        estadoDeRonda[i].getMac(),
-                        estadoDeRonda[i].getHora(),
-                        estadoDeRonda[i].getRonda()); // Almacenar tag y asignarlo a la ruta creada
-            else
-                db.insertTagRND(
-                        puntosPorRecorrer.get(i).getCodigo(),
-                        puntosPorRecorrer.get(i).getMac(),
-                        " No realizado",
-                        puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
+                        puntosRecorridos.get(i).getCodigo(),
+                        puntosRecorridos.get(i).getMac(),
+                        puntosRecorridos.get(i).getHora(),
+                        puntosRecorridos.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
         }
         //GUardar reportes
         db.insertListaReportes(reportes,ronda);
@@ -223,7 +218,8 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                 nuevoTag.setRonda(ronda.getCodigo());
                 nuevoTag.setHora(fecha);
 
-                estadoDeRonda[i] = nuevoTag;
+                puntosRecorridos.add(nuevoTag);
+
                 BitmapDescriptor icon =
                         BitmapDescriptorFactory.fromResource(R.drawable.map_icon_recorrido);
                 punterosEnMapa.get(i).setIcon(icon);
@@ -272,8 +268,9 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
         switch (item.getItemId()) {
             case R.id.action_guardar_ronda:
                 Intent i = new Intent(v.getContext(), PopupGuardarRonda.class);
+                i.putExtra("ronda",ronda);
                 i.putExtra("pntPorRecorrer",puntosPorRecorrer);
-                i.putExtra("estadoRonda",estadoDeRonda);
+                i.putExtra("pntRecorridos" ,puntosRecorridos);
                 startActivityForResult(i,2);
                 return true;
             default:

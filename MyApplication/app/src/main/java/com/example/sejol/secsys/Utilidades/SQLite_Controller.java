@@ -403,6 +403,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return arrayListData;
     }
 
+
     /*
     Control de reportes
      */
