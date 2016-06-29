@@ -21,8 +21,6 @@ import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
 
     private static String TAG = MainActivity.class.getSimpleName();
@@ -132,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         if(read) {
             RealizarRondasFragment frag = (RealizarRondasFragment)fragment;
             SQLite_Controller db = new SQLite_Controller(this);
-            Tag lectura = db.getTagsDeRutaPorCodigo(nfcController.leerPunto(intent));
+            Tag lectura = db.getTag(nfcController.leerPunto(intent));
             frag.ActualizarRonda(lectura);
         }
     }

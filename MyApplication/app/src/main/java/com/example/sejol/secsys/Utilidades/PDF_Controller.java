@@ -104,8 +104,7 @@ public class PDF_Controller {
             document.add(new Paragraph("Punto " + codeData.get(0), Subtitulo));
             document.add(new Paragraph("    Latitud : " + codeData.get(3), TxtNegro));
             document.add(new Paragraph("    Longitud: " + codeData.get(2), TxtNegro));
-            List<String> fechaData = Arrays.asList(pnt.getHora().split(" "));
-            document.add(new Paragraph("    Hora:     " + fechaData.get(1)  , TxtNegro));
+            document.add(new Paragraph("    Hora:     " + pnt.getHora()  , TxtNegro));
             document.add(new Paragraph("", Titulo));
         }
 

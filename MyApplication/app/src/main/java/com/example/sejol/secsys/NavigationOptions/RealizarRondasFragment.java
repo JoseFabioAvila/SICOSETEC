@@ -2,11 +2,7 @@ package com.example.sejol.secsys.NavigationOptions;
 
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -20,10 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.example.sejol.secsys.Clases.Reporte;
 import com.example.sejol.secsys.Clases.Ronda;
@@ -35,7 +28,6 @@ import com.example.sejol.secsys.Popup.PopupReportarAnomalia;
 import com.example.sejol.secsys.Popup.PopupSeleccionarRuta;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.Email_Controller;
-import com.example.sejol.secsys.Utilidades.NFC_Controller;
 import com.example.sejol.secsys.Utilidades.PDF_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 import com.google.android.gms.maps.CameraUpdate;
@@ -49,12 +41,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
-import android.widget.Toast;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,8 +117,9 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                 Ruta ruta = (Ruta) data.getSerializableExtra("ruta"); // get ruta
                 ronda = crearIdRonda(ruta);  // Construi ronda a partir de la ruta seleccionada
 
-                puntosPorRecorrer = db.getTagsDeRutaPorRuta(ruta.getCodigo()); // Get tag de la ruta
+                puntosPorRecorrer = db.getTagsDeRuta(ruta.getCodigo()); // Get tag de la ruta
                 estadoDeRonda = new Tag[puntosPorRecorrer.size()]; // Crear lista de estados para la ronda
+                for (int i = 0; i < estadoDeRonda.length; i++) { estadoDeRonda[i] = new Tag(); }
 
                 displayMarkerPuntosPorRecorrer();// Mostrar lista de tag en el mapa
             }else if(requestCode == 2){ // Volver luego de seleccionar guardar
@@ -140,13 +129,13 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                 new PDF_Controller(
                         ronda,
                         usuario,
-                        db.getTagsDeRondaPorCodigo(ronda.getCodigo()),
+                        db.getTagsDeRonda(ronda.getCodigo()),
                         db.getRepsDeRondaPorCodigo(ronda.getCodigo()));
                 new Email_Controller(
                         v.getContext(),
                         ronda,
                         usuario,
-                        db.getTagsDeRondaPorCodigo(ronda.getCodigo()),
+                        db.getTagsDeRonda(ronda.getCodigo()),
                         db.getRepsDeRondaPorCodigo(ronda.getCodigo()));
                 mMap.clear();
                 reportes.clear();
@@ -202,7 +191,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                 ronda.getCompleta(),ronda.getRuta(), usuario.getUsuario());
         // Guardar estado de la ronda (Ountos recorridos y no recorridos)
         for (int i = 0; i < puntosPorRecorrer.size(); i++) {
-            if (estadoDeRonda[i] != null)
+            if (estadoDeRonda[i].getCodigo() != null)
                 db.insertTagRND(
                         estadoDeRonda[i].getCodigo(),
                         estadoDeRonda[i].getMac(),
@@ -211,7 +200,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
             else
                 db.insertTagRND(
                         puntosPorRecorrer.get(i).getCodigo(),
-                        estadoDeRonda[i].getMac(),
+                        puntosPorRecorrer.get(i).getMac(),
                         " No realizado",
                         puntosPorRecorrer.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
         }
@@ -227,7 +216,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
             if (puntosPorRecorrer.get(i).getCodigo().equals(lectura.getCodigo())) {
 
                 Tag nuevoTag = new Tag();
-                String fecha = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
+                String fecha = new SimpleDateFormat("HH:mm:ss").format(new Date());
 
                 nuevoTag.setCodigo(lectura.getCodigo() + "_" + fecha);
                 nuevoTag.setMac(Arrays.asList(lectura.getCodigo().split("_")).get(1));

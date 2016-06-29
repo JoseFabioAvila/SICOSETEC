@@ -84,7 +84,7 @@ public class DescargarReportesFragment extends Fragment {
                                 Intent i = new Intent(view.getContext(),PopupVerReporte.class);
                                 i.putExtra("ronda",rondas.get(pos));
                                 i.putExtra("usuario",usuario);
-                                i.putExtra("lstTags",db.getTagsDeRondaPorCodigo(rondas.get(pos).getCodigo()));
+                                i.putExtra("lstTags",db.getTagsDeRonda(rondas.get(pos).getCodigo()));
                                 i.putExtra("lstRep",db.getRepsDeRondaPorCodigo(rondas.get(pos).getCodigo()));
                                 startActivityForResult(i,100);
                                 return true;
@@ -92,7 +92,7 @@ public class DescargarReportesFragment extends Fragment {
                                 PDF_Controller pdf_controller = new PDF_Controller(
                                         rondas.get(pos),
                                         usuario,
-                                        db.getTagsDeRondaPorCodigo(rondas.get(pos).getCodigo()),
+                                        db.getTagsDeRonda(rondas.get(pos).getCodigo()),
                                         db.getRepsDeRondaPorCodigo(rondas.get(pos).getCodigo()));
                                 return true;
                             case R.id.borrarRonda:

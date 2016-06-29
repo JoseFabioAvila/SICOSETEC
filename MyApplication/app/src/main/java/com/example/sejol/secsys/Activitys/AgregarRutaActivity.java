@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -34,8 +33,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.Random;
 
 public class AgregarRutaActivity extends AppCompatActivity {
 
@@ -116,7 +113,7 @@ public class AgregarRutaActivity extends AppCompatActivity {
                     rutaA = rut;
                 }
             }
-            tags = db.getTagsDeRutaPorRuta(rutaA.getCodigo());
+            tags = db.getTagsDeRuta(rutaA.getCodigo());
             for(Tag tag: tags){
                 if(tag.getRonda().equals(rutaA.getCodigo())){
                     PntsTagRuta.add(tag.getCodigo());

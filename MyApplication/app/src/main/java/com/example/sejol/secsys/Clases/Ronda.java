@@ -1,5 +1,9 @@
 package com.example.sejol.secsys.Clases;
 
+import android.content.Context;
+
+import com.example.sejol.secsys.Utilidades.SQLite_Controller;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -18,6 +22,7 @@ public class Ronda implements Serializable{
         this.vueltas = vueltas;
         this.usuario = usuario;
         this.ruta = ruta;
+        this.completa = "incompleta";
     }
 
     public String getCodigo() {
@@ -74,5 +79,17 @@ public class Ronda implements Serializable{
 
     public void setCompleta(String completa) {
         this.completa = completa;
+    }
+
+    public String verificarCompletada(Context ctx){
+        SQLite_Controller db = new SQLite_Controller(ctx);
+        ArrayList<Tag> lstTags = db.getTagsDeRonda(this.codigo);
+        if((lstTags.size() % Integer.getInteger(vueltas)) != 0){
+            int[] tempCounter = new int[(lstTags.size() / Integer.getInteger(vueltas))];
+
+        }else{
+            return "incompleta";
+        }
+        return "completa";
     }
 }
