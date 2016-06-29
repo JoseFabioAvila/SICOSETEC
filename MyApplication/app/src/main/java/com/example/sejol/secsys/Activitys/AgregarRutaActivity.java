@@ -220,11 +220,8 @@ public class AgregarRutaActivity extends AppCompatActivity {
         Metodo que crea un ID para la ruta
      */
     private String crearCodigoRuta(String nombre){
-        String fecha = new SimpleDateFormat("ddMMyyyy").format(new Date());
-        Random randomGenerator = new Random();
-        int RndNum = randomGenerator.nextInt(1000);
-
-        return nombre+"_"+fecha+"_"+RndNum;
+        String fecha = new SimpleDateFormat("dd/MM/yy_HH:mm:ss").format(new Date());
+        return nombre+"_"+fecha;
     }
 
     /*
