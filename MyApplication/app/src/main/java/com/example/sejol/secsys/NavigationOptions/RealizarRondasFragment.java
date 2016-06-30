@@ -47,7 +47,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -131,13 +130,13 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                         ronda,
                         usuario,
                         db.getTagsDeRonda(ronda.getCodigo()),
-                        db.getRepsDeRondaPorCodigo(ronda.getCodigo()));
+                        db.getRepsDeRonda(ronda.getCodigo()));
                 new Email_Controller(
                         v.getContext(),
                         ronda,
                         usuario,
                         db.getTagsDeRonda(ronda.getCodigo()),
-                        db.getRepsDeRondaPorCodigo(ronda.getCodigo()));
+                        db.getRepsDeRonda(ronda.getCodigo()));
                 mMap.clear();
                 reportes.clear();
                 ronda = null;

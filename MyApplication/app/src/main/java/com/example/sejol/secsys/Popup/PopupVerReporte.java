@@ -42,23 +42,23 @@ public class PopupVerReporte extends AppCompatActivity {
         TextView txtruta = (TextView)findViewById(R.id.poptxtRuta);
         TextView txtfecha = (TextView)findViewById(R.id.poptxtFecha);
         TextView txthora = (TextView)findViewById(R.id.poptxtHora);
-
+        // Lista de tags de la ronda
         ListView lvTags = (ListView)findViewById(R.id.poplvTags);
         lvTags.setAdapter(new TagListViewAdapter(lstTags,this));
         justifyListViewHeightBasedOnChildren(lvTags);
-
+        // Lista de reportes
         ListView lvReportes = (ListView)findViewById(R.id.poplvReportes);
         ReportesListViewAdapter adapterReportes = new ReportesListViewAdapter(lstReportes,this);
         lvReportes.setAdapter(adapterReportes);
         justifyListViewHeightBasedOnChildren(lvReportes);
-
+        // Datos generales
         txtoficial.setText(usuario.getNombre());
         txtronda.setText(ronda.getNombre());
         txtruta.setText(Arrays.asList(ronda.getRuta().split("_")).get(0));
         List<String> dataFecha = Arrays.asList(ronda.getFecha().split(" "));
         txtfecha.setText(dataFecha.get(0));
         txthora.setText(dataFecha.get(1));
-
+        // Tamaño del popup
         DisplayMetrics localDisplayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(localDisplayMetrics);
         int width = localDisplayMetrics.widthPixels;

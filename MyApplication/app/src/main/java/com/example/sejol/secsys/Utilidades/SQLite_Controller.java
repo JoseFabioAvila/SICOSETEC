@@ -437,7 +437,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return true;
     }
 
-    public ArrayList<Reporte> getRepsDeRondaPorCodigo(String codigo) {
+    public ArrayList<Reporte> getRepsDeRonda(String codigo) {
         String selectQuery = "SELECT  * FROM " + TABLE_REPORTE + " where " + REF_RND + " = " + "'"+codigo+"'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

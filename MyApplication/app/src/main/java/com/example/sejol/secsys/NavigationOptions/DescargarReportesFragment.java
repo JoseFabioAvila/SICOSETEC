@@ -85,7 +85,7 @@ public class DescargarReportesFragment extends Fragment {
                                 i.putExtra("ronda",rondas.get(pos));
                                 i.putExtra("usuario",usuario);
                                 i.putExtra("lstTags",db.getTagsDeRonda(rondas.get(pos).getCodigo()));
-                                i.putExtra("lstRep",db.getRepsDeRondaPorCodigo(rondas.get(pos).getCodigo()));
+                                i.putExtra("lstRep",db.getRepsDeRonda(rondas.get(pos).getCodigo()));
                                 startActivityForResult(i,100);
                                 return true;
                             case R.id.pdf:
@@ -93,7 +93,7 @@ public class DescargarReportesFragment extends Fragment {
                                         rondas.get(pos),
                                         usuario,
                                         db.getTagsDeRonda(rondas.get(pos).getCodigo()),
-                                        db.getRepsDeRondaPorCodigo(rondas.get(pos).getCodigo()));
+                                        db.getRepsDeRonda(rondas.get(pos).getCodigo()));
                                 return true;
                             case R.id.borrarRonda:
                                 db.borrarRonda(rondas.get(pos).getCodigo());
