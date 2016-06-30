@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -204,6 +205,27 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
     }
 
     /*
+    Carga en el mapa todos lo tag de una ruta
+     */
+    private void displayMarkerPuntosPorRecorrer() {
+        for (Tag tag : puntosPorRecorrer) {
+            String[] tagData = tag.getCodigo().split("_");
+            double lng = Double.parseDouble(tagData[2]);
+            double lat = Double.parseDouble(tagData[3]);
+            LatLng ll = new LatLng(lat, lng);
+
+            BitmapDescriptor icon =
+                    BitmapDescriptorFactory.fromResource(R.drawable.map_icon_sinrecorrer);
+            punterosEnMapa.add(
+                    mMap.addMarker(new MarkerOptions()
+                            .position(ll)
+                            .draggable(true)
+                            .title(ronda.getVueltas())
+                            .icon(icon)));
+        }
+    }
+
+    /*
     Actualiza el mapa luego de pasar por un tag
      */
     public void ActualizarRonda(Tag lectura) {
@@ -220,34 +242,29 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
 
                 puntosRecorridos.add(nuevoTag);
 
-                BitmapDescriptor icon =
-                        BitmapDescriptorFactory.fromResource(R.drawable.map_icon_recorrido);
-                punterosEnMapa.get(i).setIcon(icon);
+                int faltantes  =
+                        Integer.parseInt(ronda.getVueltas())-contarRepeticiones(nuevoTag.getMac());
+                if(faltantes <= 0){
+                    BitmapDescriptor icon =
+                            BitmapDescriptorFactory.fromResource(R.drawable.map_icon_recorrido);
+                    punterosEnMapa.get(i).setIcon(icon);
+                }else{
+                    punterosEnMapa.get(i).setTitle(String.valueOf(faltantes));
+                }
+
             }
         }
     }
 
-    /*
-    Carga en el mapa todos lo tag de una ruta
-     */
-    private void displayMarkerPuntosPorRecorrer() {
-        for (Tag tag : puntosPorRecorrer) {
-            String[] tagData = tag.getCodigo().split("_");
-            double lng = Double.parseDouble(tagData[2]);
-            double lat = Double.parseDouble(tagData[3]);
-            LatLng ll = new LatLng(lat, lng);
-
-            BitmapDescriptor icon =
-                    BitmapDescriptorFactory.fromResource(R.drawable.map_icon_sinrecorrer);
-            punterosEnMapa.add(
-                    mMap.addMarker(new MarkerOptions()
-                            .position(ll)
-                            .draggable(true)
-                            .title(tagData[0])
-                            .icon(icon)));
+    private int contarRepeticiones(String mac) {
+        int counter = 0;
+        for(Tag tag:puntosRecorridos){
+            if(tag.getMac().equals(mac)){
+                counter++;
+            }
         }
+        return counter;
     }
-
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////   Menu
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -317,7 +334,8 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                marker.remove();
+                if(!punterosEnMapa.contains(marker))
+                    marker.remove();
             }
         });
     }
@@ -325,7 +343,6 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
     // ---------------------------------------------------------------------------------------------
     // ----------------------------   Cambios de posicion      -------------------------------------
     // ---------------------------------------------------------------------------------------------
-
     @Override
     public void onLocationChanged(Location location) {
         UserLatLng = new LatLng(location.getLatitude(), location.getLongitude());

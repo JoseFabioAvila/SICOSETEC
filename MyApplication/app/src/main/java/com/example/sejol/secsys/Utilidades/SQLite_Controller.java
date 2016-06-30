@@ -179,6 +179,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 mae.setNombre  (cursor.getString(2));
             } while (cursor.moveToNext());
         }
+        bd.close();
         return mae;
     }
 
@@ -196,6 +197,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     public void deleteCorreo(String correo){
         SQLiteDatabase bd = this.getWritableDatabase();
         bd.delete(TABLE_CORREOS, "correo ='" + correo + "'", null);
+        bd.close();
     }
 
     public ArrayList<String> getCorreos(){
@@ -208,6 +210,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 arrayListData.add(cursor.getString(0));
             } while (cursor.moveToNext());
         }
+        db.close();
         return arrayListData;
     }
 
@@ -243,6 +246,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 arrayListData.add(ruta);
             } while (cursor.moveToNext());
         }
+        db.close();
         return arrayListData;
     }
 
@@ -301,6 +305,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 arrayListData.add(ronda);
             } while (cursor.moveToNext());
         }
+        db.close();
         return arrayListData;
     }
 
@@ -310,6 +315,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
             bd.delete(TABLE_TAG_RND, REF_RND + "='" + codigo + "'", null);
             bd.delete(TABLE_REPORTE, REF_RND + "='" + codigo + "'", null);
             bd.delete(TABLE_RONDA   , "codigo='" + codigo + "'", null);
+            bd.close();
         }catch (Exception e){
             return false;
         }
@@ -348,6 +354,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 arrayListData.add(tag);
             } while (cursor.moveToNext());
         }
+        db.close();
         return arrayListData;
     }
 
@@ -363,6 +370,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 resultado.setRonda  (cursor.getString(2));
             } while (cursor.moveToNext());
         }
+        db.close();
         return resultado;
     }
 
@@ -400,6 +408,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 arrayListData.add(tag);
             } while (cursor.moveToNext());
         }
+        db.close();
         return arrayListData;
     }
 
@@ -442,6 +451,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 arrayListData.add(reporte);
             } while (cursor.moveToNext());
         }
+        db.close();
         return arrayListData;
     }
 

@@ -30,12 +30,13 @@ public class PopupVerReporte extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.popup_ver_reporte);
 
+        // Get intent
         Intent intent = getIntent();
         Ronda ronda = (Ronda) intent.getSerializableExtra("ronda");
         Usuario usuario = (Usuario)intent.getSerializableExtra("usuario");
         ArrayList<Tag> lstTags = (ArrayList<Tag>)intent.getSerializableExtra("lstTags");
         ArrayList<Reporte> lstReportes = (ArrayList<Reporte>)intent.getSerializableExtra("lstRep");
-
+        // Get view components
         TextView txtoficial = (TextView)findViewById(R.id.poptxtOficial);
         TextView txtronda = (TextView)findViewById(R.id.poptxtRonda);
         TextView txtruta = (TextView)findViewById(R.id.poptxtRuta);

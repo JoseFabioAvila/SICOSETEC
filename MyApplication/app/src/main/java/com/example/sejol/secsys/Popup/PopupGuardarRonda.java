@@ -44,10 +44,10 @@ public class PopupGuardarRonda extends AppCompatActivity {
             List<String> codeData = Arrays.asList(puntosPorRecorrer.get(i).getCodigo().split("_"));
             if(contarRepeticiones(puntosPorRecorrer.get(i).getMac()) >= Integer.parseInt(ronda.getVueltas())){
                 printListTags.add(
-                        "Punto: " + codeData.get(0) + "  -> Completa ( " + contarRepeticiones(puntosPorRecorrer.get(i).getMac())+" )");
+                        "Punto: " + codeData.get(0) + " -> Completa (" + contarRepeticiones(puntosPorRecorrer.get(i).getMac())+")");
             }else{
                 printListTags.add(
-                        "Punto: " + codeData.get(0) + "  -> Incompleta ( " + contarRepeticiones(puntosPorRecorrer.get(i).getMac())+" )");
+                        "Punto: " + codeData.get(0) + " -> Incompleta (" + contarRepeticiones(puntosPorRecorrer.get(i).getMac())+")");
             }
         }
 
