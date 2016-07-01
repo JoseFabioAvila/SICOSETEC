@@ -254,11 +254,11 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return arrayListData;
     }
 
-    public boolean borrarRuta(String nombre){
+    public boolean borrarRuta(String codigo){
         try{
             SQLiteDatabase bd = this.getWritableDatabase();
-            bd.delete(TABLE_TAG_RUT, REF_RUT + "='" + nombre + "'", null);
-            bd.delete(TABLE_RUTA, "nombre='" + nombre + "'", null);
+            bd.delete(TABLE_TAG_RUT, REF_RUT + "='" + codigo + "'", null);
+            bd.delete(TABLE_RUTA, "codigo='" + codigo + "'", null);
             bd.close();
         }catch (Exception e){
             return false;
