@@ -6,16 +6,25 @@ import java.io.Serializable;
  * Created by sejol on 4/6/2016.
  */
 public class Tag implements Serializable{
-    private String codigo,mac,ronda,hora;
+    private String codigo,nombre,mac,ronda,hora;
 
     public Tag(){
 
     }
 
-    public Tag(String codigo, String mac, String ronda) {
+    public Tag(String codigo, String nombre, String mac, String ronda) {
         this.codigo = codigo;
+        this.nombre = nombre;
         this.mac = mac;
         this.ronda = ronda;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getCodigo() {

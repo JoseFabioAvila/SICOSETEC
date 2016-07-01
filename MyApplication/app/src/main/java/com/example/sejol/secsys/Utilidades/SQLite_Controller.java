@@ -43,6 +43,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     public static final String COLUMN_VUELTAS  = "numVueltas";
 
     public static final String TABLE_TAG_RUT   = "T_RUT_Tag";
+    //public static final String COLUMN_NOMBRE = "nombre";
     //public static final String COLUMN_ID_TAG = "codigo";
     public static final String COLUMN_MAC      = "mac";
     public static final String REF_RUT         = "ruta";
@@ -67,6 +68,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
 
     public static final String TABLE_TAG_RND   = "T_RND_Tag";
     public static final String COLUMN_ID_TAG   = "codigo";
+    //public static final String COLUMN_NOMBRE = "nombre";
     //public static final String COLUMN_MAC    = "mac";
     public static final String COLUMN_HORA     = "hora";
     //public static final String REF_RND       = "ronda";
@@ -100,6 +102,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         db.execSQL(
                 "create table " + TABLE_TAG_RUT + "(" +
                         COLUMN_ID_TAG + " text primary key," +
+                        COLUMN_NOMBRE + " text, " +
                         COLUMN_MAC    + " text, " +
                         REF_RUT       + " text, " +
                         " FOREIGN KEY (" + REF_RUT + ") REFERENCES " + TABLE_RUTA + "(" + COLUMN_ID_RUT + "));");
@@ -121,6 +124,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         db.execSQL(
                 "create table " + TABLE_TAG_RND + "(" +
                         COLUMN_ID_TAG   + " text primary key," +
+                        COLUMN_NOMBRE   + " text, " +
                         COLUMN_MAC      + " text, " +
                         COLUMN_HORA     + " text," +
                         REF_RND         + " text, " +
@@ -325,11 +329,12 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     /*
     Control de tags de ruta
      */
-    public boolean insertTagRUT(String condigo, String mac, String ronda){
+    public boolean insertTagRUT(String condigo,String nombre, String mac, String ronda){
         try{
             SQLiteDatabase bd = this.getWritableDatabase();
             ContentValues registro = new ContentValues();
             registro.put(COLUMN_ID_TAG  , condigo);
+            registro.put(COLUMN_NOMBRE  , nombre);
             registro.put(COLUMN_MAC     , mac);
             registro.put(REF_RUT        , ronda);
             bd.insert(TABLE_TAG_RUT, null, registro);
@@ -349,8 +354,9 @@ public class SQLite_Controller extends SQLiteOpenHelper {
             do {
                 Tag tag = new Tag();
                 tag.setCodigo (cursor.getString(0));
-                tag.setMac    (cursor.getString(1));
-                tag.setRonda  (cursor.getString(2));
+                tag.setNombre (cursor.getString(1));
+                tag.setMac    (cursor.getString(2));
+                tag.setRonda  (cursor.getString(3));
                 arrayListData.add(tag);
             } while (cursor.moveToNext());
         }
@@ -366,8 +372,9 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 resultado.setCodigo (cursor.getString(0));
-                resultado.setMac    (cursor.getString(1));
-                resultado.setRonda  (cursor.getString(2));
+                resultado.setNombre (cursor.getString(1));
+                resultado.setMac    (cursor.getString(2));
+                resultado.setRonda  (cursor.getString(3));
             } while (cursor.moveToNext());
         }
         db.close();
@@ -377,11 +384,12 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     /*
     Control de tags de ronda
      */
-    public boolean insertTagRND(String condigo, String mac, String hora, String ronda){
+    public boolean insertTagRND(String condigo, String nombre, String mac, String hora, String ronda){
         try{
             SQLiteDatabase bd = this.getWritableDatabase();
             ContentValues registro = new ContentValues();
             registro.put(COLUMN_ID_TAG  , condigo);
+            registro.put(COLUMN_NOMBRE  , nombre);
             registro.put(COLUMN_MAC     , mac);
             registro.put(COLUMN_HORA    , hora);
             registro.put(REF_RND        , ronda);
@@ -402,9 +410,10 @@ public class SQLite_Controller extends SQLiteOpenHelper {
             do {
                 Tag tag = new Tag();
                 tag.setCodigo   (cursor.getString(0));
-                tag.setMac      (cursor.getString(1));
-                tag.setHora     (cursor.getString(2));
-                tag.setRonda    (cursor.getString(3));
+                tag.setNombre   (cursor.getString(1));
+                tag.setMac      (cursor.getString(2));
+                tag.setHora     (cursor.getString(3));
+                tag.setRonda    (cursor.getString(4));
                 arrayListData.add(tag);
             } while (cursor.moveToNext());
         }
@@ -423,9 +432,10 @@ public class SQLite_Controller extends SQLiteOpenHelper {
             do {
                 Tag tag = new Tag();
                 tag.setCodigo   (cursor.getString(0));
-                tag.setMac      (cursor.getString(1));
-                tag.setHora     (cursor.getString(2));
-                tag.setRonda    (cursor.getString(3));
+                tag.setNombre   (cursor.getString(1));
+                tag.setMac      (cursor.getString(2));
+                tag.setHora     (cursor.getString(3));
+                tag.setRonda    (cursor.getString(4));
                 arrayListData.add(tag);
             } while (cursor.moveToNext());
         }

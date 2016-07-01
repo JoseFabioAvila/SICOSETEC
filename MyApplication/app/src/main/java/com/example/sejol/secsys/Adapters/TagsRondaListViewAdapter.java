@@ -9,21 +9,20 @@ import android.widget.TextView;
 
 import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.R;
-import com.itextpdf.text.Paragraph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by jose on 7/1/16.
+ * Created by jose on 6/21/16.
  */
-public class TagListViewAdapter extends BaseAdapter {
+public class TagsRondaListViewAdapter extends BaseAdapter {
     Context ctx;
-    ArrayList<Tag> lsttags = new ArrayList();
+    ArrayList<String> lsttags = new ArrayList();
     LayoutInflater mInflater;
 
-    public TagListViewAdapter(ArrayList<Tag> lst, Context ctx)
+    public TagsRondaListViewAdapter(ArrayList<String> lst, Context ctx)
     {
         this.mInflater = LayoutInflater.from(ctx);
         this.lsttags = lst;
@@ -49,14 +48,14 @@ public class TagListViewAdapter extends BaseAdapter {
     {
         View v = this.mInflater.inflate(R.layout.list_item_tagview, null);
 
-        TextView tagNombre  = (TextView)v.findViewById(R.id.lv_tag);
-        TextView tagPos = (TextView)v.findViewById(R.id.lv_hora);
+        TextView tagPos  = (TextView)v.findViewById(R.id.lv_tag);
+        TextView tagHora = (TextView)v.findViewById(R.id.lv_hora);
 
         //Tag tag = lsttags.get(pos);
         //List<String> codeData = Arrays.asList(tag.getCodigo().split("_"));
-        List<String> codeData = Arrays.asList(lsttags.get(pos).getCodigo().split("_"));
-        tagNombre.setText(lsttags.get(pos).getNombre() + ": ");
-        tagPos.setText("    Latitud : " + codeData.get(3) + "    Longitud: " + codeData.get(2));
+
+        tagPos.setText("Punto " + (pos+1) + ": ");
+        tagHora.setText(lsttags.get(pos));
 
         return v;
     }

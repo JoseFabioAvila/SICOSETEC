@@ -1,7 +1,6 @@
 package com.example.sejol.secsys.Popup;
 
 import android.content.Intent;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,7 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.sejol.secsys.Adapters.ReportesListViewAdapter;
-import com.example.sejol.secsys.Adapters.TagListViewAdapter;
+import com.example.sejol.secsys.Adapters.TagsRondaListViewAdapter;
 import com.example.sejol.secsys.Clases.Reporte;
 import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Tag;
@@ -52,7 +51,7 @@ public class PopupVerReporte extends AppCompatActivity {
         TextView txthora = (TextView)findViewById(R.id.poptxtHora);
         // Lista de tags de la ronda
         ListView lvTags = (ListView)findViewById(R.id.poplvTags);
-        lvTags.setAdapter(new TagListViewAdapter(listaDeEstadoDeRonda(),this));
+        lvTags.setAdapter(new TagsRondaListViewAdapter(listaDeEstadoDeRonda(),this));
         justifyListViewHeightBasedOnChildren(lvTags);
         // Lista de reportes
         ListView lvReportes = (ListView)findViewById(R.id.poplvReportes);

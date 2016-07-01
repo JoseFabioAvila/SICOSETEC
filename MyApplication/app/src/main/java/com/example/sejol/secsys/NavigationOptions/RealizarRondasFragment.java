@@ -196,6 +196,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
             if (puntosRecorridos.get(i).getCodigo() != null)
                 db.insertTagRND(
                         puntosRecorridos.get(i).getCodigo(),
+                        puntosRecorridos.get(i).getNombre(),
                         puntosRecorridos.get(i).getMac(),
                         puntosRecorridos.get(i).getHora(),
                         puntosRecorridos.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
