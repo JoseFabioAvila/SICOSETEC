@@ -18,6 +18,7 @@ import com.example.sejol.secsys.Clases.Ronda;
 import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.Clases.Usuario;
 import com.example.sejol.secsys.R;
+import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,17 +26,24 @@ import java.util.List;
 
 public class PopupVerReporte extends AppCompatActivity {
 
+    Ronda ronda;
+    Usuario usuario;
+    ArrayList<Tag> lstTags;
+    ArrayList<Reporte> lstReportes;
+    SQLite_Controller bd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.popup_ver_reporte);
 
+        bd = new SQLite_Controller(this);
         // Get intent
         Intent intent = getIntent();
-        Ronda ronda = (Ronda) intent.getSerializableExtra("ronda");
-        Usuario usuario = (Usuario)intent.getSerializableExtra("usuario");
-        ArrayList<Tag> lstTags = (ArrayList<Tag>)intent.getSerializableExtra("lstTags");
-        ArrayList<Reporte> lstReportes = (ArrayList<Reporte>)intent.getSerializableExtra("lstRep");
+        ronda = (Ronda) intent.getSerializableExtra("ronda");
+        usuario = (Usuario)intent.getSerializableExtra("usuario");
+        lstTags = (ArrayList<Tag>)intent.getSerializableExtra("lstTags");
+        lstReportes = (ArrayList<Reporte>)intent.getSerializableExtra("lstRep");
         // Get view components
         TextView txtoficial = (TextView)findViewById(R.id.poptxtOficial);
         TextView txtronda = (TextView)findViewById(R.id.poptxtRonda);
@@ -44,7 +52,7 @@ public class PopupVerReporte extends AppCompatActivity {
         TextView txthora = (TextView)findViewById(R.id.poptxtHora);
         // Lista de tags de la ronda
         ListView lvTags = (ListView)findViewById(R.id.poplvTags);
-        lvTags.setAdapter(new TagListViewAdapter(lstTags,this));
+        lvTags.setAdapter(new TagListViewAdapter(listaDeEstadoDeRonda(),this));
         justifyListViewHeightBasedOnChildren(lvTags);
         // Lista de reportes
         ListView lvReportes = (ListView)findViewById(R.id.poplvReportes);
@@ -66,6 +74,10 @@ public class PopupVerReporte extends AppCompatActivity {
         getWindow().setLayout((int)(0.70 * width), (int)(0.60 * height));
     }
 
+    /*
+    Configura el alto del Listview para que se base en la suma del alto de los elementos en la lista
+    eliminando el scrollview
+     */
     public void justifyListViewHeightBasedOnChildren (ListView listView) {
 
         ListAdapter adapter = listView.getAdapter();
@@ -85,5 +97,25 @@ public class PopupVerReporte extends AppCompatActivity {
         par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
         listView.setLayoutParams(par);
         listView.requestLayout();
+    }
+
+    public ArrayList listaDeEstadoDeRonda(){
+        ArrayList<Tag> lstTagsRuta = bd.getTagsDeRuta(ronda.getRuta());
+        ArrayList<Tag> lstTagsRonda;
+        ArrayList<String> lstHoras = new ArrayList<>();
+        for(Tag tag:lstTagsRuta){
+            lstTagsRonda = bd.getTagsDeRondaConMac(ronda.getCodigo(),tag.getMac());
+            String horas = "";
+            for(Tag tag2:lstTagsRonda){
+                if(horas.equals("")){
+                    horas = tag2.getHora();
+                }else{
+                    horas = horas + "\n" + tag2.getHora();
+                }
+
+            }
+            lstHoras.add(horas);
+        }
+        return lstHoras;
     }
 }

@@ -412,6 +412,27 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return arrayListData;
     }
 
+    public ArrayList<Tag> getTagsDeRondaConMac(String ronda, String mac){
+        String selectQuery = "SELECT  * FROM " + TABLE_TAG_RND + " where "
+                + REF_RND    + " = " + " '"+ ronda + "' " + " and "
+                + COLUMN_MAC + " = " + " '"+ mac   + "' ";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ArrayList<Tag> arrayListData = new ArrayList<Tag>();
+        if (cursor.moveToFirst()) {
+            do {
+                Tag tag = new Tag();
+                tag.setCodigo   (cursor.getString(0));
+                tag.setMac      (cursor.getString(1));
+                tag.setHora     (cursor.getString(2));
+                tag.setRonda    (cursor.getString(3));
+                arrayListData.add(tag);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return arrayListData;
+    }
+
 
     /*
     Control de reportes

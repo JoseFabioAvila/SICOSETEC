@@ -93,7 +93,8 @@ public class DescargarReportesFragment extends Fragment {
                                         rondas.get(pos),
                                         usuario,
                                         db.getTagsDeRonda(rondas.get(pos).getCodigo()),
-                                        db.getRepsDeRonda(rondas.get(pos).getCodigo()));
+                                        db.getRepsDeRonda(rondas.get(pos).getCodigo()),
+                                        view.getContext());
                                 return true;
                             case R.id.borrarRonda:
                                 db.borrarRonda(rondas.get(pos).getCodigo());

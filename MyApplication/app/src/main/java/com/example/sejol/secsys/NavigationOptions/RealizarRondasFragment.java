@@ -130,7 +130,8 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
                         ronda,
                         usuario,
                         db.getTagsDeRonda(ronda.getCodigo()),
-                        db.getRepsDeRonda(ronda.getCodigo()));
+                        db.getRepsDeRonda(ronda.getCodigo()),
+                        v.getContext());
                 new Email_Controller(
                         v.getContext(),
                         ronda,

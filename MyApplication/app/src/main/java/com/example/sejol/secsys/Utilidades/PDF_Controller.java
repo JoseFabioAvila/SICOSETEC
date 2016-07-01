@@ -4,6 +4,7 @@ package com.example.sejol.secsys.Utilidades;
  * Created by sejol on 2/5/2016.
  */
 
+import android.content.Context;
 import android.os.Environment;
 
 import com.example.sejol.secsys.Clases.Reporte;
@@ -39,12 +40,14 @@ public class PDF_Controller {
     private Usuario usuario;
     private ArrayList<Tag> puntos;
     private ArrayList<Reporte> reportes;
+    private SQLite_Controller db;
 
-    public PDF_Controller(Ronda rnd, Usuario usr, ArrayList<Tag> pnt, ArrayList<Reporte> rep) {
+    public PDF_Controller(Ronda rnd, Usuario usr, ArrayList<Tag> pnt, ArrayList<Reporte> rep, Context ctx) {
         this.ronda = rnd;
         this.usuario = usr;
         this.puntos = pnt;
         this.reportes = rep;
+        db = new SQLite_Controller(ctx);
         createPdf();
     }
 
@@ -99,12 +102,11 @@ public class PDF_Controller {
         document.add(new Paragraph("", Titulo));
         document.add(new Paragraph("Ronda realizada: ", Subtitulo));
         document.add(new Paragraph("", Subtitulo));
-        for (Tag pnt:puntos) {
+        for (Tag pnt: db.getTagsDeRuta(ronda.getRuta())) {
             List<String> codeData = Arrays.asList(pnt.getCodigo().split("_"));
             document.add(new Paragraph("Punto " + codeData.get(0), Subtitulo));
-            document.add(new Paragraph("    Latitud : " + codeData.get(3), TxtNegro));
-            document.add(new Paragraph("    Longitud: " + codeData.get(2), TxtNegro));
-            document.add(new Paragraph("    Hora:     " + pnt.getHora()  , TxtNegro));
+            document.add(new Paragraph("    Latitud : " + codeData.get(3) + "    Longitud: " + codeData.get(2), TxtNegro));
+            document.add(new Paragraph("    Hora:     " + getHoras(pnt)  , TxtNegro));
             document.add(new Paragraph("", Titulo));
         }
 
@@ -133,4 +135,17 @@ public class PDF_Controller {
         pdf.addCreator("Lars Vogel");
     }
 
+    private String getHoras(Tag tag){
+        ArrayList<Tag> lstTagsRonda;
+        lstTagsRonda = db.getTagsDeRondaConMac(ronda.getCodigo(),tag.getMac());
+        String horas = "";
+        for(Tag tag2:lstTagsRonda){
+            if(horas.equals("")){
+                horas = tag2.getHora();
+            }else{
+                horas = horas + "\n                " + tag2.getHora();
+            }
+        }
+        return horas;
+    }
 }

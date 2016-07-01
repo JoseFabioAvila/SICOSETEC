@@ -19,10 +19,10 @@ import java.util.List;
  */
 public class TagListViewAdapter extends BaseAdapter {
     Context ctx;
-    ArrayList<Tag> lsttags = new ArrayList();
+    ArrayList<String> lsttags = new ArrayList();
     LayoutInflater mInflater;
 
-    public TagListViewAdapter(ArrayList<Tag> lst,Context ctx)
+    public TagListViewAdapter(ArrayList<String> lst, Context ctx)
     {
         this.mInflater = LayoutInflater.from(ctx);
         this.lsttags = lst;
@@ -51,11 +51,11 @@ public class TagListViewAdapter extends BaseAdapter {
         TextView tagPos  = (TextView)v.findViewById(R.id.lv_tag);
         TextView tagHora = (TextView)v.findViewById(R.id.lv_hora);
 
-        Tag tag = lsttags.get(pos);
-        List<String> codeData = Arrays.asList(tag.getCodigo().split("_"));
+        //Tag tag = lsttags.get(pos);
+        //List<String> codeData = Arrays.asList(tag.getCodigo().split("_"));
 
-        tagPos.setText("Punto " + codeData.get(0));
-        tagHora.setText(tag.getHora());
+        tagPos.setText("Punto " + (pos+1) + ": ");
+        tagHora.setText(lsttags.get(pos));
 
         return v;
     }
