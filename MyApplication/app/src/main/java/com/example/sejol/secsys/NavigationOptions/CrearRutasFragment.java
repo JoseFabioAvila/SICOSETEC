@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,23 +12,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import com.example.sejol.secsys.Activitys.AgregarRutaActivity;
-import com.example.sejol.secsys.Clases.Reporte;
 import com.example.sejol.secsys.Clases.Ruta;
-import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.R;
-import com.example.sejol.secsys.Utilidades.Email_Controller;
-import com.example.sejol.secsys.Utilidades.PDF_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by fabio on 21/5/2016.
@@ -93,12 +81,15 @@ public class CrearRutasFragment extends Fragment {
                 //Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
                 final PopupMenu popup = new PopupMenu(view.getContext(), listView);
                 //Inflating the Popup using xml file
-                popup.getMenuInflater().inflate(R.menu.opciones_crear_ruta, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.opciones_ruta, popup.getMenu());
 
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
+                            case R.id.ver:
+
+                                return true;
                             case R.id.modificar:
                                 Bundle bundle = new Bundle();
                                 bundle.putString("ruta", nombresRutas.get(position));

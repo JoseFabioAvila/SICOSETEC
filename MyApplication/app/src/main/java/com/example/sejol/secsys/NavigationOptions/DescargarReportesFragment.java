@@ -73,7 +73,7 @@ public class DescargarReportesFragment extends Fragment {
                 //Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
                 final PopupMenu popup = new PopupMenu(view.getContext(), lvRondas);
                 //Inflating the Popup using xml file
-                popup.getMenuInflater().inflate(R.menu.opciones_imp_ronda, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.opciones_ronda, popup.getMenu());
 
                 final int pos = position; // Posicion numerica del objeto de la lista seleccionado
                 //registering popup with OnMenuItemClickListener

@@ -278,7 +278,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_realizar_ronda, menu);
+        inflater.inflate(R.menu.menu_guardar_ronda, menu);
     }
 
     @Override

@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sejol.secsys.Adapters.TagListViewAdapter;
-import com.example.sejol.secsys.Adapters.TagsRondaListViewAdapter;
 import com.example.sejol.secsys.Clases.Ruta;
 import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.R;
@@ -103,7 +102,7 @@ public class AgregarRutaActivity extends AppCompatActivity {
                 //Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
                 final PopupMenu popup = new PopupMenu(view.getContext(), listView);
                 //Inflating the Popup using xml file
-                popup.getMenuInflater().inflate(R.menu.opciones_crear_ruta, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.opciones_ruta, popup.getMenu());
 
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -298,7 +297,7 @@ public class AgregarRutaActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_agregar_ruta, menu);
+        getMenuInflater().inflate(R.menu.menu_guardar_ruta, menu);
         return true;
     }
 
