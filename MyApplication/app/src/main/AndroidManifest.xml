@@ -89,6 +89,10 @@
         <activity
             android:name=".Activitys.ModificarRutaActivity"
             android:label="@string/title_activity_modificar_ruta"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Activitys.ModificarTagActivity"
+            android:label="@string/title_activity_modificar_tag"
             android:theme="@style/AppTheme"></activity>
     </application>
 

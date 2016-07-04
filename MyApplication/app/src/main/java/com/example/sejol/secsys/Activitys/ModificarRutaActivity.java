@@ -75,7 +75,9 @@ public class ModificarRutaActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.modificar:
-                                Toast.makeText(ModificarRutaActivity.this,"Pronto",Toast.LENGTH_LONG).show();
+                                Intent i = new Intent(ModificarRutaActivity.this, ModificarTagActivity.class);
+                                i.putExtra("tag",PntsTagRuta.get(position));
+                                startActivityForResult(i,1);
                                 return true;
                             case R.id.borrar:
                                 db.borrarRuta(PntsTagRuta.get(position).getCodigo());

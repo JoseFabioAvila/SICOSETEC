@@ -4,5 +4,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_agregar_ruta">Crear Ruta</string>
     <string name="title_activity_modificar_ruta">ModificarRutaActivity</string>
+    <string name="title_activity_modificar_tag">ModificarTagActivity</string>
 
 </resources>
