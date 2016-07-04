@@ -37,10 +37,6 @@ import java.util.Date;
 
 public class AgregarRutaActivity extends AppCompatActivity {
 
-    Ruta ruta;
-    ArrayList<Tag> tags;
-    int pos;
-
     ArrayList<Tag> PntsTagRuta = new ArrayList<>(); // Putos en el recorrido de la ruta
     SQLite_Controller db; // Clase para accesar a la base de datos
 

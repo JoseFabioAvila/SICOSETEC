@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:id="@+id/txtAddRutNombre"
+        android:id="@+id/txtMdfRutNombre"
         android:textAlignment="center"/>
 
     <LinearLayout
@@ -42,7 +42,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/txtNumVueltas"
+            android:id="@+id/txtMdfNumVueltas"
             android:inputType="numberDecimal"
             android:textAlignment="center"/>
     </LinearLayout>
@@ -58,7 +58,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listViewAR"
+        android:id="@+id/LvMdfTagRut"
         android:layout_margin="5dp"/>
 
 </LinearLayout>

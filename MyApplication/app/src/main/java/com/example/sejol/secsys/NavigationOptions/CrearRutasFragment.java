@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.example.sejol.secsys.Activitys.AgregarRutaActivity;
 import com.example.sejol.secsys.Activitys.MainActivity;
+import com.example.sejol.secsys.Activitys.ModificarRutaActivity;
 import com.example.sejol.secsys.Adapters.TagListViewAdapter;
 import com.example.sejol.secsys.Clases.Ruta;
 import com.example.sejol.secsys.Clases.Tag;
@@ -103,11 +104,8 @@ public class CrearRutasFragment extends Fragment {
                                 (new VerRutaDialogClass(view.getContext(),position)).show();
                                 return true;
                             case R.id.modificar:
-                                Bundle bundle = new Bundle();
-                                bundle.putString("ruta", nombresRutas.get(position));
-                                Intent intent = new Intent(getActivity(), AgregarRutaActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                intent.putExtras(bundle);
+                                Intent intent = new Intent(getActivity(), ModificarRutaActivity.class);
+                                intent.putExtra("ruta",rutas.get(position));
                                 startActivity(intent);
                                 return true;
                             case R.id.borrar:
