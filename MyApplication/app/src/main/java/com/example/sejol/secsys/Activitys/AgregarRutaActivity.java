@@ -26,7 +26,7 @@ import com.example.sejol.secsys.Adapters.TagListViewAdapter;
 import com.example.sejol.secsys.Clases.Ruta;
 import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.R;
-import com.example.sejol.secsys.Utilidades.GPS_Tracker;
+import com.example.sejol.secsys.Utilidades.GPS_Controller;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 
@@ -243,12 +243,12 @@ public class AgregarRutaActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (dialog) {
-            GPS_Tracker gps_tracker = new GPS_Tracker(this);
+            GPS_Controller gps_controller = new GPS_Controller(this);
             String codigo =
                     String.valueOf(codigoTag) + "_" + // Contador de tags en ruta
                             ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)) + "_" + // Mac de tag
-                            gps_tracker.getLongitude() + "_" + // Latitud actual (ubicacion del tag)
-                            gps_tracker.getLatitude(); // Latitud actual
+                            gps_controller.getLongitude() + "_" + // Latitud actual (ubicacion del tag)
+                            gps_controller.getLatitude(); // Latitud actual
             Tag nuevoTag = new Tag();
             nuevoTag.setCodigo(codigo);
             PntsTagRuta.add(nuevoTag); // Guardar tag
