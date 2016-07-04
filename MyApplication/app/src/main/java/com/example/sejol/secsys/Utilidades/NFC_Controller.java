@@ -16,14 +16,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sejol.secsys.Activitys.AgregarRutaActivity;
-import com.example.sejol.secsys.Activitys.CrearRondaActivity;
 import com.example.sejol.secsys.Activitys.MainActivity;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -33,7 +30,6 @@ import java.util.List;
 public class NFC_Controller {
     public NfcAdapter mNfcAdapter;
 
-    CrearRondaActivity context1;
     AgregarRutaActivity context2;
     MainActivity context3;
     Context context;
@@ -43,14 +39,6 @@ public class NFC_Controller {
 
         this.context = context;
         this.context3 = (MainActivity)context;
-
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(context);
-        this.opcion = opcion;
-    }
-    public NFC_Controller(CrearRondaActivity context, int opcion) {
-
-        this.context = context;
-        this.context1 = (CrearRondaActivity)context;
 
         mNfcAdapter = NfcAdapter.getDefaultAdapter(context);
         this.opcion = opcion;
@@ -70,12 +58,6 @@ public class NFC_Controller {
 
     public void enableForegroundDispatchSystem(){
         Intent intent;
-        if(opcion == 1) {
-            intent = new Intent(context1, CrearRondaActivity.class ).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context1, 0, intent, 0);
-            IntentFilter[] intentFilters = new IntentFilter[]{};
-            mNfcAdapter.enableForegroundDispatch(context1, pendingIntent, intentFilters, null);
-        }
         if(opcion == 2){
             intent = new Intent(context2, AgregarRutaActivity.class).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
             PendingIntent pendingIntent = PendingIntent.getActivity(context2, 0, intent, 0);
@@ -91,9 +73,6 @@ public class NFC_Controller {
     }
 
     public void disableForegroundDispatchSystem() {
-        if(opcion == 1) {
-            mNfcAdapter.disableForegroundDispatch(context1);
-        }
         if(opcion == 2) {
             mNfcAdapter.disableForegroundDispatch(context2);
         }

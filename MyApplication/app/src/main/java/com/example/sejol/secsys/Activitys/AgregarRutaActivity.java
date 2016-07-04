@@ -102,7 +102,7 @@ public class AgregarRutaActivity extends AppCompatActivity {
                 //Toast.makeText(view.getContext(),"List item "+position,Toast.LENGTH_SHORT).show();
                 final PopupMenu popup = new PopupMenu(view.getContext(), listView);
                 //Inflating the Popup using xml file
-                popup.getMenuInflater().inflate(R.menu.opciones_ruta, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.opciones_tag, popup.getMenu());
 
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -112,7 +112,9 @@ public class AgregarRutaActivity extends AppCompatActivity {
                                 Toast.makeText(AgregarRutaActivity.this,"Pronto",Toast.LENGTH_LONG).show();
                                 return true;
                             case R.id.borrar:
-                                //db.borrarRuta(nombresRutas.get(position));
+                                db.borrarRuta(PntsTagRuta.get(position).getCodigo());
+                                PntsTagRuta.remove(position);
+                                adapter.notifyDataSetChanged();
                                 return true;
                         }
                         return true;
@@ -125,8 +127,6 @@ public class AgregarRutaActivity extends AppCompatActivity {
         adapter = new TagListViewAdapter(PntsTagRuta, AgregarRutaActivity.this);
         listView.setAdapter(adapter);
     }
-
-
 
 
     /*
@@ -240,6 +240,9 @@ public class AgregarRutaActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    Detector de tags nfc
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);

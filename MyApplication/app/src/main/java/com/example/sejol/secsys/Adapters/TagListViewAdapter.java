@@ -56,7 +56,7 @@ public class TagListViewAdapter extends BaseAdapter {
         //List<String> codeData = Arrays.asList(tag.getCodigo().split("_"));
         List<String> codeData = Arrays.asList(lsttags.get(pos).getCodigo().split("_"));
         tagNombre.setText(lsttags.get(pos).getNombre() + ": ");
-        tagPos.setText("    Latitud : " + codeData.get(3) + "    Longitud: " + codeData.get(2));
+        tagPos.setText("    Latitud : " + codeData.get(3) + "\n    Longitud: " + codeData.get(2));
 
         return v;
     }

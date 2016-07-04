@@ -381,6 +381,16 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return resultado;
     }
 
+    public boolean borrarTagDeRuta(String codigo){
+        try{
+            SQLiteDatabase bd = this.getWritableDatabase();
+            bd.delete(TABLE_TAG_RND   , "codigo='" + codigo + "'", null);
+            bd.close();
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
     /*
     Control de tags de ronda
      */
