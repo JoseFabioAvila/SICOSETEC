@@ -18,9 +18,11 @@ import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.Email_Controller;
 import com.example.sejol.secsys.Utilidades.GPS_Controller;
 import com.example.sejol.secsys.Utilidades.PDF_Controller;
+import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.itextpdf.text.Paragraph;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ public class ModificarTagActivity extends AppCompatActivity {
         txtLng    = (EditText)findViewById(R.id.txtMdfTagLng);
 
         txtNombre.setText(tag.getNombre());
-        List<String> tagCodigo = Arrays.asList(tag.getCodigo().split("_"));
+        final List<String> tagCodigo = Arrays.asList(tag.getCodigo().split("_"));
         txtLat.setText(tagCodigo.get(3));
         txtLng.setText(tagCodigo.get(2));
 
@@ -77,10 +79,11 @@ public class ModificarTagActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent localIntent = new Intent();
-                localIntent.putExtra("mdfTag",tag);
-                setResult(100, localIntent);
-                finish();
+                String codigoV = tag.getCodigo();
+                List<String> oldCode = Arrays.asList(tag.getCodigo().split("_"));
+                tag.setCodigo(oldCode.get(0)+"_"+ oldCode.get(1)+"_"+txtLng.getText().toString()+"_"+txtLat.getText().toString());
+                SQLite_Controller db = new SQLite_Controller(ModificarTagActivity.this);
+                db.updateTag(codigoV,tag);
             }
         });
     }

@@ -109,7 +109,7 @@ public class CrearRutasFragment extends Fragment {
                                 startActivity(intent);
                                 return true;
                             case R.id.borrar:
-                                db.borrarRuta(rutas.get(position).getCodigo());
+                                db.borrarTagDeRuta(rutas.get(position).getCodigo());
                                 nombresRutas.remove(position);
                                 rutas.remove(position);
                                 adapter.notifyDataSetChanged();

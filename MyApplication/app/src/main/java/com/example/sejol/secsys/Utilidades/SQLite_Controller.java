@@ -43,8 +43,8 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     public static final String COLUMN_VUELTAS  = "numVueltas";
 
     public static final String TABLE_TAG_RUT   = "T_RUT_Tag";
-    //public static final String COLUMN_NOMBRE = "nombre";
     //public static final String COLUMN_ID_TAG = "codigo";
+    //public static final String COLUMN_NOMBRE = "nombre";
     public static final String COLUMN_MAC      = "mac";
     public static final String REF_RUT         = "ruta";
 
@@ -384,8 +384,18 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     public boolean borrarTagDeRuta(String codigo){
         try{
             SQLiteDatabase bd = this.getWritableDatabase();
-            bd.delete(TABLE_TAG_RND   , "codigo='" + codigo + "'", null);
+            bd.delete(TABLE_TAG_RUT   , "codigo='" + codigo + "'", null);
             bd.close();
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateTag(String codigoV, Tag tag){
+        try {
+            borrarTagDeRuta(codigoV);
+            insertTagRUT(tag.getCodigo(),tag.getNombre(),tag.getMac(),tag.getRonda());
         }catch (Exception e){
             return false;
         }

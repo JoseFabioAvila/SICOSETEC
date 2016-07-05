@@ -77,10 +77,10 @@ public class ModificarRutaActivity extends AppCompatActivity {
                             case R.id.modificar:
                                 Intent i = new Intent(ModificarRutaActivity.this, ModificarTagActivity.class);
                                 i.putExtra("tag",PntsTagRuta.get(position));
-                                startActivityForResult(i,1);
+                                startActivity(i);
                                 return true;
                             case R.id.borrar:
-                                db.borrarRuta(PntsTagRuta.get(position).getCodigo());
+                                db.borrarTagDeRuta(PntsTagRuta.get(position).getCodigo());
                                 PntsTagRuta.remove(position);
                                 adapter.notifyDataSetChanged();
                                 return true;
