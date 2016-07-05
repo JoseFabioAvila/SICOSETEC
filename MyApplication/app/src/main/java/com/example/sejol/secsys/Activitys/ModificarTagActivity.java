@@ -69,6 +69,8 @@ public class ModificarTagActivity extends AppCompatActivity {
                         break;
                     case R.id.rndBscCoord:
                         Intent i = new Intent(ModificarTagActivity.this, BuscardorDeCoordenadasActivity.class);
+                        i.putExtra("lat",Double.valueOf(txtLat.getText().toString()));
+                        i.putExtra("lng",Double.valueOf(txtLng.getText().toString()));
                         startActivityForResult(i,100);
                         break;
                 }
@@ -84,6 +86,7 @@ public class ModificarTagActivity extends AppCompatActivity {
                 tag.setCodigo(oldCode.get(0)+"_"+ oldCode.get(1)+"_"+txtLng.getText().toString()+"_"+txtLat.getText().toString());
                 SQLite_Controller db = new SQLite_Controller(ModificarTagActivity.this);
                 db.updateTag(codigoV,tag);
+                finish();
             }
         });
     }

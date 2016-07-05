@@ -258,7 +258,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         try{
             SQLiteDatabase bd = this.getWritableDatabase();
             bd.delete(TABLE_TAG_RUT, REF_RUT + "='" + codigo + "'", null);
-            bd.delete(TABLE_RUTA, "codigo='" + codigo + "'", null);
+            bd.delete(TABLE_RUTA, "codigo ='" + codigo + "'", null);
             bd.close();
         }catch (Exception e){
             return false;

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,8 +41,9 @@ public class BuscardorDeCoordenadasActivity extends FragmentActivity implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buscardor_de_coordenadas);
+
         btnListo = (Button)findViewById(R.id.btnListo);
-        btnListo.setVisibility(View.INVISIBLE);
+        btnListo.setVisibility(View.VISIBLE);
         btnListo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,6 +66,12 @@ public class BuscardorDeCoordenadasActivity extends FragmentActivity implements 
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+
+        double lat = getIntent().getDoubleExtra("lat",0);
+        double lng = getIntent().getDoubleExtra("lng",0);
+        LatLng ll = new LatLng(lat,lng);
+        MarkerLatLng = mMap.addMarker(new MarkerOptions()
+                .position(ll).draggable(true).title("Remover"));
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
