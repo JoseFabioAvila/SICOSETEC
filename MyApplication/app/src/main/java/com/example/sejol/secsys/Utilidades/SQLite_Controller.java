@@ -266,6 +266,22 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateRuta(Ruta ruta){
+        try {
+            String query =
+                    "UPDATE " + TABLE_RUTA +
+                            " SET nombre   = " + "'" + ruta.getNombre()  + "', " +
+                            " numVueltas   = " + "'" + ruta.getVueltas() + "'  " +
+                            " WHERE codigo = " + "'" + ruta.getCodigo()  + "';";
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL(query);
+            db.close();
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
     /*
     Control de rondas
      */
@@ -401,6 +417,7 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         }
         return true;
     }
+
     /*
     Control de tags de ronda
      */

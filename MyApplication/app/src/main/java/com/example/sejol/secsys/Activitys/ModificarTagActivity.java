@@ -45,7 +45,7 @@ public class ModificarTagActivity extends AppCompatActivity {
         Intent intent = getIntent();
         tag = (Tag) intent.getSerializableExtra("tag");
 
-        EditText txtNombre = (EditText)findViewById(R.id.txtMdfTagNombre);
+        final EditText txtNombre = (EditText)findViewById(R.id.txtMdfTagNombre);
         txtLat    = (EditText)findViewById(R.id.txtMdfTagLat);
         txtLng    = (EditText)findViewById(R.id.txtMdfTagLng);
 
@@ -84,6 +84,7 @@ public class ModificarTagActivity extends AppCompatActivity {
                 String codigoV = tag.getCodigo();
                 List<String> oldCode = Arrays.asList(tag.getCodigo().split("_"));
                 tag.setCodigo(oldCode.get(0)+"_"+ oldCode.get(1)+"_"+txtLng.getText().toString()+"_"+txtLat.getText().toString());
+                tag.setNombre(txtNombre.getText().toString());
                 SQLite_Controller db = new SQLite_Controller(ModificarTagActivity.this);
                 db.updateTag(codigoV,tag);
                 finish();

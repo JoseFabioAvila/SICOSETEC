@@ -69,7 +69,6 @@ public class CrearRutasFragment extends Fragment {
         }
         adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,nombresRutas);
         listView = (ListView) view.findViewById(R.id.listView);
-
         listView.setAdapter(adapter);
 
         //se pueden meter acciones de los elementos del fragment
@@ -106,7 +105,7 @@ public class CrearRutasFragment extends Fragment {
                             case R.id.modificar:
                                 Intent intent = new Intent(getActivity(), ModificarRutaActivity.class);
                                 intent.putExtra("ruta",rutas.get(position));
-                                startActivity(intent);
+                                startActivityForResult(intent,100);
                                 return true;
                             case R.id.borrar:
                                 db.borrarRuta(rutas.get(position).getCodigo());
@@ -127,11 +126,12 @@ public class CrearRutasFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
-            Bundle b = data.getExtras();
-            nombresRutas.add((String) b.get("ruta"));
-            adapter.notifyDataSetChanged();
+        rutas = db.getRutas();
+        nombresRutas.clear();
+        for(Ruta ruta:rutas){
+            nombresRutas.add(ruta.getNombre());
         }
+        adapter.notifyDataSetChanged();
     }
 
 

@@ -41,9 +41,9 @@ public class ModificarRutaActivity extends AppCompatActivity {
         Intent intent = getIntent();
         ruta = (Ruta) intent.getSerializableExtra("ruta");
 
-        EditText txtNombre = (EditText) findViewById(R.id.txtMdfRutNombre);
+        final EditText txtNombre = (EditText) findViewById(R.id.txtMdfRutNombre);
         txtNombre.setText(ruta.getNombre());
-        EditText txtVuelta = (EditText) findViewById(R.id.txtMdfNumVueltas);
+        final EditText txtVuelta = (EditText) findViewById(R.id.txtMdfNumVueltas);
         txtVuelta.setText(ruta.getVueltas());
         lvTags    = (ListView) findViewById(R.id.LvMdfTagRut);
         AdapterSet();
@@ -52,8 +52,10 @@ public class ModificarRutaActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                ruta.setNombre(txtNombre.getText().toString());
+                ruta.setVueltas(txtVuelta.getText().toString());
+                db.updateRuta(ruta);
+                finish();
             }
         });
     }
