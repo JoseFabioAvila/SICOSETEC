@@ -87,6 +87,10 @@ public class ModificarTagActivity extends AppCompatActivity {
                 tag.setNombre(txtNombre.getText().toString());
                 SQLite_Controller db = new SQLite_Controller(ModificarTagActivity.this);
                 db.updateTag(codigoV,tag);
+
+                Intent localIntent = new Intent();
+                localIntent.putExtra("tag",tag);
+                setResult(1000, localIntent);
                 finish();
             }
         });

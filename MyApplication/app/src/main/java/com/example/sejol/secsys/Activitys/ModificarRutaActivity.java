@@ -79,6 +79,7 @@ public class ModificarRutaActivity extends AppCompatActivity {
                             case R.id.modificar:
                                 Intent i = new Intent(ModificarRutaActivity.this, ModificarTagActivity.class);
                                 i.putExtra("tag",PntsTagRuta.get(position));
+                                PntsTagRuta.remove(position);
                                 startActivityForResult(i,1000);
                                 return true;
                             case R.id.borrar:
@@ -98,4 +99,12 @@ public class ModificarRutaActivity extends AppCompatActivity {
         adapter = new TagListViewAdapter(PntsTagRuta, ModificarRutaActivity.this);
         lvTags.setAdapter(adapter);
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        PntsTagRuta.add((Tag)data.getSerializableExtra("tag"));
+        adapter.notifyDataSetChanged();
+    }
+
+
 }
