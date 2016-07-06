@@ -285,18 +285,17 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     /*
     Control de rondas
      */
-    public boolean insertRonda(String codigo, String nombre, String fecha,
-                               String vueltas, String completa, String ruta, String usuario){
+    public boolean insertRonda(Ronda ronda){
         try{
             SQLiteDatabase bd = this.getWritableDatabase();
             ContentValues registro = new ContentValues();
-            registro.put(COLUMN_ID_RND   , codigo);
-            registro.put(COLUMN_NOMBRE   , nombre);
-            registro.put(COLUMN_FECHA    , fecha);
-            registro.put(COLUMN_VUELTAS  , vueltas);
-            registro.put(COLUMN_COMPLETA , completa);
-            registro.put(REF_RUT         , ruta);
-            registro.put(REF_USUARIO     , usuario);
+            registro.put(COLUMN_ID_RND   , ronda.getCodigo());
+            registro.put(COLUMN_NOMBRE   , ronda.getNombre());
+            registro.put(COLUMN_FECHA    , ronda.getFecha());
+            registro.put(COLUMN_VUELTAS  , ronda.getVueltas());
+            registro.put(COLUMN_COMPLETA , ronda.getCompleta());
+            registro.put(REF_RUT         , ronda.getRuta());
+            registro.put(REF_USUARIO     , ronda.getUsuario());
             bd.insert(TABLE_RONDA, null, registro);
             bd.close();
         }catch (Exception e){
@@ -421,15 +420,15 @@ public class SQLite_Controller extends SQLiteOpenHelper {
     /*
     Control de tags de ronda
      */
-    public boolean insertTagRND(String condigo, String nombre, String mac, String hora, String ronda){
+    public boolean insertTagRND(Tag tag){
         try{
             SQLiteDatabase bd = this.getWritableDatabase();
             ContentValues registro = new ContentValues();
-            registro.put(COLUMN_ID_TAG  , condigo);
-            registro.put(COLUMN_NOMBRE  , nombre);
-            registro.put(COLUMN_MAC     , mac);
-            registro.put(COLUMN_HORA    , hora);
-            registro.put(REF_RND        , ronda);
+            registro.put(COLUMN_ID_TAG  , tag.getCodigo());
+            registro.put(COLUMN_NOMBRE  , tag.getNombre());
+            registro.put(COLUMN_MAC     , tag.getMac());
+            registro.put(COLUMN_HORA    , tag.getHora());
+            registro.put(REF_RND        , tag.getRonda());
             bd.insert(TABLE_TAG_RND, null, registro);
             bd.close();
         }catch (Exception e){

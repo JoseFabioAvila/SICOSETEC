@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -125,6 +126,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
             }else if(requestCode == 2){ // Volver luego de seleccionar guardar
                 Bundle b = data.getExtras();
                 ronda.setNombre((String) b.get("nombre"));
+                verficarCompletitudDeRonda();
                 guardarRonda(); // Guardar ronda en bd
                 new PDF_Controller(
                         ronda,
@@ -178,6 +180,8 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
         ronda.setFecha(fecha);
         ronda.setRuta(ruta.getCodigo());
         ronda.setVueltas(ruta.getVueltas());
+        ronda.setUsuario(usuario.getUsuario());
+        ronda.setCompleta("incompleta");
 
         return ronda;
     }
@@ -188,18 +192,11 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
     private void guardarRonda(){
         // Almacenar ronda en la base de datos
         // GUardar ronda
-        db.insertRonda(
-                ronda.getCodigo(), ronda.getNombre(), ronda.getFecha(),ronda.getVueltas(),
-                ronda.getCompleta(),ronda.getRuta(), usuario.getUsuario());
+        db.insertRonda(ronda);
         // Guardar estado de la ronda (Ountos recorridos y no recorridos)
         for (int i = 0; i < puntosRecorridos.size(); i++) {
             if (puntosRecorridos.get(i).getCodigo() != null)
-                db.insertTagRND(
-                        puntosRecorridos.get(i).getCodigo(),
-                        puntosRecorridos.get(i).getNombre(),
-                        puntosRecorridos.get(i).getMac(),
-                        puntosRecorridos.get(i).getHora(),
-                        puntosRecorridos.get(i).getRonda()); // Almacenar tag y asignarlo a la ruta creada
+                db.insertTagRND(puntosRecorridos.get(i)); // Almacenar tag y asignarlo a la ruta creada
         }
         //GUardar reportes
         db.insertListaReportes(reportes,ronda);
@@ -257,6 +254,16 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
         }
     }
 
+    private void verficarCompletitudDeRonda(){
+        for(int i = 0 ; i < puntosPorRecorrer.size() ; i++){
+            List<String> codeData = Arrays.asList(puntosPorRecorrer.get(i).getCodigo().split("_"));
+            if(contarRepeticiones(puntosPorRecorrer.get(i).getMac()) < Integer.parseInt(ronda.getVueltas())){
+                ronda.setCompleta("incompleta");
+            }
+        }
+        ronda.setCompleta("completada");
+    }
+
     private int contarRepeticiones(String mac) {
         int counter = 0;
         for(Tag tag:puntosRecorridos){
@@ -266,6 +273,8 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
         }
         return counter;
     }
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////   Menu
     ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class Ronda implements Serializable{
     private String codigo,nombre,fecha,vueltas,completa,usuario,ruta;
     public Ronda() {
+        this.completa = "incompleta";
     }
 
     public Ronda(String codigo, String nombre, String fecha, String vueltas, String usuario, String ruta) {
