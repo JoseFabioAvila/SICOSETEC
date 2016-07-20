@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.sejol.secsys.Adapters.FragmentDrawer;
 import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.Clases.Usuario;
+import com.example.sejol.secsys.NavigationOptions.ConfiguracionFragment;
 import com.example.sejol.secsys.NavigationOptions.CrearRutasFragment;
 import com.example.sejol.secsys.NavigationOptions.DescargarReportesFragment;
 import com.example.sejol.secsys.NavigationOptions.RealizarRondasFragment;
@@ -99,13 +100,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 break;
             case 2:
                 read = false;
-                fragment = new DescargarReportesFragment();
+                fragment = new ReportesFragment();
                 title = getString(R.string.title_adm_descargar);
                 break;
             case 3:
                 read = false;
-                fragment = new ReportesFragment();
-                title = getString(R.string.title_adm_descargar);
+                fragment = new ConfiguracionFragment();
+                title = getString(R.string.title_adm_configuracion);
                 break;
             case 4:
                 finish();
