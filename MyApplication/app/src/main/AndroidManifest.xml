@@ -56,8 +56,7 @@
             android:name=".Activitys.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".Activitys.AgregarRutaActivity"
             android:label="@string/title_activity_agregar_ruta"

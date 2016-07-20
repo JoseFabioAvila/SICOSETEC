@@ -1,5 +1,6 @@
 package com.example.sejol.secsys.Utilidades;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.sejol.secsys.Activitys.AgregarRutaActivity;
 import com.example.sejol.secsys.Activitys.MainActivity;
+import com.example.sejol.secsys.Activitys.ModificarRutaActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
@@ -29,27 +31,27 @@ import java.util.List;
  */
 public class NFC_Controller {
     public NfcAdapter mNfcAdapter;
-
-    AgregarRutaActivity context2;
-    MainActivity context3;
-    Context context;
+    private Context context;
     int opcion;
 
-    public NFC_Controller(MainActivity context, int opcion) {
+    // Opcion  == 1
+    public NFC_Controller(MainActivity context) {
 
         this.context = context;
-        this.context3 = (MainActivity)context;
-
+        opcion = 1;
         mNfcAdapter = NfcAdapter.getDefaultAdapter(context);
-        this.opcion = opcion;
     }
-    public NFC_Controller(AgregarRutaActivity context, int opcion) {
-
+    // Opcion  == 2
+    public NFC_Controller(AgregarRutaActivity context) {
         this.context = context;
-        this.context2 = context;
-
+        opcion = 2;
         mNfcAdapter = NfcAdapter.getDefaultAdapter(context);
-        this.opcion = opcion;
+    }
+    // Opcion  == 3
+    public NFC_Controller(ModificarRutaActivity context) {
+        this.context = context;
+        opcion = 3;
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(context);
     }
 
     public NFC_Controller(Context context){
@@ -57,28 +59,21 @@ public class NFC_Controller {
     }
 
     public void enableForegroundDispatchSystem(){
-        Intent intent;
-        if(opcion == 2){
-            intent = new Intent(context2, AgregarRutaActivity.class).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context2, 0, intent, 0);
-            IntentFilter[] intentFilters = new IntentFilter[]{};
-            mNfcAdapter.enableForegroundDispatch(context2, pendingIntent, intentFilters, null);
+        Intent intent = null;
+        if      (opcion == 1){
+            intent = new Intent(context, MainActivity.class).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
+        }else if(opcion == 2){
+            intent = new Intent(context, AgregarRutaActivity.class).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
+        }else if(opcion == 3){
+            intent = new Intent(context, ModificarRutaActivity.class).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
         }
-        else{
-            intent = new Intent(context3, MainActivity.class).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context3, 0, intent, 0);
-            IntentFilter[] intentFilters = new IntentFilter[]{};
-            mNfcAdapter.enableForegroundDispatch(context3, pendingIntent, intentFilters, null);
-        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        IntentFilter[] intentFilters = new IntentFilter[]{};
+        mNfcAdapter.enableForegroundDispatch((Activity) context, pendingIntent, intentFilters, null);
     }
 
     public void disableForegroundDispatchSystem() {
-        if(opcion == 2) {
-            mNfcAdapter.disableForegroundDispatch(context2);
-        }
-        else {
-            mNfcAdapter.disableForegroundDispatch(context3);
-        }
+        mNfcAdapter.disableForegroundDispatch((Activity) context);
     }
 
     public void escribir(boolean permitir, EditText cod, Intent intent){

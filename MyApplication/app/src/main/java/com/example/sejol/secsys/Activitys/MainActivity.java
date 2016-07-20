@@ -16,7 +16,6 @@ import com.example.sejol.secsys.Clases.Tag;
 import com.example.sejol.secsys.Clases.Usuario;
 import com.example.sejol.secsys.NavigationOptions.ConfiguracionFragment;
 import com.example.sejol.secsys.NavigationOptions.CrearRutasFragment;
-import com.example.sejol.secsys.NavigationOptions.DescargarReportesFragment;
 import com.example.sejol.secsys.NavigationOptions.RealizarRondasFragment;
 import com.example.sejol.secsys.NavigationOptions.ReportesFragment;
 import com.example.sejol.secsys.R;
@@ -47,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        nfcController = new NFC_Controller(this, 3);
+        nfcController = new NFC_Controller(this);
 
         Intent intent = getIntent();
         usuario = (Usuario) intent.getSerializableExtra("usuario");

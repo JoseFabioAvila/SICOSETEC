@@ -78,7 +78,7 @@ public class AgregarRutaActivity extends AppCompatActivity {
         txtVueltas = (EditText)findViewById(R.id.txtNumVueltas); // Numero de vuelta (editor)
         listView = (ListView) findViewById(R.id.listViewAR); // Lista de puntos
         adapterSet();
-        nfcController = new NFC_Controller(this, 2);
+        nfcController = new NFC_Controller(this);
 
         if (!nfcController.mNfcAdapter.isEnabled()) { // Estado del NFC en el telefono
             Toast.makeText(this,"Lectura NFC desactivado",Toast.LENGTH_SHORT).show();
