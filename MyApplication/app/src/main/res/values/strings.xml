@@ -6,4 +6,31 @@
     <string name="title_activity_modificar_ruta">ModificarRutaActivity</string>
     <string name="title_activity_modificar_tag">ModificarTagActivity</string>
 
+    <!-- Drawer -->
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <!-- Titulos drawer administrador -->
+    <string name="title_adm_crear">Rutas</string>
+    <string name="title_adm_realizar">Ronda</string>
+    <string name="title_adm_descargar">Reportes</string>
+    <string name="title_adm_configuracion">Configuracion</string>
+    <string name="title_adm_salir">Salir</string>
+    <!-- Items del drawer -->
+    <string name="nav_item_rlz">Realizar ronda</string>
+    <string name="nav_item_crt">Control de rutas</string>
+    <string name="nav_item_dsc">Monitoreo de Reportes</string>
+    <string name="nav_item_cnf">Configuracion</string>
+    <string name="nav_item_slr">Salir</string>
+    <!-- navigation drawer item labels for admin  -->
+    <string-array name="nav_drawer_options">
+        <item>@string/nav_item_rlz</item>
+        <item>@string/nav_item_crt</item>
+        <item>@string/nav_item_dsc</item>
+        <item>@string/nav_item_cnf</item>
+        <item>@string/nav_item_slr</item>
+    </string-array>
+
+    <string name="customize">Customize</string>
+    <string name="show_dialog">Show Dialog</string>
+    <string name="undo">Undo</string>
 </resources>

@@ -17,6 +17,7 @@ import com.example.sejol.secsys.Clases.Usuario;
 import com.example.sejol.secsys.NavigationOptions.CrearRutasFragment;
 import com.example.sejol.secsys.NavigationOptions.DescargarReportesFragment;
 import com.example.sejol.secsys.NavigationOptions.RealizarRondasFragment;
+import com.example.sejol.secsys.NavigationOptions.ReportesFragment;
 import com.example.sejol.secsys.R;
 import com.example.sejol.secsys.Utilidades.NFC_Controller;
 import com.example.sejol.secsys.Utilidades.SQLite_Controller;
@@ -102,6 +103,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 title = getString(R.string.title_adm_descargar);
                 break;
             case 3:
+                read = false;
+                fragment = new ReportesFragment();
+                title = getString(R.string.title_adm_descargar);
+                break;
+            case 4:
                 finish();
                 break;
             default:

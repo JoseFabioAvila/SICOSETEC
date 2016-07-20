@@ -19,6 +19,8 @@ import com.example.sejol.secsys.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
@@ -26,8 +28,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class BuscardorDeCoordenadasActivity extends FragmentActivity implements LocationListener {
+public class BuscardorDeCoordenadasActivity extends FragmentActivity implements LocationListener, OnMapReadyCallback {
 
+    private MapView mapView;
     private GoogleMap mMap;
     private LocationManager locationManager;
     LatLng UserLatLng;
@@ -36,13 +39,13 @@ public class BuscardorDeCoordenadasActivity extends FragmentActivity implements 
 
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
-
+    private LatLng ll;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buscardor_de_coordenadas);
 
-        btnListo = (Button)findViewById(R.id.btnListo);
+        btnListo = (Button) findViewById(R.id.btnListo);
         btnListo.setVisibility(View.VISIBLE);
         btnListo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,21 +58,48 @@ public class BuscardorDeCoordenadasActivity extends FragmentActivity implements 
             }
         });
 
-        // Button for positioning on actual position
-        setUpMapIfNeeded();
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            mapView = (MapView) findViewById(R.id.BsqMap);
+            mapView.onCreate(savedInstanceState);
+            mapView.onResume();
+            mapView.getMapAsync(this);//when you already implement OnMapReadyCallback in your fragment
+
+            if (mMap != null) {
+                setUpMap();
+            }
+        }
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+
+        double lat = getIntent().getDoubleExtra("lat", 0);
+        double lng = getIntent().getDoubleExtra("lng", 0);
+        ll = new LatLng(lat, lng);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        //DO WHATEVER YOU WANT WITH GOOGLEMAP
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        map.setMyLocationEnabled(true);
+        map.setTrafficEnabled(true);
+        map.setIndoorEnabled(true);
+        map.setBuildingsEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(true);
+
+        mMap = map;
         //Agregar Click Listener
         addClickListener();
         //Activar Gestos del MApa
         activateGestures();
 
-        // Ubicacion de de la camara en el mapa donde se encuentra el usuario
-        mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
-
-        double lat = getIntent().getDoubleExtra("lat",0);
-        double lng = getIntent().getDoubleExtra("lng",0);
-        LatLng ll = new LatLng(lat,lng);
         MarkerLatLng = mMap.addMarker(new MarkerOptions()
                 .position(ll).draggable(true).title("Remover"));
     }
@@ -77,17 +107,6 @@ public class BuscardorDeCoordenadasActivity extends FragmentActivity implements 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////   Configurar mapa
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    private void setUpMapIfNeeded() {
-        if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap(); // Check if we were successful in obtaining the map.
-
-            if (mMap != null) {
-                setUpMap();
-            }
-        }
-    }
 
     private void setUpMap() {
         // El objeto GoogleMap ha sido referenciado correctamente ahora podemos manipular sus propiedades
@@ -104,8 +123,8 @@ public class BuscardorDeCoordenadasActivity extends FragmentActivity implements 
             @Override
             public boolean onMarkerClick(Marker marker) {
                 Toast.makeText(getApplicationContext(), "" +
-                        "Latitud: "+MarkerLatLng.getPosition().latitude+
-                        "\nLongitud: "+MarkerLatLng.getPosition().longitude, Toast.LENGTH_LONG).show();
+                        "Latitud: " + MarkerLatLng.getPosition().latitude +
+                        "\nLongitud: " + MarkerLatLng.getPosition().longitude, Toast.LENGTH_LONG).show();
                 return false;
             }
 
@@ -133,6 +152,9 @@ public class BuscardorDeCoordenadasActivity extends FragmentActivity implements 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(UserLatLng, 10);
 
         mMap.animateCamera(cameraUpdate);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         locationManager.removeUpdates(this);
     }
 

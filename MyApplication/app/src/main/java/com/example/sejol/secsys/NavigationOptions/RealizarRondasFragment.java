@@ -33,6 +33,9 @@ import com.example.sejol.secsys.Utilidades.SQLite_Controller;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -52,9 +55,10 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RealizarRondasFragment extends Fragment implements LocationListener {
+public class RealizarRondasFragment extends Fragment implements LocationListener, OnMapReadyCallback {
 
     View v;
+    private MapView mapView;
     private GoogleMap mMap;
     private LocationManager locationManager;
     LatLng UserLatLng;
@@ -93,15 +97,19 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
             }
         });
 
-        // Button for positioning on actual position
-        setUpMapIfNeeded();
-        //Agregar Click Listener
-        addClickListener();
-        //Activar Gestos del MApa
-        activateGestures();
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            mapView = (MapView) v.findViewById(R.id.mapRR);
+            mapView.onCreate(savedInstanceState);
+            mapView.onResume();
+            mapView.getMapAsync(this);//when you already implement OnMapReadyCallback in your fragment
+
+            if (mMap != null) {
+                setUpMap();
+            }
+        }
 
         // Ubicacion de de la camara en el mapa donde se encuentra el usuario
-        mMap = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapRR)).getMap();
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null;
@@ -109,6 +117,15 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
 
         return v;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        mMap = map;
+        //Agregar Click Listener
+        addClickListener();
+        //Activar Gestos del MApa
+        activateGestures();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -308,18 +325,6 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////   Configurar mapa
     ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void setUpMapIfNeeded() {
-        if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapRR))
-                    .getMap();
-
-            if (mMap != null) {
-                setUpMap();
-            }
-        }
-    }
 
     private void setUpMap() {
         // El objeto GoogleMap ha sido referenciado correctamente ahora podemos manipular sus propiedades
