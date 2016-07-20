@@ -40,6 +40,7 @@ import java.util.Date;
 public class ModificarRutaActivity extends AppCompatActivity {
 
     private SQLite_Controller db;
+
     private NFC_Controller nfcController; // Controlador de nfc
     private boolean dialog = false;
     int codigoTag = 0; // Contador de puntos
@@ -75,10 +76,8 @@ public class ModificarRutaActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ruta.setNombre(txtNombre.getText().toString());
-                ruta.setVueltas(txtVuelta.getText().toString());
-                db.updateRuta(ruta);
-                finish();
+                cdd = new EsperarTagDialogClass(ModificarRutaActivity.this); // En espera de NFC
+                cdd.show();
             }
         });
 
@@ -170,6 +169,14 @@ public class ModificarRutaActivity extends AppCompatActivity {
                         ruta.setNombre(txtNombre.getText().toString());
                         ruta.setVueltas(txtVuelta.getText().toString());
                         db.updateRuta(ruta);
+                        for (Tag tag : PntsTagRuta) {
+                            db.insertTagRUT(
+                                    tag.getCodigo(),
+                                    tag.getNombre(),
+                                    Arrays.asList(tag.getCodigo().split("_")).get(1),
+                                    ruta.getCodigo()); // Almacenar tag y asignarlo a la ruta creada
+                        }
+
                         finish();
                     }
                 })
@@ -179,14 +186,6 @@ public class ModificarRutaActivity extends AppCompatActivity {
                     }
                 })
                 .show();
-    }
-
-    /*
-    Metodo que crea un ID para la ruta
- */
-    private String crearCodigoRuta(String nombre){
-        String fecha = new SimpleDateFormat("dd/MM/yy_HH:mm:ss").format(new Date());
-        return nombre+"_"+fecha;
     }
 
     /*
@@ -218,7 +217,10 @@ public class ModificarRutaActivity extends AppCompatActivity {
 
         }
     }
-
+    /*
+        Dialogo para indicarle al usaurio que ingrese el nombre del tag seleccionado para
+        escribirle y almacenarlo en la ruta
+     */
     public class IngresarNombreDelTagDialogClass extends Dialog implements android.view.View.OnClickListener {
         TextView textView1;
 
