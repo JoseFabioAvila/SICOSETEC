@@ -38,7 +38,6 @@ public class CrearRutasFragment extends Fragment {
 
     private View view;
     private CardView cardView1;
-    private CardView cardView2;
 
     private ListView listView;
     private SQLite_Controller db;
@@ -73,7 +72,6 @@ public class CrearRutasFragment extends Fragment {
 
         //se pueden meter acciones de los elementos del fragment
         cardView1 = (CardView) view.findViewById(R.id.card_view);
-        cardView2 = (CardView) view.findViewById(R.id.card_view2);
         cardView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

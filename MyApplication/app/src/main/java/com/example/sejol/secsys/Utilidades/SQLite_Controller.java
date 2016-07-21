@@ -166,6 +166,21 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean insertUser(Usuario usuario){
+        try{
+            SQLiteDatabase bd = this.getWritableDatabase();
+            ContentValues registro = new ContentValues();
+            registro.put(COLUMN_NOMBRE , usuario.getNombre());
+            registro.put(COLUMN_USUARIO, usuario.getUsuario());
+            registro.put(COLUMN_CONTRASEÑA, usuario.getContraseña());
+            bd.insert(TABLE_USUARIO, null, registro);
+            bd.close();
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
     public Usuario getUsuario(String usuario, String contraseña)
     {
         SQLiteDatabase bd = this.getReadableDatabase();
@@ -185,6 +200,29 @@ public class SQLite_Controller extends SQLiteOpenHelper {
         }
         bd.close();
         return mae;
+    }
+
+    public boolean updateUsuario(Usuario usuario){
+        try {
+            String query =
+                    "UPDATE " + TABLE_USUARIO +
+                            " SET nombre   = " + "'" + usuario.getNombre()  + "', " +
+                            " contraseña   = " + "'" + usuario.getContraseña() + "'  " +
+                            " WHERE usuario = " + "'" + usuario.getUsuario()  + "';";
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL(query);
+            db.close();
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
+    public void updateUsuario(String usuarioViejo, Usuario usuarioNuevo){
+        SQLiteDatabase bd = this.getWritableDatabase();
+        bd.delete(TABLE_USUARIO, "usuario ='" + usuarioViejo + "'", null);
+        insertUser(usuarioNuevo);
+        bd.close();
     }
 
     /*
