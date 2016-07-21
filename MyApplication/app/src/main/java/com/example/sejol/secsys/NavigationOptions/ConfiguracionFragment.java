@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.sejol.secsys.Activitys.LoginActivity;
 import com.example.sejol.secsys.Adapters.DoubleLineListViewAdapter;
+import com.example.sejol.secsys.Popup.PopupConfiguracionDeCorreos;
 import com.example.sejol.secsys.R;
 
 import java.util.ArrayList;
@@ -45,11 +46,9 @@ public class ConfiguracionFragment extends Fragment {
         lstTitulos.add("Cerrar sesión"); lstSubtitulos.add("");
         DoubleLineListViewAdapter dlAdapter = new DoubleLineListViewAdapter(lstTitulos,lstSubtitulos,v.getContext());
         lv.setAdapter(dlAdapter);
-        lv.setDescendantFocusability(ListView.FOCUS_BLOCK_DESCENDANTS);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(v.getContext(),"funciona",Toast.LENGTH_LONG).show();
                 opciones(position);
             }
         });
@@ -57,18 +56,22 @@ public class ConfiguracionFragment extends Fragment {
     }
 
     private void opciones(int op){
+        Intent i;
+
         switch (op){
+            case 0:
+                break;
             case 1:
                 break;
             case 2:
                 break;
             case 3:
+                i = new Intent(v.getContext(), PopupConfiguracionDeCorreos.class);
+                startActivityForResult(i,3);
                 break;
             case 4:
-                break;
-            case 5:
                 v.getContext().getSharedPreferences("Login", 0).edit().clear().commit();
-                Intent i = new Intent(v.getContext(), LoginActivity.class);
+                i = new Intent(v.getContext(), LoginActivity.class);
                 startActivity(i);
                 break;
         }
