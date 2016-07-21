@@ -276,6 +276,7 @@ public class RealizarRondasFragment extends Fragment implements LocationListener
             List<String> codeData = Arrays.asList(puntosPorRecorrer.get(i).getCodigo().split("_"));
             if(contarRepeticiones(puntosPorRecorrer.get(i).getMac()) < Integer.parseInt(ronda.getVueltas())){
                 ronda.setCompleta("incompleta");
+                return;
             }
         }
         ronda.setCompleta("completada");
