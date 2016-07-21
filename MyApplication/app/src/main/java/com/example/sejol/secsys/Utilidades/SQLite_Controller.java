@@ -197,6 +197,8 @@ public class SQLite_Controller extends SQLiteOpenHelper {
                 mae.setContraseña (cursor.getString(1));
                 mae.setNombre  (cursor.getString(2));
             } while (cursor.moveToNext());
+        }else{
+            return null;
         }
         bd.close();
         return mae;
